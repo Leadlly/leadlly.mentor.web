@@ -1,9 +1,11 @@
-
+import FilterBox from './_components/FilterBox';
 
 const page = () => {
-  return (
-    <div>Dashboard</div>
-  )
-}
+	return (
+		<>
+			<FilterBox></FilterBox>
+		</>
+	);
+};
 
-export default page
+export default page;
