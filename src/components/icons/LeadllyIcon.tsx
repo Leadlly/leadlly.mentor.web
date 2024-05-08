@@ -1,12 +1,6 @@
 import React from 'react';
 
-const LeadllyIcon = ({
-	width = '122',
-	height = '50',
-}: {
-	width?: string;
-	height?: string;
-}) => {
+const LeadllyIcon = ({ width = '122', height = '50' }: { width?: string; height?: string }) => {
 	return (
 		<>
 			<svg
