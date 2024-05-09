@@ -21,7 +21,8 @@ export default function AuthLayout({
     <html lang="en">
       <body className={cn("font-sans antialiased", fontSans.variable)}>
         <GoogleOAuthProvider
-          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
+        >
           <Container className="min-h-screen py-3">{children}</Container>
         </GoogleOAuthProvider>
       </body>
