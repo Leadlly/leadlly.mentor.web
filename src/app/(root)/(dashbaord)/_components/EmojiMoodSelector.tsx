@@ -1,27 +1,7 @@
-import Image from "next/image";
+import { MoodEmoji } from "@/helpers/types";
+import { moodEmojis } from "@/helpers/constants/moodEmojis";
 
-const moodEmojis = [
-  {
-    mood: "/assets/icons/sad_emoji.png",
-    mood_id: "sad-emoji",
-  },
-  {
-    mood: "/assets/icons/unhappy_emoji.png",
-    mood_id: "unhappy-emoji",
-  },
-  {
-    mood: "/assets/icons/neutral_emoji.png",
-    mood_id: "neutral-emoji",
-  },
-  {
-    mood: "/assets/icons/smiling_emoji.png",
-    mood_id: "smiling-emoji",
-  },
-  {
-    mood: "/assets/icons/laughing_emoji.png",
-    mood_id: "laughing-emoji",
-  },
-];
+import Image from "next/image";
 
 const EmojiMoodSelector = () => {
   return (
@@ -29,13 +9,16 @@ const EmojiMoodSelector = () => {
       <h4 className="text-[#7A7A7A] font-medium">Mood</h4>
       <div className="flex w-full items-center justify-center">
         <ul className="grid grid-cols-2 gap-2">
-          {moodEmojis.map((option) => (
+          {moodEmojis.map((option: MoodEmoji) => (
             <li key={option.mood_id}>
               <div className="flex gap-2 justify-center items-center">
-                <input type="checkbox" />
-                <label className="flex justify-start items-center w-8 h-4  cursor-pointer">
+                <input type="checkbox" id={option.mood_id} />
+                <label
+                  htmlFor={option.mood_id}
+                  className="flex justify-start items-center w-8 h-4  cursor-pointer"
+                >
                   <Image
-                    src={option.mood}
+                    src={option.moodImg}
                     alt="checkbox-label"
                     width={20}
                     height={20}

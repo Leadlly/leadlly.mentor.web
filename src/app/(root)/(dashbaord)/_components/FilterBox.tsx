@@ -5,7 +5,7 @@ import EmojiMood from "./EmojiMoodSelector";
 
 const FilterBox = () => {
   return (
-    <div className="bg-box py-5 h-full min-h-[calc(100dvh-140px)] shadow-lg rounded-3xl w-[200px] flex flex-col items-start gap-8  text-2 xl ">
+    <div className="bg-box py-5 h-full min-h-[calc(100dvh-140px)] shadow-lg rounded-3xl min-w-[200px] flex flex-col items-start gap-8  text-2 xl ">
       <h2 className="text-[#4D4D4D] text-center w-full text-2xl font-bold">
         Filter Students{" "}
       </h2>
