@@ -22,6 +22,7 @@ const Navbar = () => {
           {NavbarLinks.map((navbarItem: NavbarLink) => {
             return (
               <Link
+              key={navbarItem.label}
                 href={navbarItem.href}
                 className={cn(
                   "flex gap-5 rounded-lg  ",

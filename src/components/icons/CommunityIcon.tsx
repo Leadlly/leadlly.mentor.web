@@ -1,8 +1,8 @@
-import { IIconProps } from '@/helpers/types';
-import { cn } from '@/lib/utils';
-import React from 'react'
+import { IIconProps } from "@/helpers/types";
+import { cn } from "@/lib/utils";
+import React from "react";
 
-const CommunityIcon = ({ className, active, ...props }: IIconProps  ) => {
+const CommunityIcon = ({ className, active, ...props }: IIconProps) => {
   return (
     <svg
       width="18"
@@ -24,11 +24,11 @@ const CommunityIcon = ({ className, active, ...props }: IIconProps  ) => {
       <path
         d="M9 17C13.4183 17 17 13.4183 17 9C17 4.58172 13.4183 1 9 1C4.58172 1 1 4.58172 1 9C1 10.3223 1.32083 11.5697 1.88889 12.6686L1 17L5.33138 16.1111C6.43026 16.6792 7.67766 17 9 17Z"
         stroke="#898989"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
 };
 
-export default CommunityIcon
+export default CommunityIcon;
