@@ -23,9 +23,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn("font-sans antialiased", fontSans.variable)}>
         <StoreProvider>
-          <Container className="py-3 flex items-start gap-3 flex-col gap-5">
+          <Container className="py-3 flex items-start gap-3 flex-col ">
             <Navbar></Navbar>
-            <main className="flex-1 h-main-height px-3">{children}</main>
+            <main className="flex-1 h-main-height">{children}</main>
           </Container>
         </StoreProvider>
       </body>

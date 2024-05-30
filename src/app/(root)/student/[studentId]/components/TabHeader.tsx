@@ -1,0 +1,46 @@
+import ChatIcon from "@/components/icons/ChatIcon";
+import MeetingIcon from "@/components/icons/MeetingIcon";
+import { cn } from "@/lib/utils";
+import React from "react";
+
+interface TabHeaderProps {
+  activeTab: "chat" | "meeting";
+  setActiveTab: (tab: "chat" | "meeting") => void;
+}
+
+const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, setActiveTab }) => {
+  const tabs = [
+    { tab: "chat", label: "Chat", icon: ChatIcon },
+    { tab: "meeting", label: "Meeting", icon: MeetingIcon },
+  ];
+
+  return (
+    <div className="flex">
+      {tabs.map(({ tab, label, icon: Icon }) => (
+        <button
+          key={tab}
+          onClick={() => setActiveTab(tab as "chat" | "meeting")}
+          className={cn(
+            "flex-1 py-4 text-center text-2xl font-semibold justify-center gap-2 flex items-center",
+            tab === "chat" ? "rounded-tl-lg" : "rounded-tr-lg",
+            activeTab === tab
+              ? "bg-[#AA87DB] text-[#56249E] border-b-[3px] border-[#56249E]"
+              : "bg-[#CDAAFF] text-white border-b-[3px] border-[#CDAAFF] "
+          )}
+        >
+          <Icon
+            className={
+              (cn("size-6"),
+              activeTab === tab
+                ? "fill-[#56249E] stroke-[#BBBABC]"
+                : "stroke-[#EEE9E9] fill-white")
+            }
+          />
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+export default TabHeader;
