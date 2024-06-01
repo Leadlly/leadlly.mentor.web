@@ -1,0 +1,108 @@
+"use client";
+
+import SemiRadialChart from "@/components/charts/SemiRadialChart";
+import TabContent from "@/components/shared/TabContent";
+import TabNavItem from "@/components/shared/TabNavItem";
+import { useState } from "react"
+
+const subjectProgressMenus = [
+  {
+    title: "Maths",
+    id: "maths",
+  },
+  {
+    title: "Physics",
+    id: "physics",
+  },
+  {
+    title: "Chemistry",
+    id: "chemistry",
+  },
+];
+
+const SubjectProgress = () => {
+  const [activeTab, setActiveTab] = useState("maths");
+  return (
+    <div className="px-3 flex-1 py-2 bg-[#FBFAFC] rounded-2xl border-[1px] border-[#D8D5D5] shadow-custom-black">
+      <div className="px-1 flex items-center justify-between">
+        <h4 className="text-xs md:text-sm font-bold">Subject Progress</h4>
+        <ul className="flex items-center gap-1 border  border-[#989898] p-1 rounded ">
+          {subjectProgressMenus.map((tab) => (
+            <TabNavItem
+              key={tab.id}
+              title={tab.title}
+              id={tab.id}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              layoutIdPrefix="subject_progress"
+              activeTabClassName="h-full inset-0"
+            />
+          ))}
+        </ul>
+      </div>
+      <div className="w-full h-full overflow-hidden">
+        <TabContent id="maths" activeTab={activeTab}>
+          <div className="h-full grid grid-cols-2  place-items-center">
+            <div className="h-full flex flex-col ">
+              <SemiRadialChart
+                series={[70]}
+                colors={["#6200EE"]}
+                chartLabel="Revision Session"
+              />
+            </div>
+
+            <div className="h-full flex flex-col ">
+              <SemiRadialChart
+                series={[30]}
+                colors={["#56CFE1"]}
+                chartLabel="efficiency"
+              />
+            </div>
+          </div>
+        </TabContent>
+
+        <TabContent id="physics" activeTab={activeTab}>
+          <div className="grid grid-cols-2">
+            <div className="h-full flex flex-col ">
+              <SemiRadialChart
+                series={[55]}
+                colors={["#6200EE"]}
+                chartLabel="Revision Session"
+              />
+            </div>
+
+            <div className="h-full flex flex-col ">
+              <SemiRadialChart
+                series={[60]}
+                colors={["#56CFE1"]}
+                chartLabel="efficiency"
+              />
+            </div>
+          </div>
+        </TabContent>
+
+        <TabContent id="chemistry" activeTab={activeTab}>
+          <div className="grid grid-cols-2">
+            <div className="h-full flex flex-col ">
+              <SemiRadialChart
+                series={[90]}
+                colors={["#6200EE"]}
+                chartLabel="Revision Session"
+              />
+            </div>
+
+            <div className="h-full flex flex-col ">
+              <SemiRadialChart
+                series={[25]}
+                colors={["#56CFE1"]}
+                chartLabel="efficiency"
+              />
+            </div>
+          </div>
+        </TabContent>
+      </div>
+    </div>
+  );
+};
+
+export default SubjectProgress;

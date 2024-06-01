@@ -27,11 +27,10 @@ export const laughingEmoji = {
   mood_id: "laughing-emoji",
   mood: "laughing",
 };
-
-export const moodEmojis = [
-  sadEmoji,
-  unhappyEmoji,
-  neutralEmoji,
-  smilingEmoji,
-  laughingEmoji,
-];
+export const moodEmojis = {
+  sad: sadEmoji,
+  unhappy: unhappyEmoji,
+  neutral: neutralEmoji,
+  smiling: smilingEmoji,
+  laughing: laughingEmoji,
+};

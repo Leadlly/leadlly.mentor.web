@@ -22,7 +22,10 @@ const StudentContainer = () => {
           >
             A<ArrowIcon />Z
             <RoundArrowIcon
-              className={AscOrder ? "" : "rotate-180 translate-y-0"}
+            stroke="#6200EE"
+              className={
+                AscOrder ? "translate-y-1 " : "rotate-180 translate-y-0"
+              }
             />
           </button>
         </div>

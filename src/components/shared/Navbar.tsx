@@ -2,14 +2,14 @@
 import React from "react";
 import LeadllyIcon from "../icons/LeadllyIcon";
 import NotificationIcon from "../icons/NotificationIcon";
-import Image from "next/image";
 
-import avatar from "/public/assets/images/d4ab00b00e2c1292dc8d8cfaa7144e3d.png";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavbarLinks } from "@/helpers/constants";
 import { NavbarLink } from "@/helpers/types";
 import { cn } from "@/lib/utils";
+import Avatar from "./Avatar";
+
 const Navbar = () => {
   const pathname = usePathname();
   return (
@@ -28,7 +28,7 @@ const Navbar = () => {
                   "flex gap-5 rounded-lg  ",
                   pathname === navbarItem.href
                     ? "bg-[#9654F4DE] px-2 py-1 "
-                    : "text-[#727272]"
+                    : "text-[#727272] mx-2 my-1"
                 )}
               >
                 <li className="flex gap-[3px] justify-center items-center">
@@ -55,15 +55,7 @@ const Navbar = () => {
           <NotificationIcon />
         </div>
         <div className="flex justify-center items-center gap-2 ">
-          <div className="size-[38px] rounded-full cursor-pointer">
-            <Image
-              src={avatar}
-              alt="avatar"
-              width={64}
-              height={64}
-              className="rounded-full w-full h-full object-cover"
-            ></Image>
-          </div>
+         <Avatar size={38} alt="user" />
           <p className="text-black text-lg font-medium">Hello, Dhruvi rawal</p>
         </div>
       </div>

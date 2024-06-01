@@ -16,6 +16,18 @@ const config: Config = {
       },
       colors: {
         box: "#F0E5FF61",
+        "custom-purple": "#6200EE",
+        "light-purple": "#E9D8FD",
+        "dark-purple": "#6B46C1",
+      },
+      boxShadow: {
+        "custom-inset": "0px -1px 10.8px 0px #9654F424 inset",
+        "custom-point":
+          "3.83px 3.83px 3.83px 0px #FFFFFF inset, -3.83px -3.83px 3.83px 0px #D2D2D2 inset",
+        "custom-black": "0px 4px 4px 0px #00000040",
+      },
+      dropShadow: {
+        "custom-user-chat": "1.67px 4.6px 4.35px 0px #CFB0FA1F",
       },
     },
   },

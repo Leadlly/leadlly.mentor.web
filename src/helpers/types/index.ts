@@ -1,4 +1,3 @@
-
 import React, { SVGProps } from "react";
 
 export type TContainerProps = {
@@ -41,6 +40,54 @@ export type NavbarLink = {
   icon: React.ComponentType<{ active?: boolean }>;
   href: string;
 };
+export type SidebarLink = {
+  icon: React.ComponentType<{ className?: string }>;
+  href: string;
+  label: string;
+};
 export interface IIconProps extends SVGProps<SVGSVGElement> {
   active?: boolean;
+}
+export type TLevelPointProps = {
+  cardBgColor: string;
+  iconImageSrc: string;
+  iconAltText: string;
+  iconShadowColor?: string;
+  chevronBgColor: string;
+  pointsColor: string;
+  points: number;
+  pointsText: string;
+  progressValue?: number;
+  progressIndicatorBg?: string;
+  pointsProgressText?: string;
+  pointsProgressTextColor?: string;
+  progressIconStroke?: string;
+};
+export type TTabNavItemProps = {
+  id: string;
+  title: string;
+  activeTab: string;
+  setActiveTab: (activeTab: string) => void;
+  className?: string;
+  activeTabClassName?: string;
+  titleClassName?: string;
+  layoutIdPrefix?: string;
+};
+export type TSemiRadialChartProps = {
+  series: number[];
+  colors: string[];
+  chartLabel: string;
+};
+export type TTabContentProps = {
+  id: string;
+  activeTab: string;
+  children: React.ReactNode;
+};
+export interface ChatData {
+  studentName:String
+  messages: Array<{
+    sender: string;
+    text: string;
+    timestamp: string;
+  }>;
 }
