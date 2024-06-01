@@ -17,23 +17,23 @@ const MicIcon = ({ className }: { className: string }) => {
         height="10.8877"
         rx="2.96937"
         stroke="#CDAAFF"
-        stroke-width="1.97958"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.97958"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M19.0192 11.5105C19.0192 15.337 15.9171 18.439 12.0906 18.439C8.26411 18.439 5.16211 15.337 5.16211 11.5105"
         stroke="#CDAAFF"
-        stroke-width="1.97958"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.97958"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M12.0906 18.4377V21.4071"
         stroke="#CDAAFF"
-        stroke-width="1.97958"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.97958"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

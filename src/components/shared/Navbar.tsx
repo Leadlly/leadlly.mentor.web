@@ -2,9 +2,7 @@
 import React from "react";
 import LeadllyIcon from "../icons/LeadllyIcon";
 import NotificationIcon from "../icons/NotificationIcon";
-import Image from "next/image";
 
-import avatar from "/public/assets/images/d4ab00b00e2c1292dc8d8cfaa7144e3d.png";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NavbarLinks } from "@/helpers/constants";

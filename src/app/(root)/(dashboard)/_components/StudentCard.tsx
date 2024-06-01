@@ -11,11 +11,10 @@ import MessageIcon from "@/components/icons/MessageIcon";
 import { Student } from "@/helpers/types";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
-import avatar from "/public/assets/images/d4ab00b00e2c1292dc8d8cfaa7144e3d.png";
 import clsx from "clsx";
 import { getBackgroundColor } from "@/helpers/constants/efficiency";
 import Link from "next/link";
-import Avatar from "@/components/shared/avatar";
+import Avatar from "@/components/shared/Avatar";
 import Progressbar from "@/components/shared/Progressbar";
 
 

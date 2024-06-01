@@ -24,9 +24,9 @@ const TopicIcon = ({ className }: { className?: string }) => {
           width="33.8005"
           height="30.8"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feGaussianBlur in="BackgroundImageFix" stdDeviation="3.45" />
           <feComposite
             in2="SourceAlpha"

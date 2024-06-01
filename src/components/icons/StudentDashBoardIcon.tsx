@@ -18,7 +18,7 @@ const StudentDashboardIcon = ({ className, ...props }: IIconProps) => {
         width="6.17647"
         height="6.17647"
         rx="2.5"
-        stroke-width="2"
+        strokeWidth="2"
       />
       <rect
         x="1"
@@ -26,7 +26,7 @@ const StudentDashboardIcon = ({ className, ...props }: IIconProps) => {
         width="6.17647"
         height="6.17647"
         rx="2.5"
-        stroke-width="2"
+        strokeWidth="2"
       />
       <rect
         x="9.82373"
@@ -34,7 +34,7 @@ const StudentDashboardIcon = ({ className, ...props }: IIconProps) => {
         width="6.17647"
         height="6.17647"
         rx="2.5"
-        stroke-width="2"
+        strokeWidth="2"
       />
       <rect
         x="9.82373"
@@ -42,7 +42,7 @@ const StudentDashboardIcon = ({ className, ...props }: IIconProps) => {
         width="6.17647"
         height="6.17647"
         rx="2.5"
-        stroke-width="2"
+        strokeWidth="2"
       />
     </svg>
   );
