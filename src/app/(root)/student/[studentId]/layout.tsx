@@ -18,9 +18,11 @@ export default function RootLayout({
   params: { studentId: string };
 }) {
   return (
-    <div className={"flex  text-black"}>
+    <div className={"flex text-black h-full"}>
+      <div className="no-scrollbar md:h-[calc(100dvh-120px)]">
       <Sidebar id={studentId} />
-      <div>{children}</div>
+      </div>
+      <div className="">{children}</div>
     </div>
   );
 }

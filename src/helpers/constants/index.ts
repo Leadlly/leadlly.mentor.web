@@ -1,3 +1,4 @@
+"use client"
 import DashboardIcon from "@/components/icons/DashboardIcon";
 import { NavbarLink, SidebarLink } from "../types";
 import CommunityIcon from "@/components/icons/CommunityIcon";
@@ -59,4 +60,19 @@ export const userSidebarLinks: SidebarLink[] = [
     label: "Quizzes",
   },
 ];
-
+export const trackerTabs = [
+  {
+    id: "maths",
+    subject: "maths",
+  },
+  {
+    id: "physics",
+    subject: "physics",
+    href: "/physics"
+  },
+  {
+    id: "chemistry",
+    subject: "chemistry",
+    href: "/chemistry"
+  },
+];
