@@ -91,3 +91,23 @@ export interface ChatData {
     timestamp: string;
   }>;
 }
+export type chapterOverviewProps = {
+  chapter: string;
+  chapterEfficiency: number;
+  topics: {
+    title: string;
+    revisionFrequency: number;
+    lastRevised: string;
+    efficiency: number;
+    revisionDates: {
+      dailyEfficiency: number;
+      date: string;
+    }[];
+  }[];
+};
+export type THeaderProps = {
+  title: string;
+  className?: string;
+  icon?: React.ReactNode;
+  titleClassName?: string;
+};

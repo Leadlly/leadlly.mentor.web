@@ -13,6 +13,7 @@ import Avatar from "./Avatar";
 const Navbar = () => {
   const pathname = usePathname();
   return (
+ 
     <nav className="h-20 shadow-md flex w-full bg-box justify-between px-10 rounded-[60px] items-center">
       <Link className="h-14 w-10 cursor-pointer" href="/">
         <LeadllyIcon></LeadllyIcon>
@@ -60,6 +61,7 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
+  
   );
 };
 
