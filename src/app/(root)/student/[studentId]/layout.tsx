@@ -22,7 +22,7 @@ export default function RootLayout({
       <div className="no-scrollbar md:h-[calc(100dvh-120px)]">
       <Sidebar id={studentId} />
       </div>
-      <div className="">{children}</div>
+      <div className="w-full">{children}</div>
     </div>
   );
 }

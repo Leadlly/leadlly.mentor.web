@@ -9,7 +9,7 @@ import { userSidebarLinks } from "@/helpers/constants";
 const Sidebar = ({ id }: { id: string }) => {
   const pathname = usePathname();
   return (
-    <aside className="md:rounded-xl rounded-l h-full bg-[#ffffff] shadow-custom-inset md:mr-[31px] mr-[15px] px-[4px] max-w-[8rem]">
+    <aside className="md:rounded-xl rounded-l h-full bg-[#ffffff] shadow-custom-inset md:mr-[6%] mr-[15px] px-[4px] max-w-[8rem]">
       <ul className="flex flex-col justify-start items-start h-full no-scrollbar overflow-y-auto pt-5">
         {userSidebarLinks.map((item) => {
           return (
