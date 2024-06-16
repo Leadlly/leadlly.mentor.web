@@ -25,7 +25,7 @@ export default function RootLayout({
         <StoreProvider>
           <Container className="py-3 flex items-start gap-3 flex-col ">
             <Navbar></Navbar>
-            <main className="flex-1 h-main-height">{children}</main>
+            <main className="flex-1 h-main-height w-full">{children}</main>
           </Container>
         </StoreProvider>
       </body>
