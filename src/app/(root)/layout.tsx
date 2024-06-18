@@ -27,7 +27,7 @@ export default function RootLayout({
           ">
             {/*h-screen overflow-hidden*/}
             <Navbar></Navbar>
-            <main className="flex-1 h-main-height">{children}</main>
+            <main className="flex-1 h-main-height w-full">{children}</main>
           </Container>
         </StoreProvider>
       </body>
