@@ -21,7 +21,7 @@ const MeetingContent: React.FC = () => {
   };
 
   return (
-    <div className="p-3">
+    <div className="p-3 ">
       <h2 className="text-lg font-medium mb-4">Upcoming Meetings</h2>
       {meetings.map((meeting, index) => (
         <MeetingCard

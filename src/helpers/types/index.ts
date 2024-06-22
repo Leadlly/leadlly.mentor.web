@@ -34,6 +34,7 @@ export interface EfficiencyOption {
   label: string;
   labelClassName: string;
   cardBackgroundColor: string;
+  textColor:string
 }
 export type NavbarLink = {
   label: string;

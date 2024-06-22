@@ -9,7 +9,7 @@ import Students from "./Students";
 const StudentContainer = () => {
   const [AscOrder, setAscOrder] = useState<Boolean>(true);
   return (
-    <div className=" h-full w-[980px] max-h-[calc(100dvh-140px)] overflow-y-auto min-h-[calc(100dvh-140px)] text-black border-[#D7D7D7] border-[2px] p-4 rounded-3xl flex flex-col gap-5">
+    <div className=" h-full w-[980px]   custom__scrollbar max-h-[calc(100dvh-140px)] overflow-y-auto min-h-[calc(100dvh-140px)] text-black border-[#D7D7D7] border-[2px] p-4 rounded-3xl flex flex-col gap-5">
       <div className="flex items-center justify-between w-full">
         <div className="flex gap-5">
           <p>Sort by</p>
@@ -22,7 +22,7 @@ const StudentContainer = () => {
           >
             A<ArrowIcon />Z
             <RoundArrowIcon
-            stroke="#6200EE"
+              stroke="#6200EE"
               className={
                 AscOrder ? "translate-y-1 " : "rotate-180 translate-y-0"
               }

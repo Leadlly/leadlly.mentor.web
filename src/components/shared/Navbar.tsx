@@ -26,7 +26,7 @@ const Navbar = () => {
               key={navbarItem.label}
                 href={navbarItem.href}
                 className={cn(
-                  "flex gap-5 rounded-lg  ",
+                  "flex gap-5 rounded-[6px]  ",
                   pathname === navbarItem.href
                     ? "bg-[#9654F4DE] px-2 py-1 "
                     : "text-[#727272] mx-2 my-1"

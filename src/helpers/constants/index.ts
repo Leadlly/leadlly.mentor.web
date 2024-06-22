@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import DashboardIcon from "@/components/icons/DashboardIcon";
 import { NavbarLink, SidebarLink } from "../types";
 import CommunityIcon from "@/components/icons/CommunityIcon";
@@ -68,11 +68,22 @@ export const trackerTabs = [
   {
     id: "physics",
     subject: "physics",
-    href: "/physics"
+    href: "/physics",
   },
   {
     id: "chemistry",
     subject: "chemistry",
-    href: "/chemistry"
+    href: "/chemistry",
+  },
+];
+export const quizzesTabs = [
+  {
+    id: "unattempted",
+    label: "unattempted",
+  },
+  {
+    id: "attempted",
+    label: "attempted",
+    href: "/attempted",
   },
 ];
