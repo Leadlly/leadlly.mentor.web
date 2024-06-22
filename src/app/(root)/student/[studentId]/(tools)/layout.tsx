@@ -13,17 +13,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params: { studentId },
 }: {
   children: React.ReactNode;
-  params: { studentId: string };
 }) {
   return (
-    <div className={"flex text-black h-full relative"}>
-      <div className="no-scrollbar md:h-[calc(100dvh-120px)] ">
-        <Sidebar id={studentId} />
-      </div>
+    <>
+      <MessageBox />
       <div className="w-full">{children}</div>
-    </div>
+    </>
   );
 }

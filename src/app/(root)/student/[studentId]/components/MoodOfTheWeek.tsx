@@ -34,6 +34,8 @@ const MoodOfTheWeek = () => {
                 src={moodEmojis[mood as keyof typeof moodEmojis].moodImg}
                 alt={moodEmojis[mood as keyof typeof moodEmojis].mood}
                 className="w-4 h-4 mb-1"
+                width={24}
+                height={24}
               />
               <span
                 className="text-xs font-semibold"
