@@ -40,6 +40,10 @@ export type NavbarLink = {
   icon: React.ComponentType<{ active?: boolean }>;
   href: string;
 };
+export type NavbarLinksmall = {
+  icon: React.ComponentType<{ active?: boolean }>;
+  href: string;
+};
 export type SidebarLink = {
   icon: React.ComponentType<{ className?: string }>;
   href: string;

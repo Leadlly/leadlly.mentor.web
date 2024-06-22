@@ -6,13 +6,14 @@ interface AvatarProps {
   src?: string;
   alt: string;
   size?: number;
+  className?: string;
 }
 
-const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 38 }) => {
+const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 38,className }) => {
   return (
     <div
-      className="cursor-pointer rounded-full overflow-hidden"
-      style={{ width: size, height: size }}
+    className={`cursor-pointer rounded-full overflow-hidden ${className}`}
+    style={{ width: size, height: size }}
     >
       <Image
         src={src || avatarImg}

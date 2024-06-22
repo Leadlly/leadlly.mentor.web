@@ -5,7 +5,7 @@ import { Student } from "@/helpers/types";
 
 const Students = () => {
   return (
-    <div className="grid grid-cols-5 gap-[30px]">
+    <div className="grid lg:grid-cols-5 md:grid-cols-4 h-[calc(100dvh-120px)]  grid-cols-3 lg:gap-[30px] md:gap-[20px] gap-[10px]">
       {students.map((student: Student) => {
         return (
           <StudentCard
