@@ -57,16 +57,17 @@ const config: Config = {
         },
       },
       boxShadow: {
-        'custom-purple': '#9654F4',
         custom: "0px 17px 37px 0px rgba(165, 92, 255, 0.0)",
         dialog: "0 0 21.5px 2px rgba(0, 0, 0, 0.29)",
-        tracker_subject_overview: "2px 1px 10.5px 0 rgba(151, 83, 245, 0.18), inset 0 0 32px -7px rgba(151, 83, 245, 0.18)",
+        tracker_subject_overview:
+          "2px 1px 10.5px 0 rgba(151, 83, 245, 0.18), inset 0 0 32px -7px rgba(151, 83, 245, 0.18)",
         "custom-inset": "0px -1px 10.8px 0px #9654F424 inset",
-        "custom-point": "3.83px 3.83px 3.83px 0px #FFFFFF inset, -3.83px -3.83px 3.83px 0px #D2D2D2 inset",
+        "custom-point":
+          "3.83px 3.83px 3.83px 0px #FFFFFF inset, -3.83px -3.83px 3.83px 0px #D2D2D2 inset",
         "custom-black": "0px 4px 4px 0px #00000040",
         "custom-quiz": "0px 8px 53.1px -13px #00000014",
-        "custom-back": "inset 1.68px 3.37px 5.31px 0 rgba(0, 0, 0, 0.1)",
-        "custom-message-box": "0px 4px 4px 0px #00000080",
+       "custom-back": "inset 1.68px 3.37px 5.31px 0 rgba(0, 0, 0, 0.1)",
+       "custom-message-box":" 0px 4px 4px 0px #00000080"
       },
       borderRadius: {
         lg: "var(--radius)",
