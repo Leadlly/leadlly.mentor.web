@@ -7,12 +7,13 @@ import { ChatData } from "@/helpers/types";
 
 interface ChatContentProps {
   chatData: ChatData;
+  overrideClass?:string
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ chatData }) => {
+const ChatContent: React.FC<ChatContentProps> = ({ chatData, overrideClass }) => {
   return (
-    <div className="flex flex-col h-full border overflow-hidden">
-      <div className="flex-1 overflow-y-auto custom__scrollbar px-1 md:px-2 py-4">
+    <div className="flex flex-col h-full bg-white w-full justify-center items-center border overflow-hidden">
+      <div className={cn("flex-1 w-full overflow-y-auto custom__scrollbar px-1 md:px-2 py-4", overrideClass)}>
         <div className="text-center my-2">
           <span className="inline-block bg-gray-200 text-gray-700 px-2 py-1 rounded">
             Today
