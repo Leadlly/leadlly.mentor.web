@@ -34,6 +34,7 @@ export interface EfficiencyOption {
   label: string;
   labelClassName: string;
   cardBackgroundColor: string;
+  textColor:string
 }
 export type NavbarLink = {
   label: string;
@@ -115,3 +116,21 @@ export type THeaderProps = {
   icon?: React.ReactNode;
   titleClassName?: string;
 };
+export type Params = {
+  params: {
+    studentId: string;
+  };
+};
+export type InfoItem = {
+  label: string;
+  value: string;
+}
+
+export type InfoBoxProps = {
+  title: string;
+  items: InfoItem[];
+}
+
+export type InfoCardProps = {
+  sections: InfoBoxProps[];
+}

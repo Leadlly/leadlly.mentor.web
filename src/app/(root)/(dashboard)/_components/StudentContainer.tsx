@@ -10,6 +10,7 @@ const StudentContainer = () => {
   const [AscOrder, setAscOrder] = useState<Boolean>(true);
   return (
     <div className="md:h-full h-[570px] lg:w-[980px] md:max-h-[calc(100dvh-140px)] md:mt-0 mt-[5%] overflow-y-auto md:min-h-[calc(100dvh-140px)] text-black md:border-[#D7D7D7] md:border-[2px] p-4 rounded-3xl flex flex-col gap-5">
+
       <div className="flex items-center justify-between w-full">
         <div className="md:flex gap-5 hidden">
           <p>Sort by</p>
@@ -22,7 +23,7 @@ const StudentContainer = () => {
           >
             A<ArrowIcon />Z
             <RoundArrowIcon
-            stroke="#6200EE"
+              stroke="#6200EE"
               className={
                 AscOrder ? "translate-y-1 " : "rotate-180 translate-y-0"
               }

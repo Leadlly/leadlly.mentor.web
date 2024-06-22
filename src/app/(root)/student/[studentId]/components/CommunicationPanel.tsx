@@ -10,7 +10,7 @@ const CommunicationPanel: React.FC = () => {
   return (
     <div className="flex flex-grow flex-col h-full border border-gray-300 rounded-[10px] overflow-hidden max-w-[450px] min-w-[450px]  shadow-lg">
       <TabHeader activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div className="flex-1 bg-white overflow-y-auto">
+      <div className="flex-1 bg-white overflow-y-auto custom__scrollbar">
         {activeTab === "chat" ? (
           <ChatContent
             chatData={{

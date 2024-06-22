@@ -6,7 +6,7 @@ import React from "react";
 
 const MessageInput: React.FC = () => {
   return (
-    <div className="flex items-center gap-1 md:gap-3 border rounded-lg bg-white mt-2 md:mx-2 md:my-4 p-2">
+    <div className="w-full flex items-center gap-1 md:gap-3 border rounded-lg bg-white mt-2 md:mx-2  p-2">
       <button className="text-black/70 px-2">
         <Smile className="cursor-pointer size-4" />
       </button>
