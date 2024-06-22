@@ -1,5 +1,6 @@
 
 import { moodEmojis } from "@/helpers/constants/moodEmojis";
+import Image from "next/image";
 import React from "react";
 
 const MoodOfTheWeek = () => {
@@ -29,7 +30,7 @@ const MoodOfTheWeek = () => {
         {moodData.length > 0 ? (
           moodData.map(({ day, mood }, index) => (
             <div key={day} className="flex flex-col items-center">
-              <img
+              <Image
                 src={moodEmojis[mood as keyof typeof moodEmojis].moodImg}
                 alt={moodEmojis[mood as keyof typeof moodEmojis].mood}
                 className="w-4 h-4 mb-1"
