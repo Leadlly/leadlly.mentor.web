@@ -3,9 +3,9 @@ import CheckBox from "./CheckBox";
 const level = [1, 2, 3, 4, 5];
 const Level = () => {
   return (
-    <div className="w-full flex flex-col gap-3">
-      <h4 className="text-[#7A7A7A] font-medium ">Level</h4>
-      <div className="flex w-full items-center justify-center">
+    <div className="w-full flex flex-col  gap-3">
+      <h4 className="text-[#7A7A7A] text-[18px] font-medium ">Level</h4>
+      <div className="flex w-full ml-[22px] md:ml-0 items-center  md:justify-center">
         <ul className="grid grid-cols-2 gap-2 ">
           {level.map((lvl) => {
             return (

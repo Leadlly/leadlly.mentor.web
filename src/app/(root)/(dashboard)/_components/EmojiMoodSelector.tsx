@@ -6,8 +6,8 @@ import Image from "next/image";
 const EmojiMoodSelector = () => {
   return (
     <div className="w-full flex flex-col gap-3">
-      <h4 className="text-[#7A7A7A] font-medium">Mood</h4>
-      <div className="flex w-full items-center justify-center">
+      <h4 className="text-[#7A7A7A] text-[18px] font-medium">Mood</h4>
+      <div className="flex w-full ml-[22px] md:ml-0 items-center md:justify-center">
         <ul className="grid grid-cols-2 gap-2">
           {Object.keys(moodEmojis).map((mood) => {
             const option = moodEmojis[  mood as keyof typeof moodEmojis];

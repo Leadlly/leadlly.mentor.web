@@ -9,9 +9,10 @@ import Students from "./Students";
 const StudentContainer = () => {
   const [AscOrder, setAscOrder] = useState<Boolean>(true);
   return (
-    <div className=" h-full w-[980px]   custom__scrollbar max-h-[calc(100dvh-140px)] overflow-y-auto min-h-[calc(100dvh-140px)] text-black border-[#D7D7D7] border-[2px] p-4 rounded-3xl flex flex-col gap-5">
+    <div className="md:h-full h-[570px] lg:w-[980px] md:max-h-[calc(100dvh-140px)] md:mt-0 mt-[5%] overflow-y-auto md:min-h-[calc(100dvh-140px)] text-black md:border-[#D7D7D7] md:border-[2px] p-4 rounded-3xl flex flex-col gap-5">
+
       <div className="flex items-center justify-between w-full">
-        <div className="flex gap-5">
+        <div className="md:flex gap-5 hidden">
           <p>Sort by</p>
           <button
             id="sort"
@@ -29,7 +30,9 @@ const StudentContainer = () => {
             />
           </button>
         </div>
+        <div className="md:block hidden">
         <SearchBar />
+        </div>
       </div>
       <Students />
     </div>

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import SearchBar from "../(dashboard)/_components/SearchBar";
 import Image from "next/image";
 
+
 const chatPageTabs = [
     {
       title: "Group Chat",
@@ -110,7 +111,9 @@ const page = () => {
                             <div className="flex items-center justify-between mb-0.5 bg-white border rounded-md min-h-fit"
                             key= {profile.id}
                             >
+
                         <Image alt="student" src={profile.url} className="w-8 h-8 rounded-full ml-2 my-2"/>
+
                      <label htmlFor="everyone" className="ml-2">{profile.name}</label>
                      <input type="radio" id="everyone" className="mr-2" value="select members"/>    
                      </div>
