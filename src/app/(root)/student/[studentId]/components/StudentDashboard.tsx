@@ -6,8 +6,9 @@ import SubjectStreak from "./TotalStreak";
 import DailyReport from "./DailyReport";
 import SubjectProgress from "./SubjectProgress";
 import ProgressAnalytics from "./ProgressAnalytics";
+import Link from "next/link";
 
-export default function StudentDashboard() {
+export default function StudentDashboard({studentId}:{studentId:string}) {
   return (
     <div className="bg-[#E8E3F063] py-2 px-4 border-[#DDDDDD] border-[1px] rounded-tr-2xl max-w-[680px] min-w-[680px] ">
       <div className="bg-[#CDAAFF] rounded-t-2xl flex  px-7 pt-6 pb-2 justify-between">
@@ -18,6 +19,12 @@ export default function StudentDashboard() {
               John Musk
             </div>
             <div className="text-white font-semibold text-base">Class: 9th</div>
+            <Link
+              href={`/student-profile/${studentId}`}
+              className="bg-white text-xs font-semibold text-[#9654F4] px-[5px] py-[1px] rounded"
+            >
+              view profile
+            </Link>
           </div>
         </div>
         <PointsBox />
@@ -27,10 +34,10 @@ export default function StudentDashboard() {
         <SubjectStreak />
       </div>
       <div className="flex gap-2 pt-1 mb-3">
-        <DailyReport/>
-        <SubjectProgress/>
+        <DailyReport />
+        <SubjectProgress />
       </div>
-      <ProgressAnalytics/>
+      <ProgressAnalytics />
     </div>
   );
 }

@@ -87,3 +87,9 @@ export const quizzesTabs = [
     href: "/attempted",
   },
 ];
+export const profileTabs = [
+  {
+    id: "personal info",
+    label: "personal info",
+  },
+];

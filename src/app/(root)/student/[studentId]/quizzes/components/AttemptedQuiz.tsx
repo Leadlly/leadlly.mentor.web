@@ -51,7 +51,7 @@ const AttemptedQuiz = ({
         </div>
         <div className="flex flex-col justify-center gap-2 ">
           <div
-            className={`text-white text-xs text-center font-semibold rounded-[5px] py-[5px] px-3 ${
+            className={` text-xs text-center font-semibold rounded-[5px] py-[5px] px-3 ${
               status === "Pending"
                 ? "bg-[#9654F4]"
                 : "text-[#34C759] border-[2px] font-medium text-xs  border-[#34C759]"

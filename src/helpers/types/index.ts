@@ -112,3 +112,21 @@ export type THeaderProps = {
   icon?: React.ReactNode;
   titleClassName?: string;
 };
+type Params = {
+  params: {
+    studentId: string;
+  };
+};
+export type InfoItem = {
+  label: string;
+  value: string;
+}
+
+export type InfoBoxProps = {
+  title: string;
+  items: InfoItem[];
+}
+
+export type InfoCardProps = {
+  sections: InfoBoxProps[];
+}

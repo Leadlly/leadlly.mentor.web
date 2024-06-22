@@ -95,6 +95,7 @@ const config: Config = {
           "3.83px 3.83px 3.83px 0px #FFFFFF inset, -3.83px -3.83px 3.83px 0px #D2D2D2 inset",
         "custom-black": "0px 4px 4px 0px #00000040",
         "custom-quiz": "0px 8px 53.1px -13px #00000014",
+       "custom-back": "inset 1.68px 3.37px 5.31px 0 rgba(0, 0, 0, 0.1)"
       },
     },
   },
