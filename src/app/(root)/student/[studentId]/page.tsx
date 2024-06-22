@@ -1,4 +1,5 @@
-import { Params } from "next/dist/shared/lib/router/utils/route-matcher";
+
+import { Params } from "@/helpers/types";
 import CommunicationPanel from "./components/CommunicationPanel";
 import StudentDashboard from "./components/StudentDashboard";
 

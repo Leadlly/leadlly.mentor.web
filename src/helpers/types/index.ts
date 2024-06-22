@@ -112,7 +112,7 @@ export type THeaderProps = {
   icon?: React.ReactNode;
   titleClassName?: string;
 };
-type Params = {
+export type Params = {
   params: {
     studentId: string;
   };
