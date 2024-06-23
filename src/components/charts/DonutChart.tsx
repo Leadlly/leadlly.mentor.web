@@ -1,5 +1,6 @@
 "use client";
 
+import { color } from "framer-motion";
 import dynamic from "next/dynamic";
 
 const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
@@ -31,14 +32,21 @@ const DonutChart = () => {
                         show: true,
                         value: {
                           fontWeight: 700,
-                          fontFamily: "Mada,sans-serif",
+                          fontFamily: "Mada, sans-serif",
                           fontSize: "20px",
-                          color: "#000000",
+                          color: "#000000", // Default label color
                           offsetY: 0,
                         },
                       },
+                      width: 80, // Adjust the width of the donut chart
+                      borderWidth: 2, // Adjust the border width of the slices
+                      borderColor: "transparent", // Set the border color to transparent
                     },
                   },
+                },
+                stroke: {
+                  width: 0, // Remove stroke on small screens
+                  color: "transparent"
                 },
               },
             },
@@ -49,10 +57,8 @@ const DonutChart = () => {
           dataLabels: {
             enabled: false,
           },
-          colors: ["#9654f4", "#72EFDD", "#FFDA57"],
-          stroke: {
-            width: 3,
-          },
+          colors: ["#9654f4", "#72EFDD", "#FFDA57"], // Segment colors
+
           plotOptions: {
             pie: {
               donut: {
@@ -60,15 +66,15 @@ const DonutChart = () => {
                   show: true,
                   value: {
                     fontWeight: 700,
-                    fontFamily: "Mada,sans-serif",
+                    fontFamily: "Mada, sans-serif",
                     fontSize: "24px",
-                    color: "#000000",
+                    color: "#000000", // Default label color
                     offsetY: 0,
                   },
                   total: {
                     show: true,
                     color: "#4f4f4f",
-                    fontFamily: "Mada,sans-serif",
+                    fontFamily: "Mada, sans-serif",
                     fontSize: "8px",
                     label: "Total Value",
                     formatter: function (w) {

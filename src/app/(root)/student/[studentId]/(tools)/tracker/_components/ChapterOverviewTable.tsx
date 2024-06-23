@@ -100,27 +100,27 @@ const ChapterOverviewTable = ({
             <p className="text-center text-lg py-5 hidden lg:block lg:border-b-2">
               Chapter Overview
             </p>
-            <div className="flex-1 bg-primary/10 rounded-xl border border-primary lg:px-3 lg:py-5 flex lg:flex-col justify-center lg:justify-between items-center gap-5 mt-2">
+            <div className="flex-1 md:bg-primary/10 bg-custom-gradient rounded-xl border md:border-primary border-[#DCC6FA85] md:shadow-none shadow-donut lg:px-3 lg:py-5 flex lg:flex-col justify-center lg:justify-between items-center gap-5 mt-2">
               <div className="h-full lg:h-40 mt-5 lg:mt-0">
                 <DonutChart />
               </div>
 
               <div className="flex flex-col gap-y-2 lg:-mt-5">
                 <div className="flex items-center gap-2">
-                  <span className="w-[9px] h-[9px] rounded-full bg-primary"></span>
-                  <span className="text-[9px] font-medium leading-none">
-                    Revision Completion - <span className="font-bold">80%</span>
+                  <span className="w-[12px] h-[12px] md:w-[9px] md:h-[9px] rounded-full bg-[#9654F4]"></span>
+                  <span className="md:text-[9px] text-[12px] font-semibold md:font-medium leading-none">
+                    Revision Completion - <span className="text-[12px] md:text-[9px] font-bold">80%</span>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-[9px] h-[9px] rounded-full bg-[#72EFDD]"></span>
-                  <span className="text-[9px] font-medium leading-none">
+                  <span className="w-[12px] h-[12px] md:w-[9px] md:h-[9px] rounded-full bg-[#72EFDD]"></span>
+                  <span className="md:text-[9px] text-[12px] font-semibold md:font-medium leading-non">
                     Total Efficiency - <span className="font-bold">60%</span>
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-[9px] h-[9px] rounded-full bg-[#FFDA57]"></span>
-                  <span className="text-[9px] font-medium leading-none">
+                  <span className="w-[12px] h-[12px] md:w-[9px] md:h-[9px] rounded-full bg-[#FFDA57]"></span>
+                  <span className="md:text-[9px] text-[12px] font-semibold md:font-medium leading-non">
                     No. of Questions Solved -{" "}
                     <span className="font-bold">70%</span>
                   </span>
@@ -135,7 +135,7 @@ const ChapterOverviewTable = ({
             </p>
 
             <Button
-              className="h-6 bg-primary/[0.12] hover:bg-primary/[0.16] text-primary text-xs leading-none font-semibold"
+              className="h-6 bg-[#9654F41F] hover:bg-primary/[0.16] text-[#9654F4] rounded-[4.5px] text-xs leading-none font-semibold"
               onClick={onViewMoreButtonClickHandler}>
               View More
             </Button>

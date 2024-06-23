@@ -12,6 +12,7 @@ const config: Config = {
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic": "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        'custom-gradient': 'linear-gradient(170.71deg, rgba(233, 218, 255, 0.2) -11.84%, rgba(205, 170, 255, 0.2) 97.81%)',
       },
       dropShadow: {
         "custom-user-chat": "1.67px 4.6px 4.35px 0px #CFB0FA1F",
