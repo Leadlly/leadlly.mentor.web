@@ -3,7 +3,7 @@ import { Progress } from "@/components/ui/progress";
 
 const SubjectOverview = () => {
   return (
-    <div className="rounded-xl px-5 py-4">
+    <div className="md:rounded-xl md:bg-white bg-[#F8F2FE] px-5 py-4">
       {/* ===== LARGE DEVICE LAYOUT ====== */}
       <div className="hidden lg:flex flex-col items-center gap-4">
         <div className="flex flex-col border shadow-lg rounded-[14px] overflow-y-auto items-center w-full h-full">
@@ -60,11 +60,14 @@ const SubjectOverview = () => {
       {/* ===== SMALL DEVICE LAYOUT ====== */}
       <div className="lg:hidden flex flex-col space-y-3">
         <div>
+        <h4 className="leading-none text-[18px] font-bold mb-[25px]">
+            Subject Overview
+          </h4>
           <h4 className="leading-none text-sm font-medium mb-1">
             Revision Completion
           </h4>
           <div className="flex items-center gap-4">
-            <Progress value={75} className="h-2" />
+            <Progress value={75} className="h-2" indicatorClassName="bg-[#9654F4]"/>
             <p className="leading-none text-lg font-semibold">75%</p>
           </div>
         </div>
