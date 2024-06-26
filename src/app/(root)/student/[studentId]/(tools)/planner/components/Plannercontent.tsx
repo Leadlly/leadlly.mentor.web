@@ -25,7 +25,17 @@ const Plannercontent = ({ weekstopic }: { weekstopic: TweeksTopic[] }) => {
   };
 
   return (
-    <div className='border border-[#9898988A] h-[calc(100dvh-120px)] custom__scrollbar overflow-y-auto rounded-[6px] shadow-md px-[3%] pt-[3%]'>
+    <div className='md:border md:border-[#9898988A] mb-[20px] md:mb-[0px] h-[calc(100dvh-120px)] custom__scrollbar overflow-y-auto rounded-[6px] shadow-md px-[3%] pt-[3%]'>
+      <div className='mb-[41px]'>
+        <button className='text-[16px] flex justify-center gap-[10px] items-center font-medium text-white bg-[#CDAAFF] rounded-[4px] py-[3px] px-[10px]'>
+          <p>Add Revision sessions</p>
+          <div className='border border-[#6200EE] rounded-[9999px]'>
+          <Plus className='text-[#6200EE] w-[12px] h-[12px] font-bold'/>
+          </div>
+          
+          </button>
+        
+      </div>
       {weekstopic.map((datecard, dateIndex) => (
         <div key={datecard.date} className="mb-[1%]">
           <div className='bg-[#F0E5FF] flex justify-between px-[3%] text-[16px] py-[1%] font-bold border rounded-t-[6px] border-b-0 border-[#DFDBDB]'>
@@ -38,8 +48,8 @@ const Plannercontent = ({ weekstopic }: { weekstopic: TweeksTopic[] }) => {
               <Trash2 className='text-[#6200EE] bg-white rounded-[9999%] p-[1.5%]' />
             </div>
           </div>
-          <div className='bg-[#F5EFFF] border py-[0.9%] flex justify-center rounded-b-[6px] border-[#DFDBDB]'>
-            <div className='flex justify-between gap-[41px]'>
+          <div className='bg-[#F5EFFF] w-full border py-[0.9%] mb-[11px] flex justify-center rounded-b-[6px] border-[#DFDBDB]'>
+            <div className='flex overflow-x-auto mx-[10px] md:mx-[0px] my-[11px] md:my-[0px] no-scrollbar justify-between md:gap-[41px] gap-[21px]'>
               {datecard.topics.map((topic, topicIndex) => (
                 visibleTopics[dateIndex][topicIndex] && (
                   <div key={topicIndex} className='bg-[#E2D0FF] flex p-[8px] rounded-[9px] relative'>

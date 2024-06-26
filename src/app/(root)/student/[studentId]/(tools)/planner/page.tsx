@@ -77,11 +77,11 @@ export default function page() {
     },
   ]
   return (
-    <div className='flex flex-col justify-start h-[calc(100dvh-120px)] gap-3 pt-16 md:pt-0'>
-      <div className='bg-[#E8DAFE] py-[2%] px-[1.8%] rounded-[7px] flex justify-between items-center'>
+    <div className='flex flex-col justify-start h-[calc(100dvh-120px)] gap-3 md:pt-0'>
+      <div className='md:bg-[#E8DAFE] md:shadow-none shadow-md shadow-inner-outer pl-[14px] md:pl-[0px] py-[2%] px-[1.8%] md:rounded-[7px] flex md:flex justify-between items-center'>
         <Header
         title="Planner"
-        titleClassName="text-xl md:text-3xl lg:text-[30px]"
+        titleClassName="text-[24px] md:text-3xl lg:text-[30px]"
       />
       <WeekPicker/>
       </div>

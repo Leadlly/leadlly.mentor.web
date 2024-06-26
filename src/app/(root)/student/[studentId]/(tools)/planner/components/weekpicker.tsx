@@ -24,16 +24,16 @@ const CustomPickersDay = styled(PickersDay, {
 })<CustomPickerDayProps>(({ theme, isSelected, isHovered, day }) => ({
   borderRadius: 0,
   ...(isSelected && {
-    backgroundColor: '#9654F4', // Updated color for selected
+    backgroundColor: '#9654F4', 
     color: theme.palette.primary.contrastText,
     '&:hover, &:focus': {
-      backgroundColor: '#E8DAFE', // Updated color for hover
+      backgroundColor: '#E8DAFE', 
     },
   }),
   ...(isHovered && {
-    backgroundColor: '#E8DAFE', // Updated color for hover
+    backgroundColor: '#E8DAFE', 
     '&:hover, &:focus': {
-      backgroundColor: '#E8DAFE', // Updated color for hover
+      backgroundColor: '#E8DAFE', 
     },
   }),
   ...(day.day() === 0 && {
@@ -96,13 +96,23 @@ export default function WeekPicker() {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
+    <div className='md:h-full'>
+      <LocalizationProvider  dateAdapter={AdapterDayjs}>
+      <div className='md:block hidden'>
       <TextField
         value={getWeekDisplay(value)}
         onClick={handleClick}
         label="Select Week"
         variant="outlined"
       />
+      </div>
+      <div className='md:hidden'>
+      <TextField
+        value={getWeekDisplay(value)}
+        onClick={handleClick}
+        className='md:w-full'
+      />
+      </div>
       <Popover
         id={id}
         open={open}
@@ -136,5 +146,7 @@ export default function WeekPicker() {
         </Box>
       </Popover>
     </LocalizationProvider>
+    </div>
+    
   );
 }

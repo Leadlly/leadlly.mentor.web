@@ -64,7 +64,7 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
-    <nav className="h-20 shadow-md lg:hidden items-center flex w-full bg-[#E9DBFD] md:rounded-[60px] justify-between px-10 items-center">
+    <nav className="h-16 shadow-md lg:hidden items-center flex w-full bg-[#E9DBFD] md:rounded-[60px] justify-between px-10 items-center">
       <Link className="cursor-pointer" href="/">
         <Image src={SmallIcon} width={22} height={22} alt="small"/>
       </Link>
