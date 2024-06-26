@@ -22,7 +22,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ chatData, overrideClass }) =>
         <div className="flex flex-col space-y-4">
           {chatData.messages.map((message, index) => (
             <div
-              className={cn(
+              className={cn(  
                 "flex ",
                 message.sender === "mentor" ? "justify-end" : "justify-start"
               )}
