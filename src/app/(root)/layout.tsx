@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={cn("font-sans antialiased", fontSans.variable)}>
         <StoreProvider>
-          <Container className="py-3 flex items-start gap-3 flex-col h-screen overflow-hidden
+          <Container className="md:py-3 flex items-start gap-3 flex-col h-screen overflow-hidden
           ">
             {/*h-screen overflow-hidden*/}
             <Navbar></Navbar>

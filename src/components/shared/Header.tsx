@@ -10,7 +10,7 @@ const Header = ({
   return (
     <header
       className={cn(
-        "w-full text-page-title text-[#727272] leading-none font-semibold flex items-center justify-between",
+        "md:w-full text-page-title text-[#727272] leading-none font-semibold flex items-center justify-between",
         className
       )}>
       <h2 className={cn(titleClassName)}>{title}</h2>

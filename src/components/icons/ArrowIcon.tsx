@@ -3,8 +3,8 @@ import React from "react";
 const ArrowIcon = () => {
   return (
     <svg
-      width="13"
-      height="10"
+      width="9"
+      height="9"
       viewBox="0 0 13 10"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

@@ -34,7 +34,7 @@ const FilterBox = () => {
       </div>
       
       <div className="block md:hidden">
-        <div className="bg-box py-5 shadow-lg min-w-[200px] flex flex-col gap-8 text-2xl">
+        <div className="bg-box py-[4px] shadow-lg min-w-[200px] flex flex-col gap-8 text-2xl">
           <Link href="/filterboxsmall" className="text-[#4D4D4D] text-center flex items-center justify-center gap-2 w-full text-[16px] font-regular">
             <p>Filter</p>
             <SlidersHorizontal className="w-[16px]"/>
@@ -42,12 +42,12 @@ const FilterBox = () => {
              <p>Sort by</p>
              <button
                id="sort"
-               className="flex justify-center gap-1 shadow-md items-center bg-[#F0EEEE] rounded px-2"
+               className="flex justify-center gap-1 shadow-md items-center bg-[#F0EEEE] text-[9px] md:text-[12px] rounded px-2"
                onClick={() => {
                  setAscOrder((order) => !order);
                }}
              >
-               A<ArrowIcon />Z
+               A<ArrowIcon/>Z
                <RoundArrowIcon
                stroke="#6200EE"
                  className={
