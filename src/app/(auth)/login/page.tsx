@@ -31,7 +31,6 @@ const Login = () => {
   });
 
   const onFormSubmit = (data: z.infer<typeof signInSchema>) => {
-    console.log(errors);
 
     console.log(data);
   };
