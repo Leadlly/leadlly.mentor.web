@@ -36,12 +36,10 @@ const SignUp = () => {
 
   const onFormSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
-    console.log(data,"is the data")
+    console.log(data, "is the data");
     try {
-      const response = await apiClient.post(
-        "/api/auth/register",data
-      );
-      const responseData =  response.data;
+      const response = await apiClient.post("/api/auth/register", data);
+      const responseData = response.data;
 
       toast.success("Registration successful.", {
         description: responseData.message,
@@ -92,7 +90,8 @@ const SignUp = () => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onFormSubmit)}
-                className="space-y-4">
+                className="space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="name"
@@ -103,7 +102,6 @@ const SignUp = () => {
                           placeholder="Enter full name"
                           icon1={<User className="w-5 h-5 opacity-70" />}
                           className="focus-visible:ring-0 text-lg focus:ring-offset-0"
-                          
                           {...field}
                         />
                       </FormControl>
@@ -121,7 +119,6 @@ const SignUp = () => {
                           placeholder="Enter your email"
                           icon1={<Mail className="w-5 h-5 opacity-70" />}
                           className="focus-visible:ring-0 text-lg focus:ring-offset-0"
-                          
                           {...field}
                         />
                       </FormControl>
@@ -142,9 +139,8 @@ const SignUp = () => {
                           icon2={
                             <div
                               className="cursor-pointer"
-                              onClick={() =>
-                                setTogglePassword(!togglePassword)
-                              }>
+                              onClick={() => setTogglePassword(!togglePassword)}
+                            >
                               {togglePassword ? (
                                 <EyeOff className="w-5 h-5 opacity-70" />
                               ) : (
@@ -153,7 +149,6 @@ const SignUp = () => {
                             </div>
                           }
                           className="focus-visible:ring-0 text-lg focus:ring-offset-0"
-                          
                           {...field}
                         />
                       </FormControl>
@@ -164,8 +159,9 @@ const SignUp = () => {
 
                 <Button
                   type="submit"
-                  className="w-full text-[17px] bg-[#9652f4] text-white md:text-xl lg:h-12 py-[6px] rounded-[10px]"
-                  disabled={isSubmitting}>
+                  className="w-full text-[17px] bg-[#9652f4] hover:bg-[#9652f4]/80 text-white md:text-xl lg:h-12 py-[6px] rounded-[10px]"
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? (
                     <span className="flex items-center">
                       <Loader2 className="mr-2 w-5 h-5 animate-spin" /> Signing
