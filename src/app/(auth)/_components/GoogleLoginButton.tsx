@@ -3,6 +3,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import apiClient from "@/apiClient/apiClient";
 
 const GoogleLoginButton = () => {
   const router = useRouter();
@@ -10,7 +11,15 @@ const GoogleLoginButton = () => {
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
       try {
-        console.log("working")
+        const res = await apiClient.post("/api/google/auth", {
+          access_token: credentialResponse.access_token,
+        });
+
+        toast.success("Login success", {
+          description: res.data.message,
+        });
+
+        router.replace("/");
       } catch (error: any) {
         console.error("Axios error:", error);
         toast.error("Google login failed!", {
