@@ -44,7 +44,7 @@ const SignUp = () => {
       toast.success("Registration successful.", {
         description: responseData.message,
       });
-
+      localStorage.setItem("email", data.email)
       router.replace("/verify");
     } catch (error: any) {
       toast.error("Error registering user.", {

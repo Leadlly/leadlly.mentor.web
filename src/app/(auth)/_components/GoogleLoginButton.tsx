@@ -34,7 +34,7 @@ const GoogleLoginButton = () => {
       });
     },
   });
-
+  
   return (
     <Button
       type="button"

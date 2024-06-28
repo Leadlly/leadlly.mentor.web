@@ -45,9 +45,11 @@ const Verify = () => {
   const onOTPSubmit = async (data: z.infer<typeof OTPFormSchema>) => {
     setIsVerifying(true);
     console.log(data,"your entered otp")
+
+    const email = localStorage.getItem("email")
     try {
       const response = await apiClient.post(
-        "/api/auth/verify", data
+        "/api/auth/verify", {otp: data.otp, email}
       );
 
       const responseData = await response.data;
@@ -55,7 +57,7 @@ const Verify = () => {
       toast.success("OTP verified successfully", {
         description: responseData.message,
       });
-
+      localStorage.removeItem("email")
       router.replace("/");
     } catch (error: any) {
       toast.error("Error verifying OTP.", {
