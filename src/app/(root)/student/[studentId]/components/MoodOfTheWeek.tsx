@@ -26,7 +26,7 @@ const MoodOfTheWeek = () => {
       <h2 className="text-end text-sm text-[#979797] font-bold mb-2">
         Mood of the week
       </h2>
-      <div className="flex justify-around items-center rounded p-3   bg-white">
+      <div className="flex justify-around items-center rounded p-3 bg-[#F1E7FF] lg:bg-white">
         {moodData.length > 0 ? (
           moodData.map(({ day, mood }, index) => (
             <div key={day} className="flex flex-col items-center">

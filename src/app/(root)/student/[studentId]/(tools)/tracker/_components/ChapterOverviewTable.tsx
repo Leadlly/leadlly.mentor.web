@@ -46,7 +46,7 @@ const ChapterOverviewTable = ({
                   </tr>
                 </thead>
 
-                <tbody>
+                <tbody className="">
                   {chapterData.topics.map((item) => (
                     <tr key={item.title}>
                       <td className="text-xs md:text-base pt-5 px-1.5 lg:px-3">

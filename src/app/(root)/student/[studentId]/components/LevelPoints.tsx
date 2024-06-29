@@ -74,7 +74,7 @@ const LevelPoints = ({
             <RoundArrowIcon stroke={progressIconStroke } className="rotate-180"/>
             <span
               className={cn(
-                "text-[9px] font-bold mt-[0.5px]",
+                "md:text-[9px] text-[4px] font-bold mt-[0.5px]",
                 pointsProgressTextColor
               )}
             >
@@ -90,7 +90,7 @@ const LevelPoints = ({
               <span>Feb12</span>
             </div>
 
-            <p className="text-[7.5px] text-black font-semibold -mt-1">
+            <p className="md:text-[7.5px] text-[4px] text-black font-semibold -mt-1">
               Good Work!
             </p>
           </>

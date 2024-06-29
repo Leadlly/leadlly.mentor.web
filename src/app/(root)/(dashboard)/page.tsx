@@ -9,7 +9,7 @@ const page = () => {
       <FilterBox />
       <div className="md:mx-0 mx-[14px]">
       <div className="md:hidden">
-      <SearchBar/>
+      <SearchBar className="text-[20px]"/>
       </div>
       <StudentContainer />
       </div>

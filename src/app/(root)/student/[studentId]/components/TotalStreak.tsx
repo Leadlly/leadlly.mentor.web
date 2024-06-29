@@ -14,7 +14,7 @@ const subjects = [
       <h2 className="text-end text-sm text-[#979797] font-bold mb-2">
         Total Streaks 30
       </h2>
-      <div className="flex justify-around items-center rounded p-1 bg-white">
+      <div className="flex justify-around items-center rounded p-1 bg-[#F1E7FF] lg:bg-white">
         {subjects.length > 0 ? (
           subjects.map(({ name, streak }, index) => (
             <div key={name} className="flex flex-col items-center">
