@@ -2,17 +2,18 @@ import SearchIcon from "@/components/icons/SearchIcon";
 import React from "react";
 import { cn } from "@/lib/utils";
 
-interface searchBarProps{
-   className?:string,
+interface SearchBarProps {
+  className?: string;
 }
-const SearchBar = ({className}:searchBarProps) => {
+
+const SearchBar = ({ className }: SearchBarProps) => {
   return (
-    <div className="flex md:mb-0 text-[10px] md:text-[20px] mb-[2%] rounded-[5%] md:rounded-[1%] justify-start items-center gap-5 shadow-md bg-[#F1F1F1] rounded-md md:p-[7px] py-[4px] px-5 md:min-w-96">
-      <SearchIcon/>
+    <div className={cn("flex md:mb-0 mb-[2%] justify-start items-center gap-5 shadow-md bg-[#F1F1F1] md:p-[7px] py-[4px] px-5", className)}>
+      <SearchIcon />
       <input
         placeholder="Search by student Name"
         className="outline-none bg-transparent"
-      ></input>
+      />
     </div>
   );
 };

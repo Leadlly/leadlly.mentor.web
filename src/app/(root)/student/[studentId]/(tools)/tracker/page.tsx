@@ -21,7 +21,7 @@ const Tracker = ({
       <div className="flex w-[830px] flex-col gap-y-4">
       <Header
         title="Tracker"
-        titleClassName="text-xl md:text-3xl lg:text-page-title"
+        titleClassName="text-xl md:w-full md:bg-[#F3F1F1] md:py-[8px] md:px-[10px] md:text-3xl lg:text-[32px]"
       />
       
       <div className="h-full overflow-y-auto custom__scrollbar pr-3 mb-16 md:mb-0">
