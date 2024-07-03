@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
+import { signUpUser } from "@/actions/user_actions";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -36,16 +36,17 @@ const SignUp = () => {
 
   const onFormSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
-    console.log(data, "is the data");
-    try {
-      const response = await apiClient.post("/api/auth/register", data);
-      const responseData = response.data;
 
-      toast.success("Registration successful.", {
-        description: responseData.message,
-      });
-      localStorage.setItem("email", data.email)
-      router.replace("/verify");
+    try {
+      const responseData = await signUpUser(data);
+
+      if (responseData.success) {
+        toast.success(responseData.message);
+        localStorage.setItem("email", data.email);
+        router.replace("/verify");
+      } else {
+        toast.error(responseData.message);
+      }
     } catch (error: any) {
       toast.error("Error registering user.", {
         description: error.message,

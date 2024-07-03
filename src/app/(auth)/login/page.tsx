@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useAppDispatch } from "@/redux/hooks";
+import { getUser } from "@/actions/user_actions";
+import { userData } from "@/redux/slices";
 import { useRouter } from "next/navigation";
 
 import { signInSchema } from "@/schemas/signInSchema";
@@ -32,6 +35,7 @@ const Login = () => {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
@@ -41,21 +45,39 @@ const Login = () => {
     },
   });
 
-
   const onFormSubmit = async (data: z.infer<typeof signInSchema>) => {
     setIsLoggingIn(true);
 
-
     try {
-      const response = await apiClient.post("/api/auth/login", data);
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-      toast.success(response.data.message);
+      const userDataInfo = await getUser();
 
-      router.replace("/");
+      dispatch(userData(userDataInfo?.user));
+      if (response.ok) {
+        const responseData = await response.json();
+        toast.success(responseData.message);
+
+        router.replace("/");
+      } else {
+        const errorData = await response.json();
+        toast.error("Login Failed", {
+          description: errorData.message,
+        });
+      }
     } catch (error: any) {
-      console.log(error, "hello");
+      console.log(error);
+
       toast.error("Login Failed", {
-        description: error.message,
+        description: error.response
+          ? error.response?.data.message
+          : error.message,
       });
     } finally {
       setIsLoggingIn(false);
