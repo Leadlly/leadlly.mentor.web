@@ -1,5 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { useGoogleLogin } from "@react-oauth/google";
+import { useAppDispatch } from "@/redux/hooks";
+import axios from "axios";
+import { getUser } from "@/actions/user_actions";
+import { userData } from "@/redux/slices";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -7,19 +11,33 @@ import apiClient from "@/apiClient/apiClient";
 
 const GoogleLoginButton = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
 
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
       try {
-        const res = await apiClient.post("/api/google/auth", {
-          access_token: credentialResponse.access_token,
-        });
+        const res = await axios.post("/api/google/auth", {
+          access_token: credentialResponse.access_token
+        },{
+          withCredentials: true, 
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+        const userInfo = await getUser();
+        dispatch(userData(userInfo.user));
 
         toast.success("Login success", {
           description: res.data.message,
         });
 
-        router.replace("/");
+        if (res.status === 201) {
+          router.replace("/initial-info");
+        } else {
+          router.replace("/");
+        }
       } catch (error: any) {
         console.error("Axios error:", error);
         toast.error("Google login failed!", {
@@ -34,6 +52,7 @@ const GoogleLoginButton = () => {
       });
     },
   });
+
   
   return (
     <Button
