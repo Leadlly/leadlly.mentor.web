@@ -69,7 +69,7 @@ const Verify = () => {
         });
 
         localStorage.removeItem("email");
-        router.replace("/initial-info");
+        router.replace("/");
       } else {
         const errorData = await response.json();
         toast.error(errorData.message);

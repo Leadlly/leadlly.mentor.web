@@ -5,6 +5,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import "../globals.css";
 import { cn } from "@/lib/utils";
 import StoreProvider from "@/app/StoreProvider";
+import { Toaster } from "sonner";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -25,6 +26,7 @@ export default function AuthLayout({
         <div className={cn("h-main-height", fontSans.variable)}>
           {children}
         </div>
+        <Toaster richColors position="top-center" />
       </StoreProvider>
     </GoogleOAuthProvider>
       </body>

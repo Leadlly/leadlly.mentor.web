@@ -30,5 +30,12 @@ function getTokenFromStorage(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: [
+    "/login",
+    "/signup",
+    "/verify",
+    "/resetpassword/:path*",
+    "/forgot-password",
+    "/",
+  ],
 };

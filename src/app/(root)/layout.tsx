@@ -5,6 +5,7 @@ import StoreProvider from "@/app/StoreProvider";
 import { Container } from "@/components";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/shared/Navbar";
+import { Toaster } from "sonner";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -29,6 +30,7 @@ export default function RootLayout({
             <Navbar></Navbar>
             <main className="flex-1 h-main-height w-full">{children}</main>
           </Container>
+          <Toaster richColors position="top-center" />
         </StoreProvider>
       </body>
     </html>
