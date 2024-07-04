@@ -26,12 +26,16 @@ export async function middleware(request: NextRequest) {
 
   if (token && !isPublicPath) {
     try {
-      const user = await getUser(); 
+      const userData = await getUser(); 
 
-      if (user && user.status === "Verified") {
-        return NextResponse.redirect(new URL("/", request.nextUrl)); 
-      } else {
-        return NextResponse.next(); 
+      const isVerified = userData.user.status === "Verified"
+
+      if (!isVerified && path !== "/status") {
+        return NextResponse.redirect(new URL("/status", request.nextUrl));
+      }
+  
+      if (isVerified && path === "/status") {
+        return NextResponse.redirect(new URL("/", request.nextUrl));
       }
     } catch (error) {
       console.error("Error fetching user data:", error);
@@ -55,5 +59,6 @@ export const config = {
     "/resetpassword/:path*",
     "/forgot-password",
     "/",
+    "/status"
   ],
 };
