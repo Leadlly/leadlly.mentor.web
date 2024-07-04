@@ -30,11 +30,11 @@ export async function middleware(request: NextRequest) {
 
       const isVerified = userData.user.status === "Verified"
 
-      if (!isVerified && path !== "/status") {
-        return NextResponse.redirect(new URL("/status", request.nextUrl));
+      if (!isVerified && path !== "/Status") {
+        return NextResponse.redirect(new URL("/Status", request.nextUrl));
       }
   
-      if (isVerified && path === "/status") {
+      if (isVerified && path === "/Status") {
         return NextResponse.redirect(new URL("/", request.nextUrl));
       }
     } catch (error) {

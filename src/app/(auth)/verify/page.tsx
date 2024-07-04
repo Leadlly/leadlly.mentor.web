@@ -69,7 +69,7 @@ const Verify = () => {
         });
 
         localStorage.removeItem("email");
-        router.replace("/status");
+        router.replace("/Status");
       } else {
         const errorData = await response.json();
         toast.error(errorData.message);
@@ -78,7 +78,7 @@ const Verify = () => {
       toast.error("Account verification failed!", {
         description: error.response.data.message,
       });
-      router.replace("/status");
+      router.replace("/Status");
     } finally {
       setIsVerifying(false);
     }

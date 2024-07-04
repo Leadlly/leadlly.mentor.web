@@ -134,6 +134,7 @@ export type InfoBoxProps = {
 export type InfoCardProps = {
   sections: InfoBoxProps[];
 }
+
 export type UserDataProps = {
   firstname: string;
   lastname?: string;
