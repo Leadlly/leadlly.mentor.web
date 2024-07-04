@@ -64,7 +64,7 @@ const Login = () => {
         const responseData = await response.json();
         toast.success(responseData.message);
 
-        router.replace("/");
+        router.replace("/Status");
       } else {
         const errorData = await response.json();
         toast.error("Login Failed", {
