@@ -1,4 +1,11 @@
 import React, { SVGProps } from "react";
+import mongoose from 'mongoose';
+
+// Define the IGMeet interface
+export interface IGMeet {
+  meetingId: string;
+  meetingUrl: string;
+}
 
 export type TContainerProps = {
   children: React.ReactNode;
@@ -143,69 +150,25 @@ export type UserDataProps = {
     personal?: number;
     other?: number;
   };
-
-  password: string;
+  password?: string;
+  salt?: string;
   avatar?: {
     public_id?: string;
     url?: string;
-  };
-  parent: {
-    name?: string;
-    phone?: string;
-  };
-  address: {
-    country?: string;
-    addressLine?: string;
-    pincode?: number;
-  };
-  academic: {
-    standard: number;
-    competitiveExam?: string;
-    subjects?: [];
-    schedule?: string;
-    coachingMode?: string;
-    coachingName?: string;
-    coachingAddress?: string;
-    schoolOrCollegeName?: string;
-    schoolOrCollegeAddress?: string;
   };
   about: {
     dateOfBirth?: string;
     gender: string;
   };
-  role?: string;
-  details?: {
-    level?: number;
-    points?: number;
-    streak?: number;
-    mood?: Array<{
-      day: String;
-      emoji: String;
-    }>;
-  };
-  badges?: Array<{
-    name: string;
-    url: string;
-  }>;
-  points?: number;
-  subscription: {
-    type?: string;
-    id?: string;
-    status?: string;
-    dateOfActivation?: Date;
-    freeTrialAvailed?: boolean;
-  };
-  refund: {
-    type?: string;
-    subscriptionType?: string;
-    status?: string;
-    amount?: string;
-  };
-  quiz?: {
-    minor?: any[];
-    major?: any[];
-  };
-  createdAt?: Date; // Optional as it has a default value
+  status: 'Verified' | 'Not Verified';
+  gmeet: IGMeet;
+  students: mongoose.Types.ObjectId[];
+  createdAt: Date;
+  resetPasswordToken?: string | null;
+  resetTokenExpiry?: Date | null;
+
+  comparePassword(candidatePassword: string): Promise<boolean>;
+  getToken(): Promise<string>;
 };
 
 export type UserProps = {
