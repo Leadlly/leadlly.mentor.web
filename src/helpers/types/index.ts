@@ -1,5 +1,4 @@
 import React, { SVGProps } from "react";
-import mongoose from 'mongoose';
 
 // Define the IGMeet interface
 export interface IGMeet {
@@ -162,7 +161,7 @@ export type UserDataProps = {
   };
   status: 'Verified' | 'Not Verified';
   gmeet: IGMeet;
-  students: mongoose.Types.ObjectId[];
+  students: string;
   createdAt: Date;
   resetPasswordToken?: string | null;
   resetTokenExpiry?: Date | null;

@@ -22,12 +22,10 @@ export default function AuthLayout({
     <html>
       <body>
       <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
-      <StoreProvider>
         <div className={cn("h-main-height", fontSans.variable)}>
           {children}
         </div>
         <Toaster richColors position="top-center" />
-      </StoreProvider>
     </GoogleOAuthProvider>
       </body>
       
