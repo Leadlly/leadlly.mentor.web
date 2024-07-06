@@ -5,6 +5,7 @@ import StoreProvider from "@/app/StoreProvider";
 import { Container } from "@/components";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/shared/Navbar";
+import { getUser } from "@/actions/user_actions";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -20,9 +21,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={cn("font-sans antialiased", fontSans.variable)}>
-        <StoreProvider>
           <Container
             className="py-3 flex items-start gap-3 flex-col h-screen overflow-hidden
           "
@@ -30,8 +28,5 @@ export default function RootLayout({
             {/*h-screen overflow-hidden*/}
             <main className="flex-1 h-main-height w-full">{children}</main>
           </Container>
-        </StoreProvider>
-      </body>
-    </html>
   );
 }

@@ -1,5 +1,11 @@
 import React, { SVGProps } from "react";
 
+// Define the IGMeet interface
+export interface IGMeet {
+  meetingId: string;
+  meetingUrl: string;
+}
+
 export type TContainerProps = {
   children: React.ReactNode;
   className?: string;
@@ -134,6 +140,7 @@ export type InfoBoxProps = {
 export type InfoCardProps = {
   sections: InfoBoxProps[];
 }
+
 export type UserDataProps = {
   firstname: string;
   lastname?: string;
@@ -163,4 +170,27 @@ export type UserDataProps = {
 
 export type UserProps = {
   user: UserDataProps | null;
+};
+
+export type OTPProps = {
+  otp: string;
+};
+
+export type SignUpDataProps = {
+  name: string;
+  email: string;
+  password: string;
+};
+
+export type SignInDataProps = {
+  email: string;
+  password: string;
+};
+
+export type ForgotPasswordProps = {
+  email: string;
+};
+
+export type ResetPasswordProps = {
+  password: string;
 };
