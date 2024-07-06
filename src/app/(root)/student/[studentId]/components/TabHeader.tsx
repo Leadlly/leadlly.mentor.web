@@ -21,19 +21,19 @@ const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, setActiveTab }) => {
           key={tab}
           onClick={() => setActiveTab(tab as "chat" | "meeting")}
           className={cn(
-            "flex-1 py-4 text-center text-2xl font-semibold justify-center gap-2 flex items-center",
+            "flex-1 py-4 text-center text-l font-semibold justify-center gap-2 flex items-center",
             tab === "chat" ? "rounded-tl-lg" : "rounded-tr-lg",
             activeTab === tab
-              ? "bg-[#AA87DB] text-[#56249E] border-b-[3px] border-[#56249E]"
-              : "bg-[#CDAAFF] text-white border-b-[3px] border-[#CDAAFF] "
+              ? "bg-[#dbc2ff] text-[#000000]"
+              : "bg-[#ede0ff] text-[#56249E] "
           )}
         >
           <Icon
             className={
-              (cn("size-6"),
+              (cn("w-4 h-4"),
               activeTab === tab
-                ? "fill-[#56249E] stroke-[#BBBABC]"
-                : "stroke-[#EEE9E9] fill-white")
+                ? "fill-[#56249E]"
+                : "fill-white")
             }
           />
           {label}

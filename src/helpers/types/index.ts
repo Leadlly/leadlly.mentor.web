@@ -134,3 +134,33 @@ export type InfoBoxProps = {
 export type InfoCardProps = {
   sections: InfoBoxProps[];
 }
+export type UserDataProps = {
+  firstname: string;
+  lastname?: string;
+  email: string;
+  phone?: {
+    personal?: number;
+    other?: number;
+  };
+  password: string;
+  avatar?: {
+    public_id: string;
+    url: string;
+  };
+  about?: {
+    college?: string;
+    degree?: string;
+    dob?: string; 
+  };
+  status: "Verified" | "Not Verified";
+  students?: string;
+  createdAt?: Date; 
+  resetPasswordToken?: string | null;
+  resetTokenExpiry?: string | null;
+  comparePassword(candidatePassword: string): Promise<boolean>;
+  getToken(): Promise<string>;
+};
+
+export type UserProps = {
+  user: UserDataProps | null;
+};

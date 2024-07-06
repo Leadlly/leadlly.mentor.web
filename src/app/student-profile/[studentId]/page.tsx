@@ -105,10 +105,13 @@ const page = ({ params: { studentId }, searchParams }: Params) => {
   const activeTab = searchParams["info"] ?? "personal info";
   return (
     <main>
+      <div className="bg-[#9654F426] flex items-center py-5 gap-7 px-10 lg:my-7">
       <Head />
-      <div className="bg-[#9654F426] flex items-center py-5 gap-7 px-10 my-7">
-        <div>
+        <div className="lg:block hidden">
           <Avatar alt="e" size={125} />
+        </div>
+        <div className="lg:hidden">
+          <Avatar alt="e" size={56} />
         </div>
         <div>
           <h2 className="text-[#5F5F5F] text-2xl font-semibold">Mary</h2>
