@@ -12,8 +12,8 @@ const QuizzTab = ({
   studentId: string;
 }) => {
   return (
-    <div>
-      <ul className="flex items-center mb-[0.5%] justify-around md:justify-around gap-2 md:gap-[5px] md:mt-1">
+    <div >
+      <ul className="flex items-center mb-[0.5%] w-full justify-around gap-2 md:gap-[5px] md:mt-1">
         {quizzesTabs.map((tab) => (
           <Link
             key={tab.id}
@@ -21,10 +21,11 @@ const QuizzTab = ({
           >
             <li
               className={cn(
-                "capitalize px-5 md:px-[3px] py-1 rounded-lg md:rounded-[3px] text-base md:text-[24px] leading-none font-semibold transition ease-in-out duration-300",
+                "capitalize py-2  px-5 md:py-1  rounded-lg text-base font-semibold transition ease-in-out duration-300",
+                "md:px-[3px] md:rounded-[3px] md:text-[24px]",
                 activeTab === tab.id
-                  ? "text-[#9654F4] underline-offset-8 underline  decoration-4"
-                  : " text-black"
+                  ? "text-[#9654F4] underline-offset-[10px] md:underline-offset-8 underline decoration-4"
+                  : "text-black"
               )}
             >
               {tab.label}

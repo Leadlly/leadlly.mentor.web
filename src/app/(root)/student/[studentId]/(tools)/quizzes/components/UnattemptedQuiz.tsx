@@ -16,17 +16,17 @@ const UnattemptedQuiz = ({
   status,
 }: UnattemptedQuizProps) => {
   return (
-    <div className="shadow-custom-quiz flex flex-col justify-between gap-2 rounded-[7px] border-[1px] border-[#0000001F] bg-[#ffffff] p-3 min-w-[587px] max-w-[587px]  min-h-[130px] max-h-[150px]">
+    <div className="shadow-custom-quiz flex flex-col justify-between gap-2 rounded-[7px] border-[1px] flex-1 border-[#0000001F] bg-[#ffffff] p-3 md:min-w-[587px] md:max-w-[587px]  min-h-[130px] max-h-[150px]">
       <div className="flex justify-between items-center">
-        <div className="text-lg font-medium">
+        <div className="md:text-lg text-md font-medium">
           <h2>{title}</h2>
         </div>
         <div className="text-[#E55426] font-medium text-[9.4px] leading-[10.95px]">
           {daysPending}
         </div>
       </div>
-      <div className="text-[#525252] text-sm font-normal max-w-[450px]">
-        <p className="line-clamp-3">{description}</p>
+      <div className="text-[#525252] text-xs  md:text-sm font-normal max-w-48 md:max-w-[450px]">
+        <p className="line-clamp-2 md:line-clamp-3">{description}</p>
       </div>
       <div className="flex justify-between items-center ">
         <div className="bg-[#A36AF53D] text-xs rounded-[4px] px-[7px] py-[3px]">
