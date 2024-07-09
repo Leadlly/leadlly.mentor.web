@@ -15,15 +15,16 @@ export const metadata: Metadata = {
     "Say goodbye to one-size-fits-all! We tailor study plans and resources to your individual learning style and goals.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const userData = await getUser();
   return (
     <html lang="en">
       <body className={cn("font-sans antialiased", fontSans.variable)}>
-        <StoreProvider>
+        <StoreProvider user={userData?.user}>
         <div className="lg:hidden">
             <Navbar/>
             </div>
