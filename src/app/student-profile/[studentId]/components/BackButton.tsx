@@ -9,13 +9,13 @@ const BackButton = (props: Props) => {
   return (
     <>
       <button
-        className="border-[1px] lg:block hidden p-2 border-[#D3D3D3] rounded-[8px] shadow-custom-back"
+        className="border-[1px] lg:block hidden ml-[20px] mt-[5px] p-2 border-[#D3D3D3] rounded-[8px] shadow-custom-back"
         onClick={() => router.back()}
       >
         <MoveLeft size={24} color="#5D5D5D" strokeWidth={3} />
       </button>
       <button
-        className="border-[1px] top-0 left-0 lg:hidden p-1 border-[#D3D3D3] rounded-[4px] shadow-custom-back"
+        className="border-[1px] top-[30px] relative left-[15px] lg:hidden p-1 border-[#D3D3D3] rounded-[4px] shadow-custom-back"
         onClick={() => router.back()}
       >
         <MoveLeft size={8} color="#5D5D5D" strokeWidth={3} />
