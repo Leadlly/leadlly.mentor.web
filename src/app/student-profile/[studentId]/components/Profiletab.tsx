@@ -13,7 +13,7 @@ const ProfileTab = ({
 }) => {
   return (
     <div>
-      <ul className="flex items-center mb-[0.5%] justify-around md:justify-start px-10 gap-2 md:gap-[5px] md:mt-1">
+      <ul className="flex items-center mb-[0.5%] justify-start lg:px-10 gap-2 md:gap-[5px] md:mt-1">
         {profileTabs.map((tab) => (
           <Link
             key={tab.id}

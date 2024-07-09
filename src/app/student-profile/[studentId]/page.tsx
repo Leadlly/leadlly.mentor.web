@@ -105,23 +105,30 @@ const page = ({ params: { studentId }, searchParams }: Params) => {
   const activeTab = searchParams["info"] ?? "personal info";
   return (
     <main>
-      <div className="bg-[#9654F426] flex items-center py-5 gap-7 px-10 lg:my-7">
-      <Head />
+      <div className="">
+      <Head/>
+      </div>
+      <div className="bg-[#9654F426] flex items-center py-5 lg:gap-7 px-10 lg:my-7">
         <div className="lg:block hidden">
-          <Avatar alt="e" size={125} />
+          <Avatar alt="e" size={100} />
         </div>
-        <div className="lg:hidden">
-          <Avatar alt="e" size={56} />
-        </div>
+        <div className="lg:hidden flex justify-start gap-[7px]">
+        <Avatar alt="e" size={65} />
         <div>
           <h2 className="text-[#5F5F5F] text-2xl font-semibold">Mary</h2>
           <h3 className="text-[#989898] text-lg font-semibold">class: 9th</h3>
         </div>
+        </div>
+        
+        <div className="lg:block hidden">
+          <h2 className="text-[#5F5F5F] text-2xl font-semibold">Mary</h2>
+          <h3 className="text-[#989898] text-lg font-semibold">class: 9th</h3>
+        </div>
       </div>
-      <div className="border-b-2 border-b-[#F1F1F1]">
+      <div className="border-b-2 mt-[14px] lg:mt-0 border-b-[#F1F1F1]">
         <ProfileTab studentId={studentId} activeTab={activeTab} />
       </div>
-      <div className=" mt-10 min-h-[50vh]  max-h-[calc(100vh-500px)] overflow-y-scroll custom__scrollbar pt-0 p-3 mb-16 md:mb-0">
+      <div className=" mt-10 min-h-[50vh] max-h-[calc(100vh-250px)] md:max-h-[calc(100vh-500px)] overflow-y-scroll custom__scrollbar pt-0 p-3 mb-16 md:mb-0">
         {activeTab == "personal info" && (
           <PersonalInfo sections={infoSections} />
         )}
