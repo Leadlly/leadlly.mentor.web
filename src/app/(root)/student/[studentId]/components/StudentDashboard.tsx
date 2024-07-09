@@ -11,7 +11,7 @@ import Link from "next/link";
 export default function StudentDashboard({studentId}:{studentId:string}) {
   return (
     <>
-    <div className="bg-[#E8E3F063] lg:block hidden lg:overflow-y-auto custom__scrollbar py-2 px-4 border-[#DDDDDD] border-[1px] rounded-tr-2xl max-w-[680px] min-w-[680px] ">
+    <div className="bg-[#E8E3F063] lg:block hidden lg:overflow-y-auto custom__scrollbar py-2 px-4 border-[#DDDDDD] border-[1px] rounded-tr-2xl w-full">
       <div className="bg-[#CDAAFF] rounded-t-2xl flex  px-7 pt-6 pb-2 justify-between">
         <div className="flex justify-center items-center gap-4">
           <Avatar alt="student" size={76} />

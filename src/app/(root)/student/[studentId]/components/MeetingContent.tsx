@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import MeetingCard from "./MeetingCard";
+import ScheduleMeeting from "./ScheduleMeeting";
 
 const MeetingContent: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'upcoming' | 'schedule'>('upcoming');
+
   const meetings = [
     {
       date: "Wed, 17th April 2024",
@@ -21,18 +24,42 @@ const MeetingContent: React.FC = () => {
   };
 
   return (
-    <div className="p-3 ">
-      <h2 className="text-lg font-medium mb-4">Upcoming Meetings</h2>
-      {meetings.map((meeting, index) => (
-        <MeetingCard
-          key={index}
-          date={meeting.date}
-          time={meeting.time}
-          topic={meeting.topic}
-          onAccept={() => handleAccept(meeting)}
-          onReschedule={() => handleReschedule(meeting)}
-        />
-      ))}
+    <div className="p-3">
+      <div className="tabs mb-4 flex justify-between">
+      <button
+          className={`px-4 py-2 font-semibold transition-colors duration-300 ${
+            activeTab === 'upcoming' ? 'text-[#56249E]' : 'text-black hover:border-b-[1px] hover:border-[#56249E]'
+          }`}
+          onClick={() => setActiveTab('upcoming')}
+        >
+          Upcoming Meetings
+        </button>
+        <button
+          className={`px-4 py-2 font-semibold transition-colors duration-300 ${
+            activeTab === 'schedule' ? 'text-[#56249E]' : 'text-black hover:border-b-[1px] hover:border-[#56249E]'
+          }`}
+          onClick={() => setActiveTab('schedule')}
+        >
+          Schedule Meeting
+        </button>
+      </div>
+      <div className="tab-content">
+        {activeTab === 'upcoming' && (
+          <div>
+            {meetings.map((meeting, index) => (
+              <MeetingCard
+                key={index}
+                date={meeting.date}
+                time={meeting.time}
+                topic={meeting.topic}
+                onAccept={() => handleAccept(meeting)}
+                onReschedule={() => handleReschedule(meeting)}
+              />
+            ))}
+          </div>
+        )}
+        {activeTab === 'schedule' && <ScheduleMeeting />}
+      </div>
     </div>
   );
 };

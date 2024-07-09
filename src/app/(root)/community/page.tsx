@@ -86,7 +86,17 @@ const activeChatTab = "chat"
 
 const page = () => {
     return (
-      <>
+      <div className="flex justify-center items-center top-[35%] relative">
+        <h1 className="text-[50px] text-center text-primary/90">Coming Soon.....</h1>
+        </div>
+    
+    )
+}
+
+export default page;
+
+{/*
+        <>
       <div className="lg:flex px-10 hidden overflow-hidden flex-1 gap-3 justify-center flex-grow items-center">
             <div className="w-[30%] border border-gray-200 text-[#676767] h-full flex flex-1 justify-center items-center bg-[#D9D9D947]">
                     <div className="pt-[5%] w-full text-center">
@@ -205,9 +215,4 @@ const page = () => {
             </div>
             <MessageInput/>
         </div>
-        </div></>
-        
-    )
-}
-
-export default page;
+        </div></>*/}

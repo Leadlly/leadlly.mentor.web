@@ -145,27 +145,25 @@ export type UserDataProps = {
   firstname: string;
   lastname?: string;
   email: string;
-  phone: {
+  phone?: {
     personal?: number;
     other?: number;
   };
-  password?: string;
-  salt?: string;
+  password: string;
   avatar?: {
-    public_id?: string;
-    url?: string;
+    public_id: string;
+    url: string;
   };
-  about: {
-    dateOfBirth?: string;
-    gender: string;
+  about?: {
+    college?: string;
+    degree?: string;
+    dob?: string; 
   };
-  status: 'Verified' | 'Not Verified';
-  gmeet: IGMeet;
-  students: string;
-  createdAt: Date;
+  status: "Verified" | "Not Verified";
+  students?: string;
+  createdAt?: Date; 
   resetPasswordToken?: string | null;
-  resetTokenExpiry?: Date | null;
-
+  resetTokenExpiry?: string | null;
   comparePassword(candidatePassword: string): Promise<boolean>;
   getToken(): Promise<string>;
 };

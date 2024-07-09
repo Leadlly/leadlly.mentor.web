@@ -12,8 +12,10 @@ import { NavbarLink,NavbarLinksmall } from "@/helpers/types";
 import { cn } from "@/lib/utils";
 import Avatar from "./Avatar";
 import Image from "next/image";
+import { useAppSelector } from "@/redux/hooks";
 
 const Navbar = () => {
+  const user = useAppSelector((state) => state.user.user);
   const pathname = usePathname();
   return (
     <div className="w-full">
@@ -59,12 +61,14 @@ const Navbar = () => {
           <NotificationIcon />
         </div>
         <div className="flex justify-center items-center gap-2 ">
-         <Avatar size={38} alt="user" />
-          <p className="text-black text-lg font-medium">Hello, Dhruvi rawal</p>
+         <Avatar src={user?.avatar?.url}
+            alt={`${user?.firstname}'s profile`}/>
+          <p className="text-black text-lg font-medium">Hello, {user?.firstname}{" "}
+          {user?.lastname}</p>
         </div>
       </div>
     </nav>
-    <nav className="h-16 shadow-md lg:hidden items-center flex w-full bg-[#E9DBFD] md:rounded-[60px] justify-between px-10 items-center">
+    <nav className="h-16 shadow-md lg:hidden flex w-full bg-[#E9DBFD] md:rounded-[60px] justify-between px-10 items-center">
       <Link className="cursor-pointer" href="/">
         <Image src={SmallIcon} width={22} height={22} alt="small"/>
       </Link>
