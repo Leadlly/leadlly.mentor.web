@@ -31,22 +31,29 @@
     "clsx": "^2.1.1",
     "dayjs": "^1.11.11",
     "framer-motion": "^11.2.9",
+    "input-otp": "^1.2.4",
     "lucide": "^0.383.0",
     "lucide-react": "^0.383.0",
+    "mongoose": "^8.4.4",
     "next": "^14.2.4",
     "react": "^18.3.1",
     "react-apexcharts": "^1.4.1",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.51.5",
+
     "react-redux": "^9.1.2",
+
+    "react-redux": "^9.1.1",
+    "react-toast": "^1.0.3",
+
     "sonner": "^1.5.0",
     "tailwind-merge": "^2.3.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
-    "@types/node": "^20",
+    "@types/node": "^20.14.9",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18",
     "autoprefixer": "^10.4.19",

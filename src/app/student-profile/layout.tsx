@@ -5,6 +5,7 @@ import StoreProvider from "@/app/StoreProvider";
 import { Container } from "@/components";
 import { cn } from "@/lib/utils";
 import Navbar from "@/components/shared/Navbar";
+import { getUser } from "@/actions/user_actions";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -28,13 +29,17 @@ export default function RootLayout({
             </div>
           <div
             className="max-w-7xl w-full mx-auto flex items-start gap-3 px-0 flex-col h-screen overflow-hidden
-          "
+          <Container
+            className="py-3 flex items-start gap-3 flex-col h-screen overflow-hidden"
           > 
             {/*h-screen overflow-hidden*/}
             <main className="flex-1 h-main-height w-full">{children}</main>
+           </Container>
           </div>
         </StoreProvider>
       </body>
     </html>
+       
+
   );
 }
