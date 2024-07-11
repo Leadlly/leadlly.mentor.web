@@ -194,3 +194,19 @@ export type ForgotPasswordProps = {
 export type ResetPasswordProps = {
   password: string;
 };
+export type MentorPersonalInfoProps = {
+  address?: string;
+  class?: (number | string)[];
+  competitiveExam?: (number | string)[];
+  country?: string;
+  dateOfBirth?: string;
+  firstName?: string;
+  gender?: string;
+  lastName?: string;
+  email?:string;
+  phone?: number;
+  pinCode?: number;
+  schoolOrCollegeAddress?: string;
+  schoolOrCollegeName?: string;
+  studentSchedule?: string;
+};
