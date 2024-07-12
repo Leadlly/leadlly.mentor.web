@@ -42,13 +42,46 @@ const InitialInfoSchema = z.object({
 });
 
 const StudentInitialInfoForm = () => {
+  const [selectedClasses, setSelectedClasses] = useState<(string | number)[]>([]);
+  const [selectedExam, setSelectedExam] = useState<(string)[]>([]);
+
+  const handleSelectChange = (value: string | number) => {
+    setSelectedClasses((prev) => {
+      if (prev.includes(value)) {
+        return prev.filter((item) => item !== value);
+      } else {
+        return [...prev, value];
+      }
+    });
+  };
+  const handleSelectExam = (value: string) => {
+    setSelectedExam((prev) => {
+      if (prev.includes(value)) {
+        return prev.filter((item) => item !== value);
+      } else {
+        return [...prev, value];
+      }
+    });
+  };
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dispatch = useAppDispatch();
 
   const router = useRouter();
 
-  const form = useForm();
+  const form = useForm(
+    {
+      resolver: zodResolver(InitialInfoSchema),
+      defaultValues: {
+        class: [],
+        gender: "",
+        competitiveExam: "",
+        studentSchedule: "",
+        coachingType: "",
+      },
+    }
+  );
 
   const onFormSubmit = async (data:any) => {
     setIsSubmitting(true);
@@ -95,27 +128,32 @@ const StudentInitialInfoForm = () => {
                   <FormLabel className="text-base lg:text-lg font-medium">
                     Class:
                   </FormLabel>
+
                   <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    onValueChange={handleSelectChange}
+                    defaultValue="Class"
                   >
                     <FormControl>
                       <SelectTrigger
                         className={cn(
                           "text-base lg:text-lg font-medium",
-                          !field.value && "text-muted-foreground"
+                          selectedClasses.length === 0 && "text-muted-foreground"
                         )}
                       >
-                        <SelectValue placeholder="Select your class" />
+                        <SelectValue>
+                          {selectedClasses.length === 0
+                            ? "Select your class"
+                            : `${selectedClasses}`}
+                        </SelectValue>
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="11">11th</SelectItem>
                       <SelectItem value="12">12th</SelectItem>
-                      <SelectItem value="13">Dropout</SelectItem>
-                      
+                      <SelectItem value="Dropout">Dropout</SelectItem>
                     </SelectContent>
                   </Select>
+                  
                   <FormMessage />
                 </FormItem>
               )}
@@ -154,71 +192,40 @@ const StudentInitialInfoForm = () => {
               )}
             />
 
-            <FormField
+           <FormField
               control={form.control}
               name="competitiveExam"
               render={({ field }) => (
                 <FormItem className="space-y-1">
                   <FormLabel className="text-base lg:text-lg font-medium">
-                    Competitive Exam:
+                    Select the Preferance
                   </FormLabel>
 
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex items-center gap-x-5"
-                    >
-                      <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                        <FormControl>
-                          <RadioGroupItem
-                            value="NEET"
-                            className="lg:w-5 lg:h-5"
-                            circleClassName="lg:w-3 lg:h-3"
-                          />
-                        </FormControl>
-                        <FormLabel className="text-base lg:text-lg font-medium">
-                          NEET
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                        <FormControl>
-                          <RadioGroupItem
-                            value="JEE"
-                            className="lg:w-5 lg:h-5"
-                            circleClassName="lg:w-3 lg:h-3"
-                          />
-                        </FormControl>
-                        <FormLabel className="text-base lg:text-lg font-medium">
-                          JEE
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                        <FormControl>
-                          <RadioGroupItem
-                            value="Board"
-                            className="lg:w-5 lg:h-5"
-                            circleClassName="lg:w-3 lg:h-3"
-                          />
-                        </FormControl>
-                        <FormLabel className="text-base lg:text-lg font-medium">
-                          Board
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                        <FormControl>
-                          <RadioGroupItem
-                            value="Other"
-                            className="lg:w-5 lg:h-5"
-                            circleClassName="lg:w-3 lg:h-3"
-                          />
-                        </FormControl>
-                        <FormLabel className="text-base lg:text-lg font-medium">
-                          Other
-                        </FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
+                  <Select
+                    onValueChange={handleSelectExam}
+                    defaultValue="Select Prefernce"
+                  >
+                    <FormControl>
+                      <SelectTrigger
+                        className={cn(
+                          "text-base lg:text-lg font-medium",
+                          selectedExam.length === 0 && "text-muted-foreground"
+                        )}
+                      >
+                        <SelectValue>
+                          {selectedExam.length === 0
+                            ? "Select your Prefernce"
+                            : `${selectedExam}`}
+                        </SelectValue>
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="neet">NEET</SelectItem>
+                      <SelectItem value="jee">JEE</SelectItem>
+                      <SelectItem value="boards">Boards</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  
                   <FormMessage />
                 </FormItem>
               )}
