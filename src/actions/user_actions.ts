@@ -144,9 +144,9 @@ export const getUser = async () => {
   }
 };
 
-export const studentPersonalInfo = async (data: MentorPersonalInfoProps) => {
+export const mentorPersonalInfo = async (data: any) => {
   const token = await getCookie("token");
-  console.log(token)
+  console.log(data, "here")
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/info/save`,

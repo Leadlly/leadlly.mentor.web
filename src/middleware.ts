@@ -9,6 +9,9 @@ export async function middleware(request: NextRequest) {
 
   const token = getTokenFromStorage(request);
 
+  const userData = await getUser();
+  // console.log(userData)
+
   const isPublicPath =
     path === "/login" ||
     path === "/signup" ||
@@ -16,34 +19,44 @@ export async function middleware(request: NextRequest) {
     path === "/forgot-password";
 
 
-  if (token && isPublicPath) {
-    return NextResponse.redirect(new URL("/", request.nextUrl));
-  }
-
-  if (!token && !isPublicPath) {
-    return NextResponse.redirect(new URL("/login", request.nextUrl));
-  }
-
-  if (token && !isPublicPath) {
-    try {
-      const userData = await getUser(); 
-
-      const isVerified = userData.user.status === "Verified"
-
-      if (!isVerified && path !== "/Status") {
+    if (token && isPublicPath) {
+      return NextResponse.redirect(new URL("/", request.nextUrl));
+    }
+  
+    if (!token && !isPublicPath) {
+      return NextResponse.redirect(new URL("/login", request.nextUrl));
+    }
+  
+    // initial personal info middleware
+    if (token && !isPublicPath) {
+      const hasSubmittedInitialInfo = !!userData.user?.about.gender;
+  
+      if (!hasSubmittedInitialInfo && path !== "/initial-info") {
+        return NextResponse.redirect(new URL("/initial-info", request.nextUrl));
+      }
+  
+      if (hasSubmittedInitialInfo && path === "/initial-info") {
         return NextResponse.redirect(new URL("/Status", request.nextUrl));
+      }
+    }
+  
+    if (token && !isPublicPath && path !== "/initial-info") {
+      const isVerified = userData.user?.status === "Verified";
+  
+      if (!isVerified && path !== "/Status") {
+        return NextResponse.redirect(
+          new URL("/Status", request.nextUrl)
+        );
       }
   
       if (isVerified && path === "/Status") {
         return NextResponse.redirect(new URL("/", request.nextUrl));
       }
-    } catch (error) {
-      console.error("Error fetching user data:", error);
     }
+  
+  
+    return NextResponse.next();
   }
-
-  return NextResponse.next(); 
-}
 
 function getTokenFromStorage(request: NextRequest) {
   const cookies = request.cookies;
@@ -59,6 +72,7 @@ export const config = {
     "/resetpassword/:path*",
     "/forgot-password",
     "/",
-    "/status"
+    "/Status",
+    "/initial-info"
   ],
 };
