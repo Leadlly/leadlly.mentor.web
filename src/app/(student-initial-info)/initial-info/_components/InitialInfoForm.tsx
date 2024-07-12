@@ -43,7 +43,7 @@ const InitialInfoSchema = z.object({
 
 const StudentInitialInfoForm = () => {
   const [selectedClasses, setSelectedClasses] = useState<(string | number)[]>([]);
-  const [selectedExam, setSelectedExam] = useState<(string)[]>([]);
+  const [selectedExam, setSelectedExam] = useState<(string | number)[]>([]);
 
   const handleSelectChange = (value: string | number) => {
     setSelectedClasses((prev) => {
@@ -54,7 +54,8 @@ const StudentInitialInfoForm = () => {
       }
     });
   };
-  const handleSelectExam = (value: string) => {
+
+  const handleSelectExam = (value: string | number) => {
     setSelectedExam((prev) => {
       if (prev.includes(value)) {
         return prev.filter((item) => item !== value);
@@ -70,18 +71,7 @@ const StudentInitialInfoForm = () => {
 
   const router = useRouter();
 
-  const form = useForm(
-    {
-      resolver: zodResolver(InitialInfoSchema),
-      defaultValues: {
-        class: [],
-        gender: "",
-        competitiveExam: "",
-        studentSchedule: "",
-        coachingType: "",
-      },
-    }
-  );
+  const form = useForm();
 
   const onFormSubmit = async (data:any) => {
     setIsSubmitting(true);
@@ -93,7 +83,7 @@ const StudentInitialInfoForm = () => {
 
       toast.success(res.message);
 
-      router.replace("/verify");
+      router.replace("/Status");
     } catch (error: any) {
       toast.error(error?.message);
     } finally {
@@ -128,7 +118,6 @@ const StudentInitialInfoForm = () => {
                   <FormLabel className="text-base lg:text-lg font-medium">
                     Class:
                   </FormLabel>
-
                   <Select
                     onValueChange={handleSelectChange}
                     defaultValue="Class"
@@ -153,7 +142,6 @@ const StudentInitialInfoForm = () => {
                       <SelectItem value="Dropout">Dropout</SelectItem>
                     </SelectContent>
                   </Select>
-                  
                   <FormMessage />
                 </FormItem>
               )}
@@ -192,7 +180,7 @@ const StudentInitialInfoForm = () => {
               )}
             />
 
-           <FormField
+<FormField
               control={form.control}
               name="competitiveExam"
               render={({ field }) => (

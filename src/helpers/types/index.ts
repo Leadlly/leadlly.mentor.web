@@ -196,8 +196,8 @@ export type ResetPasswordProps = {
 };
 export type MentorPersonalInfoProps = {
   address?: string;
-  class?: (number | string)[];
-  competitiveExam?: (number | string)[];
+  class?: string[];
+  competitiveExam?: string[];
   country?: string;
   dateOfBirth?: string;
   firstName?: string;
