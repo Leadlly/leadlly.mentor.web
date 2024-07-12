@@ -4,6 +4,7 @@ import {
   ForgotPasswordProps,
   ResetPasswordProps,
   SignUpDataProps,
+  MentorPersonalInfoProps
 } from "@/helpers/types";
 import { getCookie } from "./cookie_actions";
 import { revalidateTag } from "next/cache";
@@ -139,6 +140,35 @@ export const getUser = async () => {
       throw new Error(
         "An unknown error occurred while fetching logged in user"
       );
+    }
+  }
+};
+
+export const studentPersonalInfo = async (data: MentorPersonalInfoProps) => {
+  const token = await getCookie("token");
+  console.log(token)
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/info/save`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+      }
+    );
+
+    const responseData = await res.json();
+
+    return responseData;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error in saving student info: ${error.message}`);
+    } else {
+      throw new Error("An unknown error occurred while saving student info");
     }
   }
 };
