@@ -1,11 +1,7 @@
 import type { Metadata } from "next";
-import { Mada as FontSans } from "next/font/google";
 import "../globals.css";
 import { Container } from "@/components";
-import { cn } from "@/lib/utils";
 import Navbar from "@/components/shared/Navbar";
-
-const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Leadlly",
@@ -13,25 +9,22 @@ export const metadata: Metadata = {
     "Say goodbye to one-size-fits-all! We tailor study plans and resources to your individual learning style and goals.",
 };
 
-export default function RootLayout({
+export default function StudentProfileLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={cn("font-sans antialiased", fontSans.variable)}>
-          <div className="lg:hidden">
-            <Navbar />
-          </div>
-          <div className="max-w-7xl w-full mx-auto flex items-start gap-3 px-0 flex-col h-screen overflow-hidden">
-            <Container className="py-3 flex items-start gap-3 flex-col h-screen overflow-hidden">
-              {/* h-screen overflow-hidden */}
-              <main className="flex-1 h-main-height w-full">{children}</main>
-            </Container>
-          </div>
-
-      </body>
-    </html>
+    <>
+      <div className="lg:hidden">
+        <Navbar />
+      </div>
+      <div className="max-w-7xl w-full mx-auto flex items-start gap-3 px-0 flex-col h-screen overflow-hidden">
+        <Container className="py-3 flex items-start gap-3 flex-col h-screen overflow-hidden">
+          {/* h-screen overflow-hidden */}
+          <div className="flex-1 h-main-height w-full">{children}</div>
+        </Container>
+      </div>
+    </>
   );
 }
