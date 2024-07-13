@@ -17,8 +17,6 @@ import Link from "next/link";
 import Avatar from "@/components/shared/Avatar";
 import Progressbar from "@/components/shared/Progressbar";
 
-
-
 const StudentCard = ({
   mood = "neutral",
   name,
