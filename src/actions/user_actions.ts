@@ -8,18 +8,9 @@ import {
 } from "@/helpers/types";
 import { getCookie } from "./cookie_actions";
 import { revalidateTag } from "next/cache";
+import { Student } from "@/helpers/types";
+
 import apiClient from "@/apiClient/apiClient";
-interface Student {
-  id: string;
-  mood: string;
-  avatar: string;
-  efficiency: number;
-  level: number;
-  messages: string[];
-  name: string;
-  progress: number;
-  studentClass: string;
-}
 
 export const signUpUser = async (data: SignUpDataProps) => {
   try {
