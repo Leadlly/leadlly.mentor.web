@@ -15,21 +15,22 @@ export const metadata: Metadata = {
     "Say goodbye to one-size-fits-all! We tailor study plans and resources to your individual learning style and goals.",
 };
 
-export default function RootLayout({
+export default function MainLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <>
-     <Container className="md:py-3 flex items-start gap-3 flex-col h-screen overflow-hidden
-          ">
-            {/*h-screen overflow-hidden*/}
-            <Navbar></Navbar>
-            <main className="flex-1 h-main-height w-full">{children}</main>
-          </Container>
-          <Toaster richColors position="top-center" />
-       </>
-         
+      <Container
+        className="md:py-3 flex items-start gap-3 flex-col h-screen overflow-hidden
+          "
+      >
+        {/*h-screen overflow-hidden*/}
+        <Navbar></Navbar>
+        <section className="flex-1 h-main-height w-full">{children}</section>
+      </Container>
+      <Toaster richColors position="top-center" />
+    </>
   );
 }

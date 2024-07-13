@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import { Mada as FontSans } from "next/font/google";
 import "./globals.css";
@@ -11,7 +10,7 @@ import { getUser } from "@/actions/user_actions";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
-const metadata: Metadata = {
+export const metadata: Metadata = {
   title: "Leadlly",
   description:
     "Say goodbye to one-size-fits-all! We tailor study plans and resources to your individual learning style and goals.",
@@ -22,7 +21,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-const userData = await getUser();
+  const userData = await getUser();
   return (
     <html lang="en">
       <body
@@ -35,7 +34,7 @@ const userData = await getUser();
           <GoogleOAuthProvider
             clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
           >
-              <main className="">{children}</main>
+            <main className="">{children}</main>
             <Toaster richColors position="top-center" />
           </GoogleOAuthProvider>
         </StoreProvider>

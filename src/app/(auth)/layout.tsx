@@ -18,18 +18,5 @@ export default function AuthLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <html>
-      <body>
-      <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
-        <div className={cn("h-main-height", fontSans.variable)}>
-          {children}
-        </div>
-        <Toaster richColors position="top-center" />
-    </GoogleOAuthProvider>
-      </body>
-      
-    </html>
-    
-  );
+  return <div className={cn("h-main-height")}>{children}</div>;
 }
