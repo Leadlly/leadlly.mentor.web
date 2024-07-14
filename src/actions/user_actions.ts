@@ -8,7 +8,7 @@ import {
 } from "@/helpers/types";
 import { getCookie } from "./cookie_actions";
 import { revalidateTag } from "next/cache";
-import { Student } from "@/helpers/types";
+// import { Student } from "@/helpers/types";
 
 import apiClient from "@/apiClient/apiClient";
 
@@ -175,18 +175,22 @@ export const mentorPersonalInfo = async (data: any) => {
   }
 };
 
-export const getAllStudents = async (): Promise<Student[]> => {
+export const getAllStudents = async () => {
   const token = await getCookie("token");
 
   try {
     const endpoint = `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/getstudents`;
-    console.log("Fetching data from:", endpoint);
+    // console.log("Fetching data from:", endpoint);
 
     const res = await fetch(endpoint, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Cookie: `token=${token}`,
+      },
+      cache: "force-cache",
+      next: {
+        tags: ["allocatedStudents"],
       },
       credentials: "include",
     });
@@ -197,7 +201,7 @@ export const getAllStudents = async (): Promise<Student[]> => {
       throw new Error(`status: ${res.status}, response: ${errorText}`);
     }
 
-    const responseData: Student[] = await res.json();
+    const responseData = await res.json();
     console.log("Fetched data:", responseData);
 
     return responseData;

@@ -57,8 +57,9 @@ const StudentInitialInfoForm = () => {
   };
 
   const classOptions = [
-    { _id: "11", name: "11th" },
-    { _id: "12", name: "12th" },
+    { _id: "11", name: "11" },
+    { _id: "12", name: "12" },
+    { _id: "13", name: "13" },
   ];
   const competitiveExamOptions = [
     { _id: "jee", name: "JEE" },

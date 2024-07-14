@@ -1,6 +1,6 @@
-import { Student } from "@/helpers/types";
 
-const students: Student[] = [
+
+const students = [
   {
     id: "1",
     mood: "neutral",

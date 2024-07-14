@@ -30,7 +30,7 @@ export type Student = {
   studentClass: string;
   level: string;
   progress: number;
-  messages: number;
+  messages: string;
   efficiency: number;
   id: string;
 };
