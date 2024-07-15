@@ -62,7 +62,7 @@ export function getFormattedDate(date: Date): string {
   const month: string = monthsOfYear[date.getMonth()];
   const year: number = date.getFullYear();
 
-  return `${dayOfWeek} ${dayOfMonth} ${month} ${year}`;
+  return `${dayOfMonth} ${month} ${year}`;
 }
 
 export function convertDateString(inputDate: string): string {

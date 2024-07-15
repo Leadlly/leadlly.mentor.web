@@ -65,7 +65,7 @@ const StudentCard = ({
             indicatorClassName="h-[3px] md:h-[6px]"
           />
         </div>
-        {messages > 0 ? (
+        {messages ? (
           <div className="flex bg-[#ffffff] gap-[1px] md:gap-[3px] px-1 py-[2px] my-1 rounded justify-center items-center">
             <MessageIcon />
             <div className="md:text-[9px] line-clamp-1 text-balance text-[6px] text-[#3D6CA1] font-bold">
