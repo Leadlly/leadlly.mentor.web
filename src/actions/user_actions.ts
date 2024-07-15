@@ -180,7 +180,6 @@ export const getAllStudents = async () => {
 
   try {
     const endpoint = `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/getstudents`;
-    // console.log("Fetching data from:", endpoint);
 
     const res = await fetch(endpoint, {
       method: "GET",
@@ -211,3 +210,38 @@ export const getAllStudents = async () => {
   }
 };
 
+
+export const getplanner = async (id:any) => {
+  const token = await getCookie("token")
+  try {
+    const endpoint = `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/student/planner/get/${id}`
+    const res = await fetch(endpoint,{
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${token}`,
+      },
+      cache: "force-cache",
+      next: {
+        tags: ["allocatedStudents"],
+      },
+      credentials: "include",
+    })
+
+    if(!res.ok){
+     const errortext =await res.text();
+     console.error(`status: ${res.status}, response: ${errortext}`)
+     throw new Error(`status: ${res.status}, response: ${errortext}`)
+    }
+
+    const responseData =await res.json();
+    console.log("fteched data", responseData)
+    return responseData
+
+  } catch (error) {
+    console.error(`Error in fetching planner ${(error as Error).message}` )
+    throw new Error(`Error in fetching planner ${(error as Error).message}` )
+
+  }
+
+}

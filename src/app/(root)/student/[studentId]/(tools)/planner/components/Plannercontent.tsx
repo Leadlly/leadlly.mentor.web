@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Plus, Trash2, X } from 'lucide-react';
 import NewTopicLearnt from './NewTopicLearnt';
+import { getplanner } from '@/actions/user_actions';
+import { usePathname } from 'next/navigation';
+import { any } from 'zod';
 
 type TweeksTopic = {
   day: string;
@@ -9,6 +12,35 @@ type TweeksTopic = {
 };
 
 const Plannercontent = ({ weekstopic }: { weekstopic: TweeksTopic[] }) => {
+  const pathname = usePathname();
+  const [planner, setPlanner] = useState([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+ 
+
+  useEffect(() => {
+    const fetchPlanner = async () => {
+      try {
+        const segments = pathname.split('/');
+        const id = segments[segments.length - 2]
+        console.log(id)
+        const data = await getplanner(id);
+        console.log(data); 
+        setPlanner(data);
+        setLoading(false);
+      } catch (err) {
+        console.error((err as Error).message); 
+        setError((err as Error).message);
+        setLoading(false);
+      }
+    };
+
+    fetchPlanner();
+  }, []);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+
   const [visibleTopics, setVisibleTopics] = useState(
     weekstopic.map(datecard => datecard.topics.map(() => true))
   );
@@ -36,10 +68,10 @@ const Plannercontent = ({ weekstopic }: { weekstopic: TweeksTopic[] }) => {
           </button>
         
       </div>
-      {weekstopic.map((datecard, dateIndex) => (
-        <div key={datecard.date} className="mb-[1%]">
+      {planner.days.map(({data, index}:any) => (
+        <div key={data.date} className="mb-[1%]">
           <div className='bg-[#F0E5FF] flex justify-between px-[3%] text-[16px] py-[1%] font-bold border rounded-t-[6px] border-b-0 border-[#DFDBDB]'>
-            <p>{datecard.day}, {datecard.date}</p>
+            <p>{data.day}, {data.date}</p>
             <div className='flex gap-[20px]'>
               <Plus 
                 onClick={() => setShowPopup(true)} 
@@ -50,14 +82,14 @@ const Plannercontent = ({ weekstopic }: { weekstopic: TweeksTopic[] }) => {
           </div>
           <div className='bg-[#F5EFFF] w-full border py-[0.9%] mb-[11px] flex justify-center rounded-b-[6px] border-[#DFDBDB]'>
             <div className='flex overflow-x-auto mx-[10px] md:mx-[0px] my-[11px] md:my-[0px] no-scrollbar justify-between md:gap-[41px] gap-[21px]'>
-              {datecard.topics.map((topic, topicIndex) => (
-                visibleTopics[dateIndex][topicIndex] && (
+              {data.backRevisionTopics.map(({topic, topicIndex}:any) => (
+                (
                   <div key={topicIndex} className='bg-[#E2D0FF] flex p-[8px] rounded-[9px] relative'>
                     <p className='text-[15px] pr-[10px] font-medium'>{topic}</p>
-                    <X
+                    {/*<X
                       onClick={() => handleClose(dateIndex, topicIndex)}
                       className='absolute cursor-pointer top-0 right-[3px] w-[10px]'
-                    />
+                    />*/}
                   </div>
                 )
               ))}
