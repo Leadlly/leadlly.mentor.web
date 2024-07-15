@@ -7,8 +7,7 @@ import { usePathname } from 'next/navigation';
 import { getplanner } from '@/actions/user_actions';
 
 interface Planner {
-  days: any[]; // Update 'any[]' to the actual type of the days array if known
-  // Add other properties of the planner object if needed
+  days: any[];
 }
 
 export default function Page() {

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Trash2, X } from 'lucide-react';
 import NewTopicLearnt from './NewTopicLearnt';
+import { getFormattedDate } from '@/helpers/utils';
 
 type Topic = {
   topic: {
@@ -50,7 +51,7 @@ const Plannercontent = ({ weekstopic }: { weekstopic: TweeksTopic[] }) => {
       {weekstopic.map((datecard, dateIndex) => (
         <div key={datecard.date} className="mb-[1%]">
           <div className='bg-[#F0E5FF] flex justify-between px-[3%] text-[16px] py-[1%] font-bold border rounded-t-[6px] border-b-0 border-[#DFDBDB]'>
-            <p>{datecard.day}, {datecard.date}</p>
+            <p>{datecard.day}, {getFormattedDate(new Date(datecard.date))}</p>
             <div className='flex gap-[20px]'>
               <Plus
                 onClick={() => setShowPopup(true)}
@@ -96,7 +97,7 @@ const Plannercontent = ({ weekstopic }: { weekstopic: TweeksTopic[] }) => {
               onClick={() => setShowPopup(false)}
               aria-label="Close popup"
             >
-              <X size={24} className='text-[#6a6a6a]' />
+              {/* <X size={24} className='text-[#6a6a6a]' /> */}
             </button>
             <NewTopicLearnt setNewTopicLearnt={setNewTopicLearnt} />
           </div>
