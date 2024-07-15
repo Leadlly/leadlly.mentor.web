@@ -187,13 +187,14 @@ export const getAllStudents = async () => {
         "Content-Type": "application/json",
         Cookie: `token=${token}`,
       },
-      cache: "force-cache",
-      next: {
-        tags: ["allocatedStudents"],
-      },
+      // cache: "force-cache",
+      // next: {
+      //   tags: ["allocatedStudents"],
+      // },
       credentials: "include",
     });
 
+    console.log(res)
     if (!res.ok) {
       const errorText = await res.text();
       console.error(`status: ${res.status}, response: ${errorText}`); 
