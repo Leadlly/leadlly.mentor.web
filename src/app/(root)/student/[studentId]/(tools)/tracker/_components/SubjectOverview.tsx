@@ -1,14 +1,19 @@
 import RadialBarChart from "@/components/charts/RadialBarChart";
 import { Progress } from "@/components/ui/progress";
+import { ISubject } from "@/helpers/types";
 
-const SubjectOverview = () => {
+const SubjectOverview = ({ subject }: { subject: ISubject | undefined }) => {
   return (
-    <div className="md:rounded-xl md:bg-white bg-[#F8F2FE] px-5 py-4">
+    <div className="rounded-xl shadow-tracker_subject_overview px-5 py-4">
+      <h2 className="text-lg md:text-2xl leading-none font-semibold text-black mb-4 lg:mb-0">
+        Subject Overview
+      </h2>
+
       {/* ===== LARGE DEVICE LAYOUT ====== */}
-      <div className="hidden lg:flex flex-col items-center gap-4">
-        <div className="flex flex-col border shadow-lg rounded-[14px] overflow-y-auto items-center w-full h-full">
+      <div className="hidden lg:flex items-center gap-4 h-48">
+        <div className="flex items-center h-full">
           <RadialBarChart
-            series={[75]}
+            series={[subject?.overall_progress!]}
             colors={["#9654f4"]}
             labels={["Revision Completion"]}
             width="80%"
@@ -17,7 +22,7 @@ const SubjectOverview = () => {
             fontSize="24px"
           />
           <RadialBarChart
-            series={[82]}
+            series={[subject?.overall_efficiency!]}
             colors={["#72EFDD"]}
             labels={["Revision Efficiency"]}
             width="80%"
@@ -60,15 +65,14 @@ const SubjectOverview = () => {
       {/* ===== SMALL DEVICE LAYOUT ====== */}
       <div className="lg:hidden flex flex-col space-y-3">
         <div>
-        <h4 className="leading-none text-[18px] font-bold mb-[25px]">
-            Subject Overview
-          </h4>
           <h4 className="leading-none text-sm font-medium mb-1">
             Revision Completion
           </h4>
           <div className="flex items-center gap-4">
-            <Progress value={75} className="h-2" indicatorClassName="bg-[#9654F4]"/>
-            <p className="leading-none text-lg font-semibold">75%</p>
+            <Progress value={subject?.overall_progress!} className="h-2" />
+            <p className="leading-none text-lg font-semibold">
+              {subject?.overall_progress}%
+            </p>
           </div>
         </div>
         <div>
@@ -77,11 +81,13 @@ const SubjectOverview = () => {
           </h4>
           <div className="flex items-center gap-4">
             <Progress
-              value={82}
+              value={subject?.overall_efficiency!}
               className="h-2"
               indicatorClassName="bg-[#72EFDD]"
             />
-            <p className="leading-none text-lg font-semibold">82%</p>
+            <p className="leading-none text-lg font-semibold">
+              {subject?.overall_efficiency}%
+            </p>
           </div>
         </div>
         <div>

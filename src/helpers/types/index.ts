@@ -34,6 +34,35 @@ export type Student = {
   efficiency: number;
   id: string;
 };
+
+export type TTrackerProps = {
+  _id: string;
+  user: string;
+  subject: string;
+  chapter: Chapter;
+  topics: Topic[];
+};
+export type Chapter = {
+  name: string;
+  plannerFrequency?: number;
+  level?: string;
+  overall_efficiency?: number;
+  studiedAt: {
+    date?: Date;
+    efficiency?: number;
+  }[];
+};
+
+export type Topic = {
+  name: string;
+  plannerFrequency?: number;
+  level?: string;
+  overall_efficiency?: number;
+  studiedAt: {
+    date?: Date;
+    efficiency?: number;
+  }[];
+};
 export interface EfficiencyOption {
   min?: number;
   max?: number;
@@ -140,15 +169,33 @@ export type InfoBoxProps = {
 export type InfoCardProps = {
   sections: InfoBoxProps[];
 }
-
+export interface ISubject {
+  name: string;
+  // {overall_efficiency: number;
+  // overall_progress: number;
+  // total_questions_solved: number;*/}
+}
+export interface IAcademic {
+  standard: number;
+  competitiveExam?: string | null;
+  subjects?: ISubject[];
+  schedule?: string | null;
+  coachingMode?: string | null;
+  coachingName?: string | null;
+  coachingAddress?: string | null;
+  schoolOrCollegeName?: string | null;
+  schoolOrCollegeAddress?: string | null;
+}
 export type UserDataProps = {
   firstname: string;
   lastname?: string;
   email: string;
+  subjects?: ISubject[];
   phone?: {
     personal?: number;
     other?: number;
   };
+  academic: IAcademic;
   password: string;
   avatar?: {
     public_id: string;

@@ -1,11 +1,11 @@
 "use client";
-
+import { Chapter } from "@/helpers/types";
 import { color } from "framer-motion";
 import dynamic from "next/dynamic";
 
 const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const DonutChart = () => {
+const DonutChart = ({ data }: { data: Chapter }) => {
   return (
     <>
       <Charts
