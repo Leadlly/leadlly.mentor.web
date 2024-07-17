@@ -55,8 +55,8 @@ const Tracker = ()=>{
 
   return (
     <>
-    <div className="h-[calc(100dvh-120px)] lg:hidden pt-2 md:pt-0 flex flex-col gap-y-4">
-    <Header
+      <div className="h-full flex flex-col gap-y-4">
+      <Header
         title="Tracker"
         titleClassName="text-2xl md:text-3xl lg:text-page-title"
       />
@@ -89,8 +89,8 @@ const Tracker = ()=>{
           />
         )}
       </div>
-  </div></>
-    
+    </div>
+    </>
   );
 };
 
