@@ -171,9 +171,9 @@ export type InfoCardProps = {
 }
 export interface ISubject {
   name: string;
-  // {overall_efficiency: number;
-  // overall_progress: number;
-  // total_questions_solved: number;*/}
+  overall_efficiency: number;
+  overall_progress: number;
+  total_questions_solved: number;
 }
 export interface IAcademic {
   standard: number;

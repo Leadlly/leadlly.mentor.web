@@ -17,13 +17,22 @@ const Tracker = ()=>{
   const searchParams = useSearchParams();
   const userSubjects = [
     { 
-      name: "maths"
+      name: "maths",
+      overall_efficiency: 0,
+      overall_progress: 0,
+      total_questions_solved: 0
     },
     {
-      name: "physics"
+      name: "physics",
+      overall_efficiency: 0,
+      overall_progress: 0,
+      total_questions_solved: 0
     },
     {
-      name: "chemistry" 
+      name: "chemistry",
+      overall_efficiency: 0,
+      overall_progress: 0,
+      total_questions_solved: 0
     }
   ]
   const activeSubject = searchParams.get("subject") ?? userSubjects?.[0].name; 
@@ -34,8 +43,8 @@ const Tracker = ()=>{
     const geTrackerData = async () => {
       try {
         const data = await getTracker(activeSubject!,id);
-        setTrackerData(data);
-        console.log(data)
+        setTrackerData(data.data);
+        console.log(data.data)
       } catch (error: any) {
         toast.error(error.message);
       }
