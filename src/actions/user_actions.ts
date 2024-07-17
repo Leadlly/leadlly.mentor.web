@@ -11,6 +11,7 @@ import { revalidateTag } from "next/cache";
 // import { Student } from "@/helpers/types";
 
 import apiClient from "@/apiClient/apiClient";
+import { error } from "console";
 
 export const signUpUser = async (data: SignUpDataProps) => {
   try {
@@ -246,3 +247,34 @@ export const getplanner = async (id:any) => {
   }
 
 }
+
+export const getTracker = async (subject: string | string[],id:any) => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/student/tracker/get/${id}?subject=${subject}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        next: {
+          tags: ["userTracker"],
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    return data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error in fetching user tracker: ${error.message}`);
+    } else {
+      throw new Error("An unknown error occurred while fetching user tracker!");
+    }
+  }
+};
