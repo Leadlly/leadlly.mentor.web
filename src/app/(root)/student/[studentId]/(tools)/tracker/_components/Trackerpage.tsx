@@ -55,43 +55,6 @@ const Tracker = ()=>{
 
   return (
     <>
-    {/*<div className="pt-16 hidden md:pt-0 lg:flex gap-[12px] h-[calc(100dvh-120px)]">
-      <div className="flex w-[830px] flex-col gap-y-4">
-      <Header
-        title="Tracker"
-        titleClassName="text-xl md:w-full md:bg-[#F3F1F1] md:py-[8px] md:px-[10px] md:text-3xl lg:text-[32px]"
-      />
-      
-      <div className="h-full overflow-y-auto custom__scrollbar pr-3 mb-16 md:mb-0">
-        {activeSubject === "maths" && <MathsTracker />}
-
-        {activeSubject === "physics" && <PhysicsTracker />}
-
-        {activeSubject === "chemistry" && <ChemistryTracker />}
-      </div>
-      </div>
-
-      <div className="h-[calc(100dvh-120px)] shadow-lg pt-[14px] px-[7px] flex flex-col custom__scrollbar overflow-y-auto">
-      <ul className="flex items-center mb-[5%] justify-between md:justify-between gap-2 md:gap-[5px] md:mt-4">
-        {trackerTabs.map((tab) => (
-          <Link key={tab.id} href={`/student/${tab.id}/tracker?subject=${tab.subject}`}>
-            <li
-              className={cn(
-                "capitalize px-5 md:px-[3px] py-1 rounded-lg md:rounded-[3px] text-base md:text-[18px] leading-none font-semibold transition ease-in-out duration-300",
-                activeSubject === tab.id
-                  ? "bg-[#E6D5FD] text-black"
-                  : "text-[#878787]"
-              )}>
-              {tab.subject}
-            </li>
-          </Link>
-        ))}
-      </ul>
-      <SubjectOverview/>
-      </div>
-    </div>*/}
-
-
     <div className="h-[calc(100dvh-120px)] lg:hidden pt-2 md:pt-0 flex flex-col gap-y-4">
     <Header
         title="Tracker"
