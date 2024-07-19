@@ -1,64 +1,100 @@
 import React, { useState } from "react";
 import MeetingCard from "./MeetingCard";
 import ScheduleMeeting from "./ScheduleMeeting";
+import { toast } from "sonner";
+import { acceptMeeting } from "@/actions/meeting_actions";
+import { MeetingDataProps } from "@/helpers/types";
+import RescheduleDialogBox from "./RescheduleDialogBox";
 
-const MeetingContent: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'schedule'>('upcoming');
+const MeetingContent = ({ meetings }: { meetings: MeetingDataProps[] }) => {
+  const [activeTab, setActiveTab] = useState<"upcoming" | "schedule">(
+    "upcoming"
+  );
+  const [isAcceptingMeeting, setIsAcceptingMeeting] = useState<string | null>(
+    null
+  );
+  const [meetingId, setMeetingId] = useState<string | null>(null);
+  const [openRescheduleDialog, setOpenRescheduleDialog] = useState(false);
 
-  const meetings = [
-    {
-      date: "Wed, 17th April 2024",
-      time: "10:00 IST",
-      topic: "Vectors and Algebra",
-    },
-    { date: "Thu, 18th April 2024", time: "11:00 IST", topic: "Calculus" },
-    { date: "Fri, 19th April 2024", time: "12:00 IST", topic: "Statistics" },
-  ];
+  const handleAccept = async (meetingId: string) => {
+    setIsAcceptingMeeting(meetingId);
+    try {
+      const res = await acceptMeeting(meetingId);
+      console.log(res);
 
-  const handleAccept = (meeting: any) => {
-    console.log(`Accepted meeting: ${meeting.topic}`);
+      if (!res.success) {
+        toast.error(res.message);
+        return;
+      }
+
+      toast.success(res.message);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsAcceptingMeeting(null);
+    }
   };
 
-  const handleReschedule = (meeting: any) => {
-    console.log(`Rescheduled meeting: ${meeting.topic}`);
+  const handleReschedule = (meetingId: string) => {
+    setMeetingId(meetingId);
+    setOpenRescheduleDialog(true);
   };
 
   return (
     <div className="p-3">
       <div className="tabs mb-4 flex justify-between">
-      <button
+        <button
           className={`px-4 py-2 font-semibold transition-colors duration-300 ${
-            activeTab === 'upcoming' ? 'text-[#56249E]' : 'text-black hover:border-b-[1px] hover:border-[#56249E]'
+            activeTab === "upcoming"
+              ? "text-[#56249E]"
+              : "text-black hover:border-b-[1px] hover:border-[#56249E]"
           }`}
-          onClick={() => setActiveTab('upcoming')}
+          onClick={() => setActiveTab("upcoming")}
         >
           Upcoming Meetings
         </button>
         <button
           className={`px-4 py-2 font-semibold transition-colors duration-300 ${
-            activeTab === 'schedule' ? 'text-[#56249E]' : 'text-black hover:border-b-[1px] hover:border-[#56249E]'
+            activeTab === "schedule"
+              ? "text-[#56249E]"
+              : "text-black hover:border-b-[1px] hover:border-[#56249E]"
           }`}
-          onClick={() => setActiveTab('schedule')}
+          onClick={() => setActiveTab("schedule")}
         >
           Schedule Meeting
         </button>
       </div>
       <div className="tab-content">
-        {activeTab === 'upcoming' && (
-          <div>
-            {meetings.map((meeting, index) => (
-              <MeetingCard
-                key={index}
-                date={meeting.date}
-                time={meeting.time}
-                topic={meeting.topic}
-                onAccept={() => handleAccept(meeting)}
-                onReschedule={() => handleReschedule(meeting)}
+        {activeTab === "upcoming" && (
+          <>
+            <div>
+              {meetings && meetings.length ? (
+                meetings.map((meeting) => (
+                  <MeetingCard
+                    key={meeting._id}
+                    data={meeting}
+                    isAcceptingMeeting={isAcceptingMeeting}
+                    onAccept={() => handleAccept(meeting._id)}
+                    onReschedule={() => handleReschedule(meeting._id)}
+                  />
+                ))
+              ) : (
+                <div className="w-full h-full flex items-center justify-center">
+                  <p className="text-sm text-muted-foreground font-semibold">
+                    No meetings yet!
+                  </p>
+                </div>
+              )}
+            </div>
+            {openRescheduleDialog && (
+              <RescheduleDialogBox
+                setOpenRescheduleDialog={setOpenRescheduleDialog}
+                meetingId={meetingId}
               />
-            ))}
-          </div>
+            )}
+          </>
         )}
-        {activeTab === 'schedule' && <ScheduleMeeting />}
+        {activeTab === "schedule" && <ScheduleMeeting />}
       </div>
     </div>
   );

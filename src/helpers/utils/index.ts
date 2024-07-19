@@ -1,63 +1,51 @@
-export function getTodaysFormattedDate() {
-  const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  const monthsOfYear = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+const daysOfWeek = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
+const monthsOfYear = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
 
+export function getTodaysDay() {
   const today = new Date();
   const dayOfWeek = daysOfWeek[today.getDay()];
+
+  return `${dayOfWeek}`;
+}
+
+export function getMonthDate(date: Date): string {
+  const dayOfMonth: string = String(date.getDate()).padStart(2, "0");
+  const month: string = monthsOfYear[date.getMonth()];
+
+  return `${month} ${dayOfMonth}`;
+}
+
+export function getTodaysFormattedDate() {
+  const today = new Date();
   const dayOfMonth = String(today.getDate()).padStart(2, "0");
   const month = monthsOfYear[today.getMonth()];
   const year = today.getFullYear();
 
-  return `${dayOfWeek} ${dayOfMonth} ${month} ${year}`;
+  return `${dayOfMonth} ${month} ${year}`;
 }
 
 export function getFormattedDate(date: Date): string {
-  const daysOfWeek: string[] = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
-  const monthsOfYear: string[] = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  const dayOfWeek: string = daysOfWeek[date.getDay()];
   const dayOfMonth: string = String(date.getDate()).padStart(2, "0");
   const month: string = monthsOfYear[date.getMonth()];
   const year: number = date.getFullYear();
@@ -65,17 +53,26 @@ export function getFormattedDate(date: Date): string {
   return `${dayOfMonth} ${month} ${year}`;
 }
 
-export function convertDateString(inputDate: string): string {
-  // Parse the input date string
-  const date = new Date(inputDate);
+export function convertDateString(inputDate: Date): string {
+  const utcDate = new Date(inputDate);
 
-  // Extract the day, month, and year
-  const day = String(date.getUTCDate()).padStart(2, "0");
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // getUTCMonth() is zero-based
-  const year = date.getUTCFullYear();
+  // Convert to IST by adding 5 hours and 30 minutes
+  const istDate = new Date(utcDate.getTime() + 5.5 * 60 * 60 * 1000);
+
+  // Format the date
+  const day = istDate.getDate().toString().padStart(2, "0");
+  const month = (istDate.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed
+  const year = istDate.getFullYear();
 
   // Format the date as DD-MM-YYYY
   return `${day}-${month}-${year}`;
+}
+
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.toLocaleString("default", { month: "short" });
+  return `${day} ${month}`;
 }
 
 export function capitalizeFirstLetter(sentence: string): string {

@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import TabHeader from "./TabHeader";
 import ChatContent from "./ChatContent";
 import MeetingContent from "./MeetingContent";
+import { MeetingDataProps } from "@/helpers/types";
 
-const CommunicationPanel: React.FC = () => {
+const CommunicationPanel = ({ meetings }: { meetings: MeetingDataProps[] }) => {
   const [activeTab, setActiveTab] = useState<"chat" | "meeting">("chat");
 
   return (
@@ -50,7 +51,7 @@ const CommunicationPanel: React.FC = () => {
             }}
           />
         ) : (
-          <MeetingContent />
+          <MeetingContent meetings={meetings} />
         )}
       </div>
     </div>

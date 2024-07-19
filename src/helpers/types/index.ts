@@ -69,7 +69,7 @@ export interface EfficiencyOption {
   label: string;
   labelClassName: string;
   cardBackgroundColor: string;
-  textColor:string
+  textColor: string;
 }
 export type NavbarLink = {
   label: string;
@@ -124,7 +124,7 @@ export type TTabContentProps = {
   children: React.ReactNode;
 };
 export interface ChatData {
-  studentName:String
+  studentName: String;
   messages: Array<{
     sender: string;
     text: string;
@@ -159,16 +159,16 @@ export type Params = {
 export type InfoItem = {
   label: string;
   value: string;
-}
+};
 
 export type InfoBoxProps = {
   title: string;
   items: InfoItem[];
-}
+};
 
 export type InfoCardProps = {
   sections: InfoBoxProps[];
-}
+};
 export interface ISubject {
   name: string;
   overall_efficiency: number;
@@ -204,11 +204,11 @@ export type UserDataProps = {
   about?: {
     college?: string;
     degree?: string;
-    dob?: string; 
+    dob?: string;
   };
   status: "Verified" | "Not Verified";
   students?: string;
-  createdAt?: Date; 
+  createdAt?: Date;
   resetPasswordToken?: string | null;
   resetTokenExpiry?: string | null;
   comparePassword(candidatePassword: string): Promise<boolean>;
@@ -250,10 +250,28 @@ export type MentorPersonalInfoProps = {
   firstName?: string;
   gender?: string;
   lastName?: string;
-  email?:string;
+  email?: string;
   phone?: number;
   pinCode?: number;
   schoolOrCollegeAddress?: string;
   schoolOrCollegeName?: string;
   studentSchedule?: string;
+};
+
+export type MeetingDataProps = {
+  _id: string;
+  date: string;
+  time: string;
+  student: string;
+  mentor: string;
+  accepted: boolean;
+  rescheduled: {
+    isRescheduled: boolean;
+    date: Date;
+    time: string;
+  };
+  gmeet: { link: string | null };
+  message: string;
+  createdAt: string;
+  updatedAt: string;
 };
