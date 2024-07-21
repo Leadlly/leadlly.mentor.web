@@ -1,6 +1,6 @@
 import LevelPoints from "./LevelPoints";
 
-const PointsBox = () => {
+const PointsBox = ({points,level,streak}:any) => {
   return (
     <div className="grid grid-cols-3 gap-[8px] md:gap-6 xl:gap-6">
       <LevelPoints
@@ -10,7 +10,7 @@ const PointsBox = () => {
         iconShadowColor="shadow-[#32CEFF]/[0.55]"
         chevronBgColor="bg-[#D2E0E7]"
         pointsColor="text-[#0075FF]"
-        points={10}
+        points={points ?? 0}
         pointsText="Level Up"
         progressValue={60}
         progressIndicatorBg="bg-[#0075FF]"
@@ -25,7 +25,7 @@ const PointsBox = () => {
         iconShadowColor="shadow-[#FFE608]/[0.55]"
         chevronBgColor="bg-[#FCDEBC]"
         pointsColor="text-[#FF9900]"
-        points={70}
+        points={level ?? 0}
         pointsText="Points"
         progressValue={30}
         progressIndicatorBg="bg-[#FF9900]"
@@ -39,7 +39,7 @@ const PointsBox = () => {
         iconAltText="Fire Flame"
         chevronBgColor="bg-[#FFC0F9]"
         pointsColor="text-[#FF00E5]"
-        points={16}
+        points={streak ?? 0}
         pointsText="Streak"
         progressValue={50}
         progressIndicatorBg="bg-[#FF00E5]"

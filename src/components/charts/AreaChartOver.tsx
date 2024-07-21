@@ -1,27 +1,9 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useMemo } from "react";
 const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const AreaChart = ({monthly}:{monthly:any}) => {
-  const series = useMemo(() => {
-    if (!Array.isArray(monthly)) return [];
-
-    const sessionData = monthly.map((day) => day.session);
-    const quizData = monthly.map((day) => day.quiz);
-
-    return [
-      {
-        name: "Revisions",
-        data: sessionData,
-      },
-      {
-        name: "Quizzes",
-        data: quizData,
-      },
-    ];
-  }, [monthly]);
+const AreaChartOver = () => {
   return (
     <>
       <div className="flex-1">
@@ -29,7 +11,16 @@ const AreaChart = ({monthly}:{monthly:any}) => {
           type="area"
           width={"100%"}
           height={125}
-          series={series}
+          series={[
+            {
+              name: "Revision Session",
+              data: [31, 40],
+            },
+            {
+              name: "Quizzes",
+              data: [11, 32],
+            },
+          ]}
           options={{
             dataLabels: {
               enabled: false,
@@ -55,4 +46,4 @@ const AreaChart = ({monthly}:{monthly:any}) => {
   );
 };
 
-export default AreaChart;
+export default AreaChartOver;
