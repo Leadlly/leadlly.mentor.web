@@ -121,6 +121,7 @@ export type TSemiRadialChartProps = {
 export type TTabContentProps = {
   id: string;
   activeTab: string;
+  className?:string
   children: React.ReactNode;
 };
 export interface ChatData {
