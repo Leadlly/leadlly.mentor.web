@@ -24,11 +24,10 @@ const TabNavItem = ({
     <li
       onClick={handleClick}
       className={cn(
-        "relative text-xs p-[0.7px] px-1  flex  rounded cursor-pointer transition-all ease-in-out",
+        "relative text-xs p-1 rounded cursor-pointer transition-all ease-in-out",
         activeTab === id ? "text-white" : "text-black",
         className
-      )}
-    >
+      )}>
       {activeTab === id && (
         <motion.div
           layoutId={layoutId}
@@ -36,10 +35,10 @@ const TabNavItem = ({
             type: "spring",
             duration: 0.6,
           }}
-          className={cn("absolute rounded bg-blue-500", activeTabClassName)}
+          className={cn("absolute rounded bg-primary", activeTabClassName)}
         />
       )}
-      <span className={cn("relative z-10 text-xs", titleClassName)}>{title}</span>
+      <span className={cn("relative z-10", titleClassName)}>{title}</span>
     </li>
   );
 };

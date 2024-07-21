@@ -1,11 +1,15 @@
 "use client";
 
 import dynamic from "next/dynamic";
-const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
+const Charts = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+  loading: () => <SemiRadialChartSkeleton />,
+});
 
 import { TSemiRadialChartProps } from "@/helpers/types";
 
 import { cn } from "@/lib/utils";
+import SemiRadialChartSkeleton from "./_skeletons/SemiRadialChartSkeleton";
 
 const SemiRadialChart = ({
   series = [],
@@ -53,8 +57,8 @@ const SemiRadialChart = ({
       <div className="w-full flex items-center justify-center gap-1">
         <span
           className={cn(
-            "w-3 h-3 rounded-[5px] ",
-            chartLabel === "Revision Session" ? "bg-[#6200EE]" : "bg-[#56CFE1]"
+            "w-2 h-2 rounded-[2px] -mt-[2px]",
+            chartLabel === "revision" ? "bg-primary" : "bg-[#56CFE1]"
           )}
         ></span>
         <p className="text-xs capitalize">{chartLabel}</p>

@@ -1,9 +1,29 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useMemo } from "react";
+
 const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const BarChart = () => {
+const BarChart = ({ weekly }: { weekly: any }) => {
+  const series = useMemo(() => {
+    if (!Array.isArray(weekly)) return [];
+
+    const sessionData = weekly.map((day) => day.session);
+    const quizData = weekly.map((day) => day.quiz);
+
+    return [
+      {
+        name: "Revisions",
+        data: sessionData,
+      },
+      {
+        name: "Quizzes",
+        data: quizData,
+      },
+    ];
+  }, [weekly]);
+
   return (
     <>
       <div className="flex-1">
@@ -11,16 +31,7 @@ const BarChart = () => {
           type="bar"
           width={"100%"}
           height={125}
-          series={[
-            {
-              name: "Revisions",
-              data: [44, 55, 57, 56, 61, 58, 63],
-            },
-            {
-              name: "Quizzes",
-              data: [35, 41, 36, 26, 45, 48, 52],
-            },
-          ]}
+          series={series}
           options={{
             chart: {
               type: "bar",
@@ -63,7 +74,7 @@ const BarChart = () => {
         </div>
         <div className="flex items-center gap-2">
           <span className=" block w-3 h-3 rounded bg-[#72EFDD]"></span>
-          <span className="text-xs capitalize  font-semibold">Quizzes</span>
+          <span className="text-xs capitalize font-semibold">Quizzes</span>
         </div>
       </div>
     </>

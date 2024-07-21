@@ -166,6 +166,135 @@ export type InfoBoxProps = {
   items: InfoItem[];
 }
 
+export interface monthlyReport {
+  startDate: string;
+  endDate: string;
+  days: {
+      day: string;
+      date: string;
+      session: any;
+      quiz: any;
+      overall: any;
+  }[];
+}
+
+export interface  overallReport {
+  day: string;
+  date: string;
+  session: number;
+  quiz: number;
+  overall: number;
+}[]
+export interface weeklyReport {
+  startDate: string;
+  endDate: string;
+  days: {
+      day: string;
+      date: string;
+      session: any;
+      quiz: any;
+      overall: any;
+  }[];
+}
+interface Streak {
+  number: number | null;
+}
+
+interface Level {
+  number: number
+}
+
+interface Points {
+  number: number
+}
+
+interface DailyReport {
+  mood: any[]; 
+}
+
+interface Report {
+  dailyReport: DailyReport;
+}
+export interface Studentinformation {
+  firstname: string;
+  lastname: string;
+  email: string;
+  phone: {
+    personal: string
+    other: string 
+  };
+  parent: {
+    name: string 
+    phone: string 
+  };
+  mentor: {
+    id: string;
+  };
+  planner: boolean;
+  address: {
+    country: string
+    addressLine: string
+    pincode: string
+  };
+  academic: {
+    standard: number;
+    competitiveExam: string;
+    schedule: string;
+    coachingMode: string;
+    coachingName: string 
+    coachingAddress: string 
+    schoolOrCollegeName: string 
+    schoolOrCollegeAddress: string 
+    subjects: {
+      name: string;
+      overall_efficiency: number;
+      overall_progress: number;
+      total_questions_solved: number;
+    }[];
+  };
+  about: {
+    dateOfBirth: string 
+    gender: string;
+  };
+  avatar: {
+    public_id: string 
+    url: string 
+  };
+  details: {
+    level: Level;
+    points: Points;
+    streak: Streak;
+    mood: {
+      day: string;
+      emoji: string;
+    }[];
+    report: {
+      dailyReport: {
+        session: number,
+        quiz: number,
+        overall: number
+      }
+    }
+  };
+  subscription: {
+    id: string 
+    status: string 
+    dateOfActivation: string 
+  };
+  freeTrial: {
+    availed: boolean;
+    active: boolean;
+    dateOfActivation: string;
+    dateOfDeactivation: string 
+  };
+  refund: {
+    status: string 
+    amount: number 
+  };
+  createdAt: string;
+  updatedAt: string;
+}
+
 export type InfoCardProps = {
   sections: InfoBoxProps[];
 }
