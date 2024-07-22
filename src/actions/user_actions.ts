@@ -212,6 +212,41 @@ export const getAllStudents = async () => {
   }
 };
 
+export const Studentinfo = async (id:string) => {
+  const token = await getCookie("token");
+
+  try {
+    const endpoint = `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/getstudents?studentId=${id}`;
+
+    const res = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${token}`,
+      },
+      // cache: "force-cache",
+      // next: {
+      //   tags: ["allocatedStudents"],
+      // },
+      credentials: "include",
+    });
+
+    console.log(res)
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error(`status: ${res.status}, response: ${errorText}`); 
+      throw new Error(`status: ${res.status}, response: ${errorText}`);
+    }
+
+    const responseData = await res.json();
+    console.log("Fetched data:", responseData);
+
+    return responseData;
+  } catch (error) {
+    console.error("Error in fetching student info:", (error as Error).message);
+    throw new Error(`Error in fetching student info: ${(error as Error).message}`);
+  }
+};
 
 export const getplanner = async (id:any) => {
   const token = await getCookie("token")
@@ -278,3 +313,5 @@ export const getTracker = async (subject: string | string[],id:any) => {
     }
   }
 };
+
+

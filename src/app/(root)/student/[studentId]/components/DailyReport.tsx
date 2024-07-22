@@ -1,13 +1,13 @@
 import RadialBarChart from "@/components/charts/RadialBarChart";
 
 
-const DailyReport = () => {
+const DailyReport = ({dailyreportquiz,dailyreportsession}:any) => {
   return (
     <div className="px-3 flex-1 py-2 bg-[#FBFAFC] rounded-2xl border-[1px] border-[#D8D5D5] shadow-custom-black">
       <h4 className="text-xs md:text-sm font-bold">Daily Report</h4>
       <div className="flex items-center justify-center">
         <RadialBarChart
-          series={[70, 37]}
+          series={[dailyreportquiz,dailyreportsession]}
           colors={["#9654F4", "#72EFDD"]}
           labels={["Sessions", "Quizzes"]}
           dataLabel="overall"

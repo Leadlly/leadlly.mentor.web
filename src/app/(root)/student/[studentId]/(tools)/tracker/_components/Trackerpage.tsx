@@ -39,6 +39,8 @@ const Tracker = ()=>{
   const pathname = usePathname();
   const segments = pathname.split('/');
   const id = segments[segments.length - 2];
+
+  
   useEffect(() => {
     const geTrackerData = async () => {
       try {

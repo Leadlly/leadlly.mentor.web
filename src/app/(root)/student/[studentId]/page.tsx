@@ -1,4 +1,4 @@
-
+"use client"
 import { Params } from "@/helpers/types";
 import CommunicationPanel from "./components/CommunicationPanel";
 import StudentDashboard from "./components/StudentDashboard";
