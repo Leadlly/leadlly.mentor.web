@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { format } from "date-fns";
 
-import { CalendarIcon, Check } from "lucide-react";
+import { CalendarIcon, Check, Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -35,49 +35,83 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useAppSelector } from "@/redux/hooks";
+import GMeetInputLinkModal from "./GMeetInputLinkModal";
+import { scheduleMeeting } from "@/actions/meeting_actions";
 
 const RequestMeetingFormSchema = z.object({
   date_of_meeting: z.date({
     required_error: "A date is required to request meeting.",
   }),
   time: z.string({ required_error: "A time is required to request meeting!" }),
-  meeting_agenda: z.string({
-    required_error: "Please enter your meeting agenda",
-  }),
+  meeting_agenda: z.string().optional(),
 });
 
-const RequestMeetingComponent = () => {
-  // const [selectedMeetingTime, setSelectedMeetingTime] = useState('');
+const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
+  const [openGMeetLinkInputModal, setOpenGMeetLinkInputModal] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const mentorStudents = useAppSelector((state) => state.user.user?.students);
+  const currentStudentIndex = mentorStudents?.findIndex(
+    (student) => student.id === studentId
+  );
+  const currentStudent = mentorStudents?.[currentStudentIndex!];
+
+  const isGMeetLink = !!currentStudent?.gmeet.link;
+
   const form = useForm<z.infer<typeof RequestMeetingFormSchema>>({
     resolver: zodResolver(RequestMeetingFormSchema),
   });
 
-  const onSubmit = (data: z.infer<typeof RequestMeetingFormSchema>) => {
-    // Include the selected meeting time in the form submission data
-    const formData = { ...data };
-    toast.success("You submitted the following values:", {
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">
-            {JSON.stringify(formData, null, 2)}
-          </code>
-        </pre>
-      ),
-    });
-    setSubmitted(true);
+  const handleGMeetLinkInputModal = () => {
+    setOpenGMeetLinkInputModal(true);
+  };
+
+  const onSubmit = async (data: z.infer<typeof RequestMeetingFormSchema>) => {
+    if (
+      mentorStudents &&
+      mentorStudents?.length &&
+      currentStudent &&
+      !currentStudent?.gmeet.link
+    ) {
+      return toast.error("No meeting link available!");
+    }
+
+    const formattedData = {
+      date: new Date(data.date_of_meeting),
+      time: data.time,
+      studentIds: [currentStudent?.id!],
+    };
+
+    setIsSubmitting(true);
+
+    try {
+      const res = await scheduleMeeting(formattedData);
+      if (res.success && res.success === false) {
+        return toast.error(res.message);
+      }
+
+      toast.success(res.message);
+      setSubmitted(true);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
     <div>
       {!submitted ? (
-        <div className="h-[74dvh] flex flex-col gap-y-5 md:gap-y-7 bg-[url('/assets/images/programmer.png')] bg-no-repeat bg-right-top bg-[length:200px] md:bg-[length:300px] rounded-xl overflow-y-auto custom__scrollbar px-3 md:px-7 pb-4">
+        <div className="h-[74dvh] flex flex-col gap-y-5 md:gap-y-7 rounded-xl overflow-y-auto custom__scrollbar px-3 md:px-7 pb-4">
           {/* Request Meet */}
 
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex flex-col gap-y-5 w-full max-w-lg mx-auto">
+              className="flex flex-col gap-y-5 w-full max-w-lg mx-auto"
+            >
               <div className="grid grid-cols-2 gap-5">
                 {/* Date Select */}
                 <FormField
@@ -94,7 +128,8 @@ const RequestMeetingComponent = () => {
                               className={cn(
                                 "w-full pl-3 text-left font-normal",
                                 !field.value && "text-muted-foreground"
-                              )}>
+                              )}
+                            >
                               {field.value ? (
                                 format(field.value, "dd-MM-yyyy")
                               ) : (
@@ -133,7 +168,8 @@ const RequestMeetingComponent = () => {
                       <FormLabel>Time</FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}>
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select a time" />
@@ -159,7 +195,7 @@ const RequestMeetingComponent = () => {
                   <FormItem>
                     <FormControl>
                       <Textarea
-                        placeholder="Type your doubt here..."
+                        placeholder="Meeting agenda"
                         className="resize-none"
                         {...field}
                       />
@@ -169,11 +205,32 @@ const RequestMeetingComponent = () => {
                 )}
               />
 
-              <div className="text-center">
-                <Button type="submit">Schedule</Button>
+              <div className="w-full flex items-center justify-between">
+                <Button
+                  type="button"
+                  variant={"secondary"}
+                  onClick={handleGMeetLinkInputModal}
+                  disabled={isGMeetLink}
+                  className="text-primary bg-primary/10"
+                >
+                  {isGMeetLink ? "Update Meeting Link" : "Get Meeting Link"}
+                </Button>
+                <Button type="submit" disabled={!isGMeetLink || isSubmitting}>
+                  {isSubmitting ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    "Schedule"
+                  )}
+                </Button>
               </div>
             </form>
           </Form>
+
+          {openGMeetLinkInputModal && (
+            <GMeetInputLinkModal
+              setOpenGMeetLinkInputModal={setOpenGMeetLinkInputModal}
+            />
+          )}
         </div>
       ) : (
         <div className="h-[74dvh] flex flex-col border rounded-xl overflow-hidden bg-[url('/assets/images/girl_celebration.png'),_url('/assets/images/work_discussion.png')] bg-[position:top_left_-20px,_bottom_right] bg-[length:140px,_170px] md:bg-[length:200px,_200px] bg-no-repeat">
@@ -182,13 +239,11 @@ const RequestMeetingComponent = () => {
               <Check className="w-8 h-8 md:w-12 md:h-12" />
             </div>
             <h1 className="text-primary text-4xl font-bold">
-              Meeting Scheduled Sucessfully
+              Meeting Scheduled Successfully
             </h1>
             <div className="text-center">
               <h3 className="text-3xl font-semibold mt-6">Thank You!</h3>
-              <p className="font-medium text-xl m-1">
-                Your Meet is Scheculed
-              </p>
+              <p className="font-medium text-xl m-1">Your Meet is Scheduled</p>
             </div>
           </div>
         </div>

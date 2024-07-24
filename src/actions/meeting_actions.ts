@@ -98,3 +98,38 @@ export const rescheduleMeeting = async (
     }
   }
 };
+
+export const scheduleMeeting = async (data: {
+  date: Date;
+  time: string;
+  studentIds: string[];
+}) => {
+  try {
+    const token = await getCookie("token");
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/schedule`,
+      {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+      }
+    );
+
+    const responseData = await res.json();
+
+    revalidateTag("meetingsData");
+
+    return responseData;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error in scheduling meeting: ${error.message}`);
+    } else {
+      throw new Error("An unknown error occurred while scheduling meeting");
+    }
+  }
+};

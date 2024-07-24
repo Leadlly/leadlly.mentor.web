@@ -6,7 +6,13 @@ import { acceptMeeting } from "@/actions/meeting_actions";
 import { MeetingDataProps } from "@/helpers/types";
 import RescheduleDialogBox from "./RescheduleDialogBox";
 
-const MeetingContent = ({ meetings }: { meetings: MeetingDataProps[] }) => {
+const MeetingContent = ({
+  meetings,
+  studentId,
+}: {
+  meetings: MeetingDataProps[];
+  studentId: string;
+}) => {
   const [activeTab, setActiveTab] = useState<"upcoming" | "schedule">(
     "upcoming"
   );
@@ -15,6 +21,8 @@ const MeetingContent = ({ meetings }: { meetings: MeetingDataProps[] }) => {
   );
   const [meetingId, setMeetingId] = useState<string | null>(null);
   const [openRescheduleDialog, setOpenRescheduleDialog] = useState(false);
+
+  console.log(meetings);
 
   const handleAccept = async (meetingId: string) => {
     setIsAcceptingMeeting(meetingId);
@@ -81,7 +89,7 @@ const MeetingContent = ({ meetings }: { meetings: MeetingDataProps[] }) => {
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <p className="text-sm text-muted-foreground font-semibold">
-                    No meetings yet!
+                    No meetings scheduled!
                   </p>
                 </div>
               )}
@@ -94,7 +102,7 @@ const MeetingContent = ({ meetings }: { meetings: MeetingDataProps[] }) => {
             )}
           </>
         )}
-        {activeTab === "schedule" && <ScheduleMeeting />}
+        {activeTab === "schedule" && <ScheduleMeeting studentId={studentId} />}
       </div>
     </div>
   );
