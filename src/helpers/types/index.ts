@@ -316,38 +316,6 @@ export interface IAcademic {
   schoolOrCollegeName?: string | null;
   schoolOrCollegeAddress?: string | null;
 }
-export type UserDataProps = {
-  firstname: string;
-  lastname?: string;
-  email: string;
-  subjects?: ISubject[];
-  phone?: {
-    personal?: number;
-    other?: number;
-  };
-  academic: IAcademic;
-  password: string;
-  avatar?: {
-    public_id: string;
-    url: string;
-  };
-  about?: {
-    college?: string;
-    degree?: string;
-    dob?: string; 
-  };
-  status: "Verified" | "Not Verified";
-  students?: string;
-  createdAt?: Date; 
-  resetPasswordToken?: string | null;
-  resetTokenExpiry?: string | null;
-  comparePassword(candidatePassword: string): Promise<boolean>;
-  getToken(): Promise<string>;
-};
-
-export type UserProps = {
-  user: UserDataProps | null;
-};
 
 export type OTPProps = {
   otp: string;
@@ -372,18 +340,50 @@ export type ResetPasswordProps = {
   password: string;
 };
 export type MentorPersonalInfoProps = {
-  address?: string;
-  class?: (number | string)[];
-  competitiveExam?: (number | string)[];
-  country?: string;
-  dateOfBirth?: string;
+  _id?: string; 
   firstName?: string;
-  gender?: string;
-  lastName?: string;
-  email?:string;
-  phone?: number;
-  pinCode?: number;
-  schoolOrCollegeAddress?: string;
-  schoolOrCollegeName?: string;
-  studentSchedule?: string;
+  lastName?: string 
+  email?: string;
+  phone?: {
+    personal?: number 
+    other?: number 
+  };
+  password?: string;
+  salt?: string;
+  address?: {
+    country?: string 
+    addressLine?: string 
+    pincode?: number 
+  };
+  avatar?: {
+    public_id?: string;
+    url?: string;
+  };
+  about?: {
+    dateOfBirth?: string;
+    gender?: string;
+  };
+  academic?: {
+    schoolOrCollegeName?: string 
+    schoolOrCollegeAddress?: string 
+    degree?: string 
+    status?: string; 
+    standard?: (number | string)[]; 
+    schedule?: string;
+  };
+  gmeet?: {
+    link?: string 
+  };
+  preference?: {
+    standard?: (number | string)[];
+    competitiveExam?: (number | string)[];
+  };
+  students?: {
+    id: string;
+    gmeet?: {
+      link?: string
+    };
+  }[];
+  createdAt?: string; 
+  __v?: number; 
 };

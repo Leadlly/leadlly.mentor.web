@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { Provider } from "react-redux";
 import { makeStore, AppStore } from "@/redux/store";
-import { UserDataProps } from "@/helpers/types";
+import { MentorPersonalInfoProps } from "@/helpers/types";
 import { userData } from "@/redux/slices";
 
 export default function StoreProvider({
@@ -11,7 +11,7 @@ export default function StoreProvider({
   user,
 }: {
   children: React.ReactNode;
-  user: UserDataProps | null;
+  user: MentorPersonalInfoProps | null;
 }) {
   const storeRef = useRef<AppStore>();
   if (!storeRef.current) {
