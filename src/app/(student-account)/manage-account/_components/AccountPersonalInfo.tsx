@@ -193,7 +193,7 @@ const AccountPersonalInfo = () => {
                     <MultiSelect
                       options={classOptions}
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={field.value || []}
                       variant={"inverted"}
                       animation={2}
                       placeholder="Select your class preference"
@@ -527,7 +527,7 @@ const AccountPersonalInfo = () => {
                     <MultiSelect
                       options={competitiveExamOptions}
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={field.value || []}
                       variant={"inverted"}
                       animation={2}
                       placeholder="Select your competitive exams preference"
