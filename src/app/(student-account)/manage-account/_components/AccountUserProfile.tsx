@@ -12,17 +12,17 @@ const AccountUserProfile = () => {
       <Avatar className="w-20 h-20 lg:w-32 lg:h-32">
         <AvatarImage src={user?.avatar?.url} />
         <AvatarFallback className="text-3xl font-semibold capitalize">
-          {user?.firstName}
+          {user?.firstname}
           <span className="capitalize">
-            {user?.lastName ? user.lastName[0] : ""}
+            {user?.lastname ? user.lastname[0] : ""}
           </span>
         </AvatarFallback>
       </Avatar>
 
       <div className="space-y-3 lg:space-y-5">
         <h2 className="capitalize text-2xl lg:text-3xl font-bold">
-          <span className="text-primary">hello,</span> {user?.firstName}{" "}
-          {user?.lastName}
+          <span className="text-primary">hello,</span> {user?.firstname}{" "}
+          {user?.lastname}
         </h2>
 
         <p className="text-base lg:text-xl max-w-lg">

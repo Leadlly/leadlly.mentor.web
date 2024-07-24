@@ -1,8 +1,8 @@
 "use client";
+
 import { mentorPersonalInfo } from "@/actions/user_actions";
 import { Button } from "@/components/ui/button";
 import { CalendarDatePicker } from "@/components/ui/calendar_date_picker";
-import { userData } from "@/redux/slices";
 import {
   Form,
   FormControl,
@@ -12,8 +12,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
   Select,
   SelectContent,
@@ -21,47 +19,45 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { userData } from "@/redux/slices";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit3, Globe, Loader2, MailOpen, Phone, User } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
-import { useAppDispatch,useAppSelector } from "@/redux/hooks";
-
-const AccountPersonalInfoSchema = z.object({
-  firstName: z.string().nullable(),
-  lastName: z.string().nullable(),
-  phone: z.string().nullable(),
-  email: z.string().email(),
-  address: z.string().nullable(),
-  pinCode: z.string().nullable(),
-  schoolOrCollegeName: z.string().nullable(),
-  schoolOrCollegeAddress: z.string().nullable(),
-  coachingName: z.string().nullable(),
-  coachingAddress: z.string().nullable(),
-  gender: z.string().nullable(),
-  class: z.string().nullable(),
-  studentSchedule: z.string().nullable(),
-  country: z.string().nullable(),
-  dateOfBirth: z.object({
-    from: z.string().nullable(),
-  }).nullable(),
-});
+import { AccountPersonalInfoSchema } from "./accountPersonalInfoSchema";
 
 const AccountPersonalInfo = () => {
   const [isSaving, setIsSaving] = useState(false);
+
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.user.user);
-  console.log(user,"this is user")
-  const form = useForm();
 
-  const onSubmit = async (data: any) => {
+  const form = useForm<z.infer<typeof AccountPersonalInfoSchema>>({
+    resolver: zodResolver(AccountPersonalInfoSchema),
+    defaultValues: {
+      firstName: user?.firstname ? user.firstname : "",
+      lastName: user?.lastname ? user.lastname : "",
+      phone: user?.phone?.personal ? String(user.phone.personal) : "",
+      email: user?.email ? user.email : "",
+      address: user?.address.addressLine ? user.address.addressLine : "",
+      pinCode: user?.address.pincode ? String(user.address.pincode) : "",
+      schoolOrCollegeName: user?.academic.schoolOrCollegeName
+        ? user.academic.schoolOrCollegeName
+        : "",
+      schoolOrCollegeAddress: user?.academic.schoolOrCollegeAddress
+        ? user.academic.schoolOrCollegeAddress
+        : "",
+      gender: user?.about.gender ? user?.about.gender : "",
+      country: user?.address.country ? user.address.country : "",
+    },
+  });
 
+  const onSubmit = async (data: z.infer<typeof AccountPersonalInfoSchema>) => {
     const formattedPersonalData = {
-      class: Number(data.class),
       dateOfBirth: data.dateOfBirth
         ? new Date(data.dateOfBirth.from).toLocaleString("en-US", {
             timeZone: "Asia/Kolkata",
@@ -74,20 +70,18 @@ const AccountPersonalInfo = () => {
       pinCode: Number(data.pinCode),
     };
 
-    const combinedData = {
-      ...data,
-      ...formattedPersonalData,
-    };
-  
     setIsSaving(true);
-  
-    try {
 
-      const res = await mentorPersonalInfo(combinedData);
+    try {
+      const res = await mentorPersonalInfo({
+        ...data,
+        ...formattedPersonalData,
+      });
+
       dispatch(userData(res.user));
+
       toast.success(res.message);
     } catch (error: any) {
-
       toast.error("Your info submission failed!", {
         description: error.message,
       });
@@ -95,8 +89,6 @@ const AccountPersonalInfo = () => {
       setIsSaving(false);
     }
   };
-  
-
   return (
     <>
       <Form {...form}>
@@ -129,7 +121,7 @@ const AccountPersonalInfo = () => {
                       </div>
                       <FormControl>
                         <Input
-                          defaultValue={user?.firstName}
+                          placeholder="Enter your first name"
                           icon2={<User className="w-5 h-5" />}
                           className="text-base lg:text-lg font-medium"
                           {...field}
@@ -158,45 +150,12 @@ const AccountPersonalInfo = () => {
                       </div>
                       <FormControl>
                         <Input
-                          defaultValue={user?.lastName}
+                          placeholder="Enter your last name"
                           icon2={<User className="w-5 h-5" />}
                           className="text-base lg:text-lg font-medium"
                           {...field}
                         />
                       </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="class"
-                  render={({ field }) => (
-                    <FormItem className="space-y-1">
-                      <FormLabel className="text-base lg:text-lg font-medium">
-                        Class:
-                      </FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger
-                            className={cn(
-                              "text-base lg:text-lg font-medium",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            <SelectValue placeholder="Select your class" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="11">11th</SelectItem>
-                          <SelectItem value="12">12th</SelectItem>
-                          <SelectItem value="13">Dropper</SelectItem>
-                        </SelectContent>
-                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -228,7 +187,7 @@ const AccountPersonalInfo = () => {
                       <FormControl>
                         <Input
                           type="tel"
-                          defaultValue={user?.phone?.personal}
+                          placeholder="Enter your phone no."
                           icon2={<Phone className="w-5 h-5" />}
                           className="text-base lg:text-lg font-medium"
                           countryCodeClassName="text-base lg:text-lg font-medium"
@@ -266,7 +225,7 @@ const AccountPersonalInfo = () => {
                       <FormControl>
                         <Input
                           type="email"
-                          defaultValue={user?.email}
+                          placeholder="Enter your email"
                           icon2={<MailOpen className="w-5 h-5" />}
                           className="text-base lg:text-lg font-medium"
                           {...field}
@@ -287,7 +246,7 @@ const AccountPersonalInfo = () => {
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={user?.about?.gender}
+                        defaultValue={field.value}
                       >
                         <FormControl>
                           <SelectTrigger
@@ -321,7 +280,7 @@ const AccountPersonalInfo = () => {
                       <FormControl>
                         <CalendarDatePicker
                           date={
-                            user?.about?.dateOfBirth
+                            user?.about.dateOfBirth
                               ? { from: new Date(user.about.dateOfBirth) }
                               : field.value
                           }
@@ -331,7 +290,7 @@ const AccountPersonalInfo = () => {
                           variant="outline"
                           numberOfMonths={1}
                           className="text-base lg:text-lg font-medium"
-                          defaultValue={user?.about?.dateOfBirth}
+                          placeholder="Pick your D.O.B"
                           yearsRange={35}
                         />
                       </FormControl>
@@ -347,6 +306,8 @@ const AccountPersonalInfo = () => {
                 Other Information
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+           
+            
 
                 <FormField
                   control={form.control}
@@ -358,7 +319,7 @@ const AccountPersonalInfo = () => {
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={user?.address?.country}
+                        defaultValue={field.value}
                       >
                         <FormControl>
                           <SelectTrigger
@@ -389,7 +350,7 @@ const AccountPersonalInfo = () => {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          defaultValue={user?.address?.addressLine}
+                          placeholder="Enter your address"
                           icon2={<Globe className="w-5 h-5" />}
                           className="text-base lg:text-lg font-medium"
                           {...field}
@@ -410,7 +371,7 @@ const AccountPersonalInfo = () => {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          defaultValue={user?.address?.pincode}
+                          placeholder="Enter PIN Code"
                           className="text-base lg:text-lg font-medium"
                           {...field}
                         />
@@ -425,8 +386,13 @@ const AccountPersonalInfo = () => {
               <h4 className="text-lg lg:text-[22px] font-medium text-primary">
                 Academic Information
               </h4>
-
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-5">
+
+
+          
+
+
+
                 <FormField
                   control={form.control}
                   name="schoolOrCollegeName"
@@ -437,7 +403,7 @@ const AccountPersonalInfo = () => {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          defaultValue={user?.academic?.schoolOrCollegeName}
+                          placeholder="Enter School/College Name"
                           className="text-base lg:text-lg font-medium"
                           {...field}
                         />
@@ -457,7 +423,7 @@ const AccountPersonalInfo = () => {
                       </FormLabel>
                       <FormControl>
                         <Input
-                          defaultValue={user?.academic?.schoolOrCollegeAddress}
+                          placeholder="Enter School/College Address"
                           className="text-base lg:text-lg font-medium"
                           {...field}
                         />
@@ -466,8 +432,9 @@ const AccountPersonalInfo = () => {
                     </FormItem>
                   )}
                 />
-              </div>
 
+          
+              </div>
             </div>
           </div>
 
