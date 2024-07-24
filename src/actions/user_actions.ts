@@ -165,6 +165,7 @@ export const mentorPersonalInfo = async (data: any) => {
     );
 
     const responseData = await res.json();
+    revalidateTag('userData')
 
     revalidateTag("userData");
 
@@ -312,3 +313,4 @@ export const getTracker = async (subject: string | string[], id: any) => {
     }
   }
 };
+

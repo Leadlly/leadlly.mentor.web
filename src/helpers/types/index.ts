@@ -316,38 +316,6 @@ export interface IAcademic {
   schoolOrCollegeName?: string | null;
   schoolOrCollegeAddress?: string | null;
 }
-export type UserDataProps = {
-  firstname: string;
-  lastname?: string;
-  email: string;
-  subjects?: ISubject[];
-  phone?: {
-    personal?: number;
-    other?: number;
-  };
-  academic: IAcademic;
-  password: string;
-  avatar?: {
-    public_id: string;
-    url: string;
-  };
-  about?: {
-    college?: string;
-    degree?: string;
-    dob?: string;
-  };
-  status: "Verified" | "Not Verified";
-  students?: string;
-  createdAt?: Date;
-  resetPasswordToken?: string | null;
-  resetTokenExpiry?: string | null;
-  comparePassword(candidatePassword: string): Promise<boolean>;
-  getToken(): Promise<string>;
-};
-
-export type UserProps = {
-  user: UserDataProps | null;
-};
 
 export type OTPProps = {
   otp: string;
@@ -371,37 +339,63 @@ export type ForgotPasswordProps = {
 export type ResetPasswordProps = {
   password: string;
 };
-export type MentorPersonalInfoProps = {
-  address?: string;
-  class?: (number | string)[];
-  competitiveExam?: (number | string)[];
-  country?: string;
-  dateOfBirth?: string;
-  firstName?: string;
-  gender?: string;
-  lastName?: string;
-  email?: string;
-  phone?: number;
-  pinCode?: number;
-  schoolOrCollegeAddress?: string;
-  schoolOrCollegeName?: string;
-  studentSchedule?: string;
-};
 
-export type MeetingDataProps = {
-  _id: string;
-  date: string;
-  time: string;
-  student: string;
-  mentor: string;
-  accepted: boolean;
-  rescheduled: {
-    isRescheduled: boolean;
-    date: Date;
-    time: string;
+// Mentor Info types
+interface IAvatar {
+  public_id: string;
+  url: string;
+}
+
+interface IAbout {
+  dateOfBirth: string | null;
+  gender: string | null;
+}
+
+interface IAddress {
+  country: string | null;
+  addressLine: string | null;
+  pincode: number | null;
+}
+
+interface IPhone {
+  personal: number | null;
+  other: number | null;
+}
+
+interface IStudent {
+  id: string;
+  gmeet: IGMeet;
+}
+
+export interface MentorPersonalInfoProps  {
+  firstname: string | null;
+  lastname: string | null;
+  email: string;
+  phone: IPhone;
+  password?: string | null;
+  salt?: string | null;
+  address: IAddress;
+  avatar: IAvatar;
+  about: IAbout;
+  academic: {
+    schoolOrCollegeName: string | null;
+    schoolOrCollegeAddress: string | null;
+    degree: string | null;
   };
-  gmeet: { link: string | null };
-  message: string;
-  createdAt: string;
-  updatedAt: string;
-};
+  status: 'Verified' | 'Not Verified';
+  gmeet: {
+    tokens: Record<string, any>;
+    link: string | null;
+  };
+  preference: {
+    standard: string[];
+    competitiveExam: string[];
+  };
+  students: IStudent[];
+  createdAt: Date;
+  resetPasswordToken?: string | null;
+  resetTokenExpiry?: Date | null;
+
+  comparePassword(candidatePassword: string): Promise<boolean>;
+  getToken(): Promise<string>;
+}

@@ -93,3 +93,22 @@ export const profileTabs = [
     label: "personal info",
   },
 ];
+
+export const manageAccountTabs = [
+  {
+    id: "personal-info",
+    label: "Personal Info",
+  },
+  {
+    id: "study-progress",
+    label: "Study Progress",
+  },
+  // {
+  //   id: "subject-overview",
+  //   label: "Subject Overview",
+  // },
+  // {
+  //   id: "your-mentor",
+  //   label: "Your Mentor",
+  // },
+];
