@@ -10,7 +10,7 @@ interface TabHeaderProps {
 
 const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, setActiveTab }) => {
   const tabs = [
-    { tab: "chat", label: "Chat", icon: ChatIcon },
+    // { tab: "chat", label: "Chat", icon: ChatIcon },
     { tab: "meeting", label: "Meeting", icon: MeetingIcon },
   ];
 
@@ -31,9 +31,7 @@ const TabHeader: React.FC<TabHeaderProps> = ({ activeTab, setActiveTab }) => {
           <Icon
             className={
               (cn("w-4 h-4"),
-              activeTab === tab
-                ? "fill-[#56249E]"
-                : "fill-white")
+              activeTab === tab ? "fill-[#56249E]" : "fill-white")
             }
           />
           {label}

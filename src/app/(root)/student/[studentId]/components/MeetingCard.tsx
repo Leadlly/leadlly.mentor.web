@@ -2,19 +2,20 @@ import React from "react";
 import DateIcon from "@/components/icons/DateIcon";
 import TimeIcon from "@/components/icons/TimeIcon"; // Assume this icon exists
 import TopicIcon from "@/components/icons/TopicIcon"; // Assume this icon exists
+import { getFormattedDate } from "@/helpers/utils";
+import { MeetingDataProps } from "@/helpers/types";
+import { Loader2 } from "lucide-react";
 
 interface MeetingCardProps {
-  date: string;
-  time: string;
-  topic: string;
+  data: MeetingDataProps;
+  isAcceptingMeeting: string | null;
   onAccept: () => void;
   onReschedule: () => void;
 }
 
 const MeetingCard: React.FC<MeetingCardProps> = ({
-  date,
-  time,
-  topic,
+  data,
+  isAcceptingMeeting,
   onAccept,
   onReschedule,
 }) => {
@@ -24,31 +25,41 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2 text-[#969696] font-medium text-base">
             <div className="bg-[#D9D9D9] p-2 rounded-[8px]">
-              <DateIcon className="w-[14px] h-[14px]"/>
+              <DateIcon className="w-[14px] h-[14px]" />
             </div>
-            <p className="text-[14px]" >Day and Date</p>
+            <p className="text-[14px]">Day and Date</p>
           </div>
-          <p className="text-[black] text-[16px] font-regular">{date}</p>
+          <p className="text-[black] text-[16px] font-regular">
+            {data.rescheduled && data.rescheduled.isRescheduled
+              ? getFormattedDate(new Date(data.rescheduled.date))
+              : getFormattedDate(new Date(data.date))}
+          </p>
         </div>
 
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2 text-[#969696] font-medium text-base">
             <div className="bg-[#D9D9D9] p-2 rounded-[8px]">
-              <TimeIcon className="w-[14px] h-[14px"/>
+              <TimeIcon className="w-[14px] h-[14px" />
             </div>
             <p className="text-[14px]">Time</p>
           </div>
-          <p className="text-[black] text-[16px] font-regular">{time}</p>
+          <p className="text-[black] text-[16px] font-regular">
+            {data.rescheduled && data.rescheduled.isRescheduled
+              ? data.rescheduled.time
+              : data.time}
+          </p>
         </div>
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-[#969696] font-medium text-base">
             <div className="bg-[#D9D9D9] p-2 rounded-[8px]">
-              <TopicIcon className="w-[14px] h-[14px]"/>
+              <TopicIcon className="w-[14px] h-[14px]" />
             </div>
             <p className="text-[14px]">Topic</p>
           </div>
-          <p className="text-[black] text-[16px] font-regular">{topic}</p>
+          <p className="text-[black] text-[16px] font-regular capitalize">
+            {data.message}
+          </p>
         </div>
       </div>
 
@@ -56,9 +67,16 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
         <div className="flex justify-between py-2">
           <button
             onClick={onAccept}
-            className="bg-[#56249E] text-white text-[14px] font-medium px-4 py-2 rounded-[6px]"
+            disabled={isAcceptingMeeting === data._id || data.accepted}
+            className="bg-[#56249E] text-white text-[14px] font-medium px-4 py-2 rounded-[6px] disabled:opacity-70"
           >
-            Accept
+            {isAcceptingMeeting === data._id ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : data.accepted ? (
+              "Accepted"
+            ) : (
+              "Accept"
+            )}
           </button>
         </div>
         <div className="flex justify-center py-2">

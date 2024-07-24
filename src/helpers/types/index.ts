@@ -1,9 +1,9 @@
 import React, { SVGProps } from "react";
 
 // Define the IGMeet interface
-export interface IGMeet {
-  meetingId: string;
-  meetingUrl: string;
+interface IGMeet {
+  tokens: Record<string, any>;
+  link: string | null;
 }
 
 export type TContainerProps = {
@@ -69,7 +69,7 @@ export interface EfficiencyOption {
   label: string;
   labelClassName: string;
   cardBackgroundColor: string;
-  textColor:string
+  textColor: string;
 }
 export type NavbarLink = {
   label: string;
@@ -125,7 +125,7 @@ export type TTabContentProps = {
   children: React.ReactNode;
 };
 export interface ChatData {
-  studentName:String
+  studentName: String;
   messages: Array<{
     sender: string;
     text: string;
@@ -160,12 +160,12 @@ export type Params = {
 export type InfoItem = {
   label: string;
   value: string;
-}
+};
 
 export type InfoBoxProps = {
   title: string;
   items: InfoItem[];
-}
+};
 
 export interface monthlyReport {
   startDate: string;
@@ -298,7 +298,7 @@ export interface Studentinformation {
 
 export type InfoCardProps = {
   sections: InfoBoxProps[];
-}
+};
 export interface ISubject {
   name: string;
   overall_efficiency: number;
@@ -383,10 +383,7 @@ export interface MentorPersonalInfoProps  {
     degree: string | null;
   };
   status: 'Verified' | 'Not Verified';
-  gmeet: {
-    tokens: Record<string, any>;
-    link: string | null;
-  };
+  gmeet: IGMeet;
   preference: {
     standard: string[];
     competitiveExam: string[];
@@ -399,3 +396,23 @@ export interface MentorPersonalInfoProps  {
   comparePassword(candidatePassword: string): Promise<boolean>;
   getToken(): Promise<string>;
 }
+
+
+
+export type MeetingDataProps = {
+  _id: string;
+  date: string;
+  time: string;
+  student: string;
+  mentor: string;
+  accepted: boolean;
+  rescheduled: {
+    isRescheduled: boolean;
+    date: Date;
+    time: string;
+  };
+  gmeet: { link: string | null };
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+};
