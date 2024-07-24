@@ -9,6 +9,8 @@ export const AccountPersonalInfoSchema = z.object({
     .string({ required_error: "Please enter your phone number" })
     .max(10)
     .optional(),
+  class: z.array(z.string()).optional(),  
+  competitiveExams: z.array(z.string()).optional(),
   email: z
     .string({ required_error: "Please enter your email" })
     .email({ message: "Invalid email address" }),
@@ -22,6 +24,8 @@ export const AccountPersonalInfoSchema = z.object({
   country: z.string().optional(),
   address: z.string().optional(),
   pinCode: z.string().optional(),
+  gmeet: z.string().optional(),
   schoolOrCollegeName: z.string().optional(),
+  degree: z.string().optional(),
   schoolOrCollegeAddress: z.string().optional(),
 });

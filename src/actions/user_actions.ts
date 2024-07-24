@@ -167,8 +167,6 @@ export const mentorPersonalInfo = async (data: any) => {
     const responseData = await res.json();
     revalidateTag('userData')
 
-    revalidateTag("userData");
-
     return responseData;
   } catch (error: unknown) {
     if (error instanceof Error) {
