@@ -340,50 +340,49 @@ export type ResetPasswordProps = {
   password: string;
 };
 export type MentorPersonalInfoProps = {
-  _id?: string; 
-  firstName?: string;
-  lastName?: string 
-  email?: string;
-  phone?: {
-    personal?: number 
-    other?: number 
+  firstName: string 
+  lastName: string 
+  email: string;
+  phone: {
+    personal: number 
+    other: number ;
   };
-  password?: string;
-  salt?: string;
-  address?: {
-    country?: string 
-    addressLine?: string 
-    pincode?: number 
+  password?: string 
+  salt?: string 
+  address: {
+    country: string 
+    addressLine: string 
+    pincode: number;
   };
-  avatar?: {
-    public_id?: string;
-    url?: string;
+  avatar: {
+    public_id: string;
+    url: string;
   };
-  about?: {
-    dateOfBirth?: string;
-    gender?: string;
+  about: {
+    dateOfBirth: string 
+    gender: string 
+  }
+  academic: {
+    schoolOrCollegeName: string 
+    schoolOrCollegeAddress: string 
+    degree: string 
   };
-  academic?: {
-    schoolOrCollegeName?: string 
-    schoolOrCollegeAddress?: string 
-    degree?: string 
-    status?: string; 
-    standard?: (number | string)[]; 
-    schedule?: string;
+  status: 'Verified' | 'Not Verified';
+  gmeet: {
+    link: string 
   };
-  gmeet?: {
-    link?: string 
+  preference: {
+    standard: string[];
+    competitiveExam: string[];
   };
-  preference?: {
-    standard?: (string)[];
-    competitiveExam?: (string)[];
-  };
-  students?: {
+  students: {
     id: string;
-    gmeet?: {
-      link?: string
-    };
+    gmeet: IGMeet;
   }[];
-  createdAt?: string; 
-  __v?: number; 
+  createdAt: Date;
+  resetPasswordToken?: string 
+  resetTokenExpiry?: Date 
+
+  comparePassword(candidatePassword: string): Promise<boolean>;
+  getToken(): Promise<string>;
 };
