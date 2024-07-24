@@ -3,6 +3,7 @@
 import { mentorPersonalInfo } from "@/actions/user_actions";
 import { Button } from "@/components/ui/button";
 import { CalendarDatePicker } from "@/components/ui/calendar_date_picker";
+import { MultiSelect } from "@/components/ui/multi-select";
 import {
   Form,
   FormControl,
@@ -41,12 +42,18 @@ const AccountPersonalInfo = () => {
     defaultValues: {
       firstName: user?.firstname ? user.firstname : "",
       lastName: user?.lastname ? user.lastname : "",
+      class: Array.isArray(user?.preference.standard) ? user.preference.standard : [],
+      competitiveExams: Array.isArray(user?.preference.competitiveExam) ? user?.preference.competitiveExam : [],
       phone: user?.phone?.personal ? String(user.phone.personal) : "",
       email: user?.email ? user.email : "",
       address: user?.address.addressLine ? user.address.addressLine : "",
       pinCode: user?.address.pincode ? String(user.address.pincode) : "",
+      gmeet: user?.gmeet.link ? String(user?.gmeet.link) : "",
       schoolOrCollegeName: user?.academic.schoolOrCollegeName
         ? user.academic.schoolOrCollegeName
+        : "",
+        degree: user?.academic.degree
+        ? user.academic.degree
         : "",
       schoolOrCollegeAddress: user?.academic.schoolOrCollegeAddress
         ? user.academic.schoolOrCollegeAddress
@@ -89,6 +96,19 @@ const AccountPersonalInfo = () => {
       setIsSaving(false);
     }
   };
+
+  const classOptions = [
+    { _id: "11", name: "11" },
+    { _id: "12", name: "12" },
+    { _id: "13", name: "13" },
+  ];
+  
+  const competitiveExamOptions = [
+    { _id: "jee", name: "JEE" },
+    { _id: "neet", name: "NEET" },
+    { _id: "boards", name: "Boards" },
+  ];
+
   return (
     <>
       <Form {...form}>
@@ -160,6 +180,29 @@ const AccountPersonalInfo = () => {
                     </FormItem>
                   )}
                 />
+
+              <FormField
+              control={form.control}
+              name="class"
+              render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel className="text-base lg:text-lg font-medium">
+                    Select your class preference:
+                  </FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      options={classOptions}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      variant={"inverted"}
+                      animation={2}
+                      placeholder="Select your class preference"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
                 <FormField
                   control={form.control}
@@ -378,6 +421,28 @@ const AccountPersonalInfo = () => {
                       </FormControl>
                       <FormMessage />
                     </FormItem>
+
+                    
+                  )}
+                />
+
+                 <FormField
+                  control={form.control}
+                  name="gmeet"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1">
+                      <FormLabel className="text-base lg:text-lg font-medium">
+                        Gmeet:
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter Google Meet Link"
+                          className="text-base lg:text-lg font-medium"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
                 />
               </div>
@@ -387,12 +452,7 @@ const AccountPersonalInfo = () => {
                 Academic Information
               </h4>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-5">
-
-
-          
-
-
-
+                
                 <FormField
                   control={form.control}
                   name="schoolOrCollegeName"
@@ -433,6 +493,50 @@ const AccountPersonalInfo = () => {
                   )}
                 />
 
+                <FormField
+                  control={form.control}
+                  name="degree"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1">
+                      <FormLabel className="text-base lg:text-lg font-medium">
+                        Degree:
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Enter Degree"
+                        
+                          defaultValue ={field.value}
+                          className="text-base lg:text-lg font-medium"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                control={form.control}
+                name="competitiveExams"
+                render={({ field }) => (
+                <FormItem className="space-y-1">
+                  <FormLabel className="text-base lg:text-lg font-medium">
+                    Select your competitive exams preference:
+                  </FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      options={competitiveExamOptions}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      variant={"inverted"}
+                      animation={2}
+                      placeholder="Select your competitive exams preference"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           
               </div>
             </div>

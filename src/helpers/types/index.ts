@@ -397,8 +397,6 @@ export interface MentorPersonalInfoProps  {
   getToken(): Promise<string>;
 }
 
-
-
 export type MeetingDataProps = {
   _id: string;
   date: string;
