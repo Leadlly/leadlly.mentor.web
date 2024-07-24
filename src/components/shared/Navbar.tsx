@@ -62,9 +62,9 @@ const Navbar = () => {
         </div>
         <Link href={"/manage-account"} className="flex justify-center items-center gap-2 ">
          <Avatar src={user?.avatar?.url}
-            alt={`${user?.firstName}'s profile`}/>
-          <p className="text-black text-lg font-medium">Hello, {user?.firstName}{" "}
-          {user?.lastName}</p>
+            alt={`${user?.firstname}'s profile`}/>
+          <p className="text-black text-lg font-medium">Hello, {user?.firstname}{" "}
+          {user?.lastname}</p>
         </Link>
       </div>
     </nav>

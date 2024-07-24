@@ -339,51 +339,63 @@ export type ForgotPasswordProps = {
 export type ResetPasswordProps = {
   password: string;
 };
-export type MentorPersonalInfoProps = {
-  _id?: string; 
-  firstName?: string;
-  lastName?: string 
-  email?: string;
-  phone?: {
-    personal?: number 
-    other?: number 
+
+// Mentor Info types
+interface IAvatar {
+  public_id: string;
+  url: string;
+}
+
+interface IAbout {
+  dateOfBirth: string | null;
+  gender: string | null;
+}
+
+interface IAddress {
+  country: string | null;
+  addressLine: string | null;
+  pincode: number | null;
+}
+
+interface IPhone {
+  personal: number | null;
+  other: number | null;
+}
+
+interface IStudent {
+  id: string;
+  gmeet: IGMeet;
+}
+
+export interface MentorPersonalInfoProps  {
+  firstname: string | null;
+  lastname: string | null;
+  email: string;
+  phone: IPhone;
+  password?: string | null;
+  salt?: string | null;
+  address: IAddress;
+  avatar: IAvatar;
+  about: IAbout;
+  academic: {
+    schoolOrCollegeName: string | null;
+    schoolOrCollegeAddress: string | null;
+    degree: string | null;
   };
-  password?: string;
-  salt?: string;
-  address?: {
-    country?: string 
-    addressLine?: string 
-    pincode?: number 
+  status: 'Verified' | 'Not Verified';
+  gmeet: {
+    tokens: Record<string, any>;
+    link: string | null;
   };
-  avatar?: {
-    public_id?: string;
-    url?: string;
+  preference: {
+    standard: string[];
+    competitiveExam: string[];
   };
-  about?: {
-    dateOfBirth?: string;
-    gender?: string;
-  };
-  academic?: {
-    schoolOrCollegeName?: string 
-    schoolOrCollegeAddress?: string 
-    degree?: string 
-    status?: string; 
-    standard?: (number | string)[]; 
-    schedule?: string;
-  };
-  gmeet?: {
-    link?: string 
-  };
-  preference?: {
-    standard?: (number | string)[];
-    competitiveExam?: (number | string)[];
-  };
-  students?: {
-    id: string;
-    gmeet?: {
-      link?: string
-    };
-  }[];
-  createdAt?: string; 
-  __v?: number; 
-};
+  students: IStudent[];
+  createdAt: Date;
+  resetPasswordToken?: string | null;
+  resetTokenExpiry?: Date | null;
+
+  comparePassword(candidatePassword: string): Promise<boolean>;
+  getToken(): Promise<string>;
+}
