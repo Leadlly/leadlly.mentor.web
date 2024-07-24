@@ -1,9 +1,9 @@
 import React, { SVGProps } from "react";
 
 // Define the IGMeet interface
-export interface IGMeet {
-  meetingId: string;
-  meetingUrl: string;
+interface IGMeet {
+  tokens: Record<string, any>;
+  link: string | null;
 }
 
 export type TContainerProps = {
@@ -383,10 +383,7 @@ export interface MentorPersonalInfoProps  {
     degree: string | null;
   };
   status: 'Verified' | 'Not Verified';
-  gmeet: {
-    tokens: Record<string, any>;
-    link: string | null;
-  };
+  gmeet: IGMeet;
   preference: {
     standard: string[];
     competitiveExam: string[];
@@ -399,3 +396,23 @@ export interface MentorPersonalInfoProps  {
   comparePassword(candidatePassword: string): Promise<boolean>;
   getToken(): Promise<string>;
 }
+
+
+
+export type MeetingDataProps = {
+  _id: string;
+  date: string;
+  time: string;
+  student: string;
+  mentor: string;
+  accepted: boolean;
+  rescheduled: {
+    isRescheduled: boolean;
+    date: Date;
+    time: string;
+  };
+  gmeet: { link: string | null };
+  message: string;
+  createdAt: string;
+  updatedAt: string;
+};
