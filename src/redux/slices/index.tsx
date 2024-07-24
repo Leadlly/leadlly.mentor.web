@@ -1,8 +1,8 @@
-import { UserDataProps } from "@/helpers/types";
+import { MentorPersonalInfoProps } from "@/helpers/types";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface UserProps {
-  user: UserDataProps | null;
+  user: MentorPersonalInfoProps | null;
 }
 
 const initialState: UserProps = {

@@ -60,14 +60,15 @@ const Navbar = () => {
         <div className="bg-white size-[38px] border-[0.63px] border-[#7D7D7D] rounded-full flex justify-center items-center cursor-pointer">
           <NotificationIcon />
         </div>
-        <div className="flex justify-center items-center gap-2 ">
+        <Link href={"/manage-account"} className="flex justify-center items-center gap-2 ">
          <Avatar src={user?.avatar?.url}
-            alt={`${user?.firstname}'s profile`}/>
-          <p className="text-black text-lg font-medium">Hello, {user?.firstname}{" "}
-          {user?.lastname}</p>
-        </div>
+            alt={`${user?.firstName}'s profile`}/>
+          <p className="text-black text-lg font-medium">Hello, {user?.firstName}{" "}
+          {user?.lastName}</p>
+        </Link>
       </div>
     </nav>
+
     <nav className="h-16 shadow-md lg:hidden flex w-full bg-[#E9DBFD] md:rounded-[60px] justify-between px-10 items-center">
       <Link className="cursor-pointer" href="/">
         <Image src={SmallIcon} width={22} height={22} alt="small"/>
