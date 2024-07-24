@@ -169,7 +169,7 @@ const AccountPersonalInfo = () => {
                   )}
                 />
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="class"
                   render={({ field }) => (
@@ -200,7 +200,7 @@ const AccountPersonalInfo = () => {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
                 <FormField
                   control={form.control}

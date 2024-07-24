@@ -375,8 +375,8 @@ export type MentorPersonalInfoProps = {
     link?: string 
   };
   preference?: {
-    standard?: (number | string)[];
-    competitiveExam?: (number | string)[];
+    standard?: (string)[];
+    competitiveExam?: (string)[];
   };
   students?: {
     id: string;
