@@ -1,4 +1,4 @@
-import { mentorPersonalInfo } from "@/actions/user_actions";
+import { getUser, mentorPersonalInfo } from "@/actions/user_actions";
 import Modal from "@/components/shared/Modal";
 import { Button } from "@/components/ui/button";
 import {
@@ -49,8 +49,9 @@ const GMeetInputLinkModal = ({
           description: res.message,
         });
       }
+      const userInfo = await getUser();
 
-      dispatch(userData(res.user));
+      dispatch(userData(userInfo.user));
       toast.success(res.message);
       setOpenGMeetLinkInputModal(false);
       form.reset();

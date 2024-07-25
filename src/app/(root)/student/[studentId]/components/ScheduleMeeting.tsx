@@ -52,13 +52,15 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const mentorStudents = useAppSelector((state) => state.user.user?.students);
-  const currentStudentIndex = mentorStudents?.findIndex(
-    (student) => student.id === studentId
+  const mentorGMeetLink = useAppSelector(
+    (state) => state.user.user?.gmeet.link
   );
-  const currentStudent = mentorStudents?.[currentStudentIndex!];
+  // const currentStudentIndex = mentorStudents?.findIndex(
+  //   (student) => student.id === studentId
+  // );
+  // const currentStudent = mentorStudents?.[currentStudentIndex!];
 
-  const isGMeetLink = !!currentStudent?.gmeet.link;
+  // const isGMeetLink = !!currentStudent?.gmeet.link;
 
   const form = useForm<z.infer<typeof RequestMeetingFormSchema>>({
     resolver: zodResolver(RequestMeetingFormSchema),
@@ -69,19 +71,14 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
   };
 
   const onSubmit = async (data: z.infer<typeof RequestMeetingFormSchema>) => {
-    if (
-      mentorStudents &&
-      mentorStudents?.length &&
-      currentStudent &&
-      !currentStudent?.gmeet.link
-    ) {
+    if (!mentorGMeetLink) {
       return toast.error("No meeting link available!");
     }
 
     const formattedData = {
       date: new Date(data.date_of_meeting),
       time: data.time,
-      studentIds: [currentStudent?.id!],
+      studentIds: [studentId],
     };
 
     setIsSubmitting(true);
@@ -93,6 +90,7 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
       }
 
       toast.success(res.message);
+      form.reset();
       setSubmitted(true);
     } catch (error: any) {
       toast.error(error.message);
@@ -195,7 +193,7 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
                   <FormItem>
                     <FormControl>
                       <Textarea
-                        placeholder="Meeting agenda"
+                        placeholder="Meeting agenda..."
                         className="resize-none"
                         {...field}
                       />
@@ -210,12 +208,14 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
                   type="button"
                   variant={"secondary"}
                   onClick={handleGMeetLinkInputModal}
-                  disabled={isGMeetLink}
                   className="text-primary bg-primary/10"
                 >
-                  {isGMeetLink ? "Update Meeting Link" : "Get Meeting Link"}
+                  {mentorGMeetLink ? "Update Meeting Link" : "Get Meeting Link"}
                 </Button>
-                <Button type="submit" disabled={!isGMeetLink || isSubmitting}>
+                <Button
+                  type="submit"
+                  disabled={!mentorGMeetLink || isSubmitting}
+                >
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
@@ -233,16 +233,24 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
           )}
         </div>
       ) : (
-        <div className="h-[74dvh] flex flex-col border rounded-xl overflow-hidden bg-[url('/assets/images/girl_celebration.png'),_url('/assets/images/work_discussion.png')] bg-[position:top_left_-20px,_bottom_right] bg-[length:140px,_170px] md:bg-[length:200px,_200px] bg-no-repeat">
+        <div className="relative flex flex-col items-center justify-center h-full pt-12">
+          <Button
+            variant={"outline"}
+            size={"sm"}
+            className="absolute right-4 top-4"
+            onClick={() => setSubmitted(false)}
+          >
+            Back
+          </Button>
           <div className="h-full flex flex-col gap-y-7 items-center justify-center">
             <div className="w-16 h-16 md:w-20 md:h-20 text-white bg-primary rounded-full flex items-center justify-center shadow-[0_0_32px_0_#9654f4]">
               <Check className="w-8 h-8 md:w-12 md:h-12" />
             </div>
-            <h1 className="text-primary text-4xl font-bold">
+            <h1 className="text-primary text-4xl text-center font-bold">
               Meeting Scheduled Successfully
             </h1>
             <div className="text-center">
-              <h3 className="text-3xl font-semibold mt-6">Thank You!</h3>
+              <h3 className="text-3xl font-semibold">Thank You!</h3>
               <p className="font-medium text-xl m-1">Your Meet is Scheduled</p>
             </div>
           </div>
