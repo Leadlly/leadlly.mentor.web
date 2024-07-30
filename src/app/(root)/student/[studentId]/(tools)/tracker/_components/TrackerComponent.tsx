@@ -1,6 +1,7 @@
 import { ISubject, TTrackerProps } from "@/helpers/types";
 import ChapterOverviewTable from "./ChapterOverviewTable";
 import SubjectOverview from "./SubjectOverview";
+import Loader from "@/components/shared/Loader";
 
 const TrackerComponent = ({
   trackerData,
@@ -11,6 +12,8 @@ const TrackerComponent = ({
   userSubjects: ISubject[] | undefined;
   activeSubject: string;
 }) => {
+  if (!trackerData) return <Loader />;
+
   return (
     <div className="flex flex-col gap-y-6">
       <SubjectOverview

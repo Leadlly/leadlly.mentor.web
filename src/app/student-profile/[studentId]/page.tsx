@@ -1,6 +1,5 @@
-"use client"
-import ProfileComponent from './components/Profilecomponent';
-import React from 'react';
+import ProfileComponent from "./components/Profilecomponent";
+import React from "react";
 
 type Params = {
   params: {
@@ -15,6 +14,6 @@ const Page = ({ params, searchParams }: Params) => {
       <ProfileComponent params={params} searchParams={searchParams} />
     </div>
   );
-}
+};
 
 export default Page;

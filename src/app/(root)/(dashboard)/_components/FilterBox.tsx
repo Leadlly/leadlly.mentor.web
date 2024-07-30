@@ -1,8 +1,10 @@
+"use client";
+
 import React from "react";
 import Level from "./Level";
 import Efficiency from "./Efficiency";
 import EmojiMood from "./EmojiMoodSelector";
-import { SlidersHorizontal } from 'lucide-react';
+import { SlidersHorizontal } from "lucide-react";
 import ArrowIcon from "@/components/icons/ArrowIcon";
 import RoundArrowIcon from "@/components/icons/RoundArrowIcon";
 import { useState } from "react";
@@ -10,7 +12,6 @@ import Link from "next/link";
 import SearchBar from "./SearchBar";
 
 const FilterBox = () => {
-
   const [AscOrder, setAscOrder] = useState<Boolean>(true);
   return (
     <div>
@@ -32,29 +33,32 @@ const FilterBox = () => {
           </div>
         </div>
       </div>
-      
+
       <div className="block md:hidden">
         <div className="bg-box py-[4px] shadow-lg min-w-[200px] flex flex-col gap-8 text-2xl">
-          <Link href="/filterboxsmall" className="text-[#4D4D4D] text-center flex items-center justify-center gap-2 w-full text-[16px] font-regular">
+          <Link
+            href="/filterboxsmall"
+            className="text-[#4D4D4D] text-center flex items-center justify-center gap-2 w-full text-[16px] font-regular"
+          >
             <p>Filter</p>
-            <SlidersHorizontal className="w-[16px]"/>
+            <SlidersHorizontal className="w-[16px]" />
             <div className="flex gap-5">
-             <p>Sort by</p>
-             <button
-               id="sort"
-               className="flex justify-center gap-1 shadow-md items-center bg-[#F0EEEE] text-[9px] md:text-[12px] rounded px-2"
-               onClick={() => {
-                 setAscOrder((order) => !order);
-               }}
-             >
-               A<ArrowIcon/>Z
-               <RoundArrowIcon
-               stroke="#6200EE"
-                 className={
-                   AscOrder ? "translate-y-1 " : "rotate-180 translate-y-0"
-                 }
-               />
-             </button>
+              <p>Sort by</p>
+              <button
+                id="sort"
+                className="flex justify-center gap-1 shadow-md items-center bg-[#F0EEEE] text-[9px] md:text-[12px] rounded px-2"
+                onClick={() => {
+                  setAscOrder((order) => !order);
+                }}
+              >
+                A<ArrowIcon />Z
+                <RoundArrowIcon
+                  stroke="#6200EE"
+                  className={
+                    AscOrder ? "translate-y-1 " : "rotate-180 translate-y-0"
+                  }
+                />
+              </button>
             </div>
           </Link>
         </div>

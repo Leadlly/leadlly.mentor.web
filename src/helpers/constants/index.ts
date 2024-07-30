@@ -99,10 +99,10 @@ export const manageAccountTabs = [
     id: "personal-info",
     label: "Personal Info",
   },
-  {
-    id: "study-progress",
-    label: "Study Progress",
-  },
+  // {
+  //   id: "study-progress",
+  //   label: "Study Progress",
+  // },
   // {
   //   id: "subject-overview",
   //   label: "Subject Overview",

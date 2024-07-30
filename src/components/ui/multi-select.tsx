@@ -128,7 +128,7 @@ export const MultiSelect = React.forwardRef<
       if (selectedValues.length === options.length) {
         handleClear();
       } else {
-        const allValues = options.map((option) => option.name);
+        const allValues = options.map((option) => option._id);
         setSelectedValues(allValues);
         onValueChange(allValues);
       }
@@ -144,19 +144,21 @@ export const MultiSelect = React.forwardRef<
             className={cn(
               "flex w-full p-1 rounded-md border min-h-10 h-auto items-center justify-between bg-inherit hover:bg-inherit",
               className
-            )}>
+            )}
+          >
             {selectedValues.length > 0 ? (
               <div className="flex justify-between items-center w-full">
                 <div className="flex flex-wrap items-center">
                   {selectedValues.slice(0, maxCount).map((value) => {
-                    const option = options?.find((o) => o.name === value);
+                    const option = options?.find((o) => o._id === value);
                     const IconComponent = option?.icon;
                     return (
                       <Badge
                         key={value}
                         className={cn(
                           multiSelectVariants({ variant, className })
-                        )}>
+                        )}
+                      >
                         {IconComponent && (
                           <IconComponent className="h-4 w-4 mr-2" />
                         )}
@@ -178,7 +180,8 @@ export const MultiSelect = React.forwardRef<
 
                         multiSelectVariants({ variant, className })
                       )}
-                      style={{ animationDuration: `${animation}s` }}>
+                      style={{ animationDuration: `${animation}s` }}
+                    >
                       {`+ ${selectedValues.length - maxCount} more`}
                       <XCircle
                         className="ml-2 h-4 w-4 cursor-pointer"
@@ -218,7 +221,8 @@ export const MultiSelect = React.forwardRef<
         <PopoverContent
           className="w-full p-0"
           align="start"
-          onEscapeKeyDown={() => setIsPopoverOpen(false)}>
+          onEscapeKeyDown={() => setIsPopoverOpen(false)}
+        >
           <Command>
             <CommandInput
               placeholder="Search..."
@@ -231,36 +235,40 @@ export const MultiSelect = React.forwardRef<
                   key="all"
                   onSelect={toggleAll}
                   style={{ pointerEvents: "auto", opacity: 1 }}
-                  className="cursor-pointer">
+                  className="cursor-pointer"
+                >
                   <div
                     className={cn(
                       "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
                       selectedValues.length === options?.length
                         ? "bg-primary text-primary-foreground"
                         : "opacity-50 [&_svg]:invisible"
-                    )}>
+                    )}
+                  >
                     <CheckIcon className="h-4 w-4" />
                   </div>
                   <span>(Select All)</span>
                 </CommandItem>
                 {options?.map((option) => {
-                  const isSelected = selectedValues.includes(option?.name);
+                  const isSelected = selectedValues.includes(option?._id);
                   return (
                     <CommandItem
                       key={option?._id}
-                      onSelect={() => toggleOption(option?.name)}
+                      onSelect={() => toggleOption(option?._id)}
                       style={{
                         pointerEvents: "auto",
                         opacity: 1,
                       }}
-                      className="cursor-pointer">
+                      className="cursor-pointer"
+                    >
                       <div
                         className={cn(
                           "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
                           isSelected
                             ? "bg-primary text-primary-foreground"
                             : "opacity-50 [&_svg]:invisible"
-                        )}>
+                        )}
+                      >
                         <CheckIcon className="h-4 w-4" />
                       </div>
                       {option?.icon && (
@@ -282,7 +290,8 @@ export const MultiSelect = React.forwardRef<
                           pointerEvents: "auto",
                           opacity: 1,
                         }}
-                        className="flex-1 justify-center cursor-pointer">
+                        className="flex-1 justify-center cursor-pointer"
+                      >
                         Clear
                       </CommandItem>
                       <Separator
@@ -298,7 +307,8 @@ export const MultiSelect = React.forwardRef<
                       pointerEvents: "auto",
                       opacity: 1,
                     }}
-                    className="flex-1 justify-center cursor-pointer">
+                    className="flex-1 justify-center cursor-pointer"
+                  >
                     Close
                   </CommandItem>
                 </div>

@@ -42,8 +42,15 @@ const AccountPersonalInfo = () => {
     defaultValues: {
       firstName: user?.firstname ? user.firstname : "",
       lastName: user?.lastname ? user.lastname : "",
-      class: Array.isArray(user?.preference.standard) ? user.preference.standard : [],
-      competitiveExams: Array.isArray(user?.preference.competitiveExam) ? user?.preference.competitiveExam : [],
+      class:
+        user?.preference.standard && user.preference.standard.length
+          ? user.preference.standard
+          : [],
+      competitiveExams:
+        user?.preference.competitiveExam &&
+        user.preference.competitiveExam.length
+          ? user?.preference.competitiveExam
+          : [],
       phone: user?.phone?.personal ? String(user.phone.personal) : "",
       email: user?.email ? user.email : "",
       address: user?.address.addressLine ? user.address.addressLine : "",
@@ -52,9 +59,7 @@ const AccountPersonalInfo = () => {
       schoolOrCollegeName: user?.academic.schoolOrCollegeName
         ? user.academic.schoolOrCollegeName
         : "",
-        degree: user?.academic.degree
-        ? user.academic.degree
-        : "",
+      degree: user?.academic.degree ? user.academic.degree : "",
       schoolOrCollegeAddress: user?.academic.schoolOrCollegeAddress
         ? user.academic.schoolOrCollegeAddress
         : "",
@@ -102,7 +107,7 @@ const AccountPersonalInfo = () => {
     { _id: "12", name: "12" },
     { _id: "13", name: "13" },
   ];
-  
+
   const competitiveExamOptions = [
     { _id: "jee", name: "JEE" },
     { _id: "neet", name: "NEET" },
@@ -181,28 +186,28 @@ const AccountPersonalInfo = () => {
                   )}
                 />
 
-              <FormField
-              control={form.control}
-              name="class"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel className="text-base lg:text-lg font-medium">
-                    Select your class preference:
-                  </FormLabel>
-                  <FormControl>
-                    <MultiSelect
-                      options={classOptions}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value || []}
-                      variant={"inverted"}
-                      animation={2}
-                      placeholder="Select your class preference"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="class"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1">
+                      <FormLabel className="text-base lg:text-lg font-medium">
+                        Select your class preference:
+                      </FormLabel>
+                      <FormControl>
+                        <MultiSelect
+                          options={classOptions}
+                          onValueChange={field.onChange}
+                          defaultValue={field.value!}
+                          variant={"inverted"}
+                          animation={2}
+                          placeholder="Select your class preference"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <FormField
                   control={form.control}
@@ -349,9 +354,6 @@ const AccountPersonalInfo = () => {
                 Other Information
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-           
-            
-
                 <FormField
                   control={form.control}
                   name="country"
@@ -421,12 +423,10 @@ const AccountPersonalInfo = () => {
                       </FormControl>
                       <FormMessage />
                     </FormItem>
-
-                    
                   )}
                 />
 
-                 <FormField
+                <FormField
                   control={form.control}
                   name="gmeet"
                   render={({ field }) => (
@@ -452,7 +452,6 @@ const AccountPersonalInfo = () => {
                 Academic Information
               </h4>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-20 gap-y-5">
-                
                 <FormField
                   control={form.control}
                   name="schoolOrCollegeName"
@@ -504,8 +503,7 @@ const AccountPersonalInfo = () => {
                       <FormControl>
                         <Input
                           placeholder="Enter Degree"
-                        
-                          defaultValue ={field.value}
+                          defaultValue={field.value}
                           className="text-base lg:text-lg font-medium"
                           {...field}
                         />
@@ -514,30 +512,29 @@ const AccountPersonalInfo = () => {
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
-                control={form.control}
-                name="competitiveExams"
-                render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel className="text-base lg:text-lg font-medium">
-                    Select your competitive exams preference:
-                  </FormLabel>
-                  <FormControl>
-                    <MultiSelect
-                      options={competitiveExamOptions}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value || []}
-                      variant={"inverted"}
-                      animation={2}
-                      placeholder="Select your competitive exams preference"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          
+                  control={form.control}
+                  name="competitiveExams"
+                  render={({ field }) => (
+                    <FormItem className="space-y-1">
+                      <FormLabel className="text-base lg:text-lg font-medium">
+                        Select your competitive exams preference:
+                      </FormLabel>
+                      <FormControl>
+                        <MultiSelect
+                          options={competitiveExamOptions}
+                          onValueChange={field.onChange}
+                          defaultValue={field.value!}
+                          variant={"inverted"}
+                          animation={2}
+                          placeholder="Select your competitive exams preference"
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
           </div>
