@@ -16,7 +16,6 @@ export const getMeetings = async (studentId: string) => {
           Cookie: `token=${token}`,
         },
         credentials: "include",
-        cache: "force-cache",
         next: {
           tags: ["meetingsData"],
         },

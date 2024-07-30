@@ -24,7 +24,7 @@ export type MoodEmoji = {
 
 export type Mood = "sad" | "unhappy" | "neutral" | "smiling" | "laughing";
 export type Student = {
-  mood?: Mood;
+  mood?: string;
   avatar?: string;
   name: string;
   studentClass: string;
@@ -121,7 +121,7 @@ export type TSemiRadialChartProps = {
 export type TTabContentProps = {
   id: string;
   activeTab: string;
-  className?:string
+  className?: string;
   children: React.ReactNode;
 };
 export interface ChatData {
@@ -171,30 +171,31 @@ export interface monthlyReport {
   startDate: string;
   endDate: string;
   days: {
-      day: string;
-      date: string;
-      session: any;
-      quiz: any;
-      overall: any;
+    day: string;
+    date: string;
+    session: any;
+    quiz: any;
+    overall: any;
   }[];
 }
 
-export interface  overallReport {
+export interface overallReport {
   day: string;
   date: string;
   session: number;
   quiz: number;
   overall: number;
-}[]
+}
+[];
 export interface weeklyReport {
   startDate: string;
   endDate: string;
   days: {
-      day: string;
-      date: string;
-      session: any;
-      quiz: any;
-      overall: any;
+    day: string;
+    date: string;
+    session: any;
+    quiz: any;
+    overall: any;
   }[];
 }
 interface Streak {
@@ -202,64 +203,68 @@ interface Streak {
 }
 
 interface Level {
-  number: number
+  number: number;
 }
 
 interface Points {
-  number: number
+  number: number;
 }
 
 interface DailyReport {
-  mood: any[]; 
+  mood: any[];
 }
 
 interface Report {
   dailyReport: DailyReport;
 }
+
+export interface ISubject {
+  name: string;
+  overall_efficiency: number;
+  overall_progress: number;
+  total_questions_solved: { number: number; percentage: number };
+}
+
 export interface Studentinformation {
+  _id: string;
   firstname: string;
   lastname: string;
   email: string;
   phone: {
-    personal: string
-    other: string 
+    personal: string;
+    other: string;
   };
   parent: {
-    name: string 
-    phone: string 
+    name: string;
+    phone: string;
   };
   mentor: {
     id: string;
   };
   planner: boolean;
   address: {
-    country: string
-    addressLine: string
-    pincode: string
+    country: string;
+    addressLine: string;
+    pincode: string;
   };
   academic: {
     standard: number;
     competitiveExam: string;
     schedule: string;
     coachingMode: string;
-    coachingName: string 
-    coachingAddress: string 
-    schoolOrCollegeName: string 
-    schoolOrCollegeAddress: string 
-    subjects: {
-      name: string;
-      overall_efficiency: number;
-      overall_progress: number;
-      total_questions_solved: number;
-    }[];
+    coachingName: string;
+    coachingAddress: string;
+    schoolOrCollegeName: string;
+    schoolOrCollegeAddress: string;
+    subjects: ISubject[];
   };
   about: {
-    dateOfBirth: string 
+    dateOfBirth: string;
     gender: string;
   };
   avatar: {
-    public_id: string 
-    url: string 
+    public_id: string;
+    url: string;
   };
   details: {
     level: Level;
@@ -271,26 +276,26 @@ export interface Studentinformation {
     }[];
     report: {
       dailyReport: {
-        session: number,
-        quiz: number,
-        overall: number
-      }
-    }
+        session: number;
+        quiz: number;
+        overall: number;
+      };
+    };
   };
   subscription: {
-    id: string 
-    status: string 
-    dateOfActivation: string 
+    id: string;
+    status: string;
+    dateOfActivation: string;
   };
   freeTrial: {
     availed: boolean;
     active: boolean;
     dateOfActivation: string;
-    dateOfDeactivation: string 
+    dateOfDeactivation: string;
   };
   refund: {
-    status: string 
-    amount: number 
+    status: string;
+    amount: number;
   };
   createdAt: string;
   updatedAt: string;
@@ -299,12 +304,7 @@ export interface Studentinformation {
 export type InfoCardProps = {
   sections: InfoBoxProps[];
 };
-export interface ISubject {
-  name: string;
-  overall_efficiency: number;
-  overall_progress: number;
-  total_questions_solved: number;
-}
+
 export interface IAcademic {
   standard: number;
   competitiveExam?: string | null;
@@ -367,7 +367,7 @@ interface IStudent {
   gmeet: IGMeet;
 }
 
-export interface MentorPersonalInfoProps  {
+export interface MentorPersonalInfoProps {
   firstname: string | null;
   lastname: string | null;
   email: string;
@@ -382,7 +382,7 @@ export interface MentorPersonalInfoProps  {
     schoolOrCollegeAddress: string | null;
     degree: string | null;
   };
-  status: 'Verified' | 'Not Verified';
+  status: "Verified" | "Not Verified";
   gmeet: IGMeet;
   preference: {
     standard: string[];

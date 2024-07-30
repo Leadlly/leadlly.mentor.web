@@ -165,7 +165,7 @@ export const mentorPersonalInfo = async (data: any) => {
     );
 
     const responseData = await res.json();
-    revalidateTag('userData')
+    revalidateTag("userData");
 
     return responseData;
   } catch (error: unknown) {
@@ -273,7 +273,6 @@ export const getplanner = async (id: any) => {
     }
 
     const responseData = await res.json();
-    console.log("fteched data", responseData);
     return responseData;
   } catch (error) {
     console.error(`Error in fetching planner ${(error as Error).message}`);
@@ -311,4 +310,3 @@ export const getTracker = async (subject: string | string[], id: any) => {
     }
   }
 };
-
