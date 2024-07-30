@@ -22,13 +22,10 @@ const MeetingContent = ({
   const [meetingId, setMeetingId] = useState<string | null>(null);
   const [openRescheduleDialog, setOpenRescheduleDialog] = useState(false);
 
-  console.log(meetings);
-
   const handleAccept = async (meetingId: string) => {
     setIsAcceptingMeeting(meetingId);
     try {
       const res = await acceptMeeting(meetingId);
-      console.log(res);
 
       if (!res.success) {
         toast.error(res.message);

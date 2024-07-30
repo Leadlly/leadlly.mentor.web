@@ -1,15 +1,11 @@
-"use client"
 import { ArrowLeft } from "lucide-react";
 import AccountPersonalInfo from "./_components/AccountPersonalInfo";
 import Link from "next/link";
-import { MotionDiv } from "@/components/shared/MotionDiv";
-
-import { cn } from "@/lib/utils";
-
-import { manageAccountTabs } from "@/helpers/constants";
 import LogoutButton from "@/components/shared/LogoutButton";
 import AccountUserProfile from "./_components/AccountUserProfile";
-const ManageAccount = async ({
+import AccountTabs from "./_components/AccountTabs";
+
+const ManageAccount = ({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -37,36 +33,7 @@ const ManageAccount = async ({
       </section>
 
       <div className="border-b-2 px-2 lg:px-16">
-        <ul className="flex items-center justify-center lg:justify-normal gap-3 lg:gap-10 overflow-x-auto no-scrollbar">
-          {manageAccountTabs.map((tab) => (
-            <Link
-              key={tab.id}
-              href={`/manage-account?tab=${tab.id}`}
-              className="relative pb-1"
-            >
-              {activeManageAccountTab === tab.id && (
-                <MotionDiv
-                  layoutId="active_manage_account_tab"
-                  transition={{
-                    type: "spring",
-                    duration: 0.6,
-                  }}
-                  className="absolute rounded h-1 bg-primary inset-x-0 bottom-0"
-                />
-              )}
-              <li
-                className={cn(
-                  "flex items-center justify-between w-full capitalize text-[17px] md:text-2xl font-medium px-3 text-black whitespace-nowrap",
-                  activeManageAccountTab === tab.id
-                    ? "text-primary"
-                    : "text-black"
-                )}
-              >
-                {tab.label}
-              </li>
-            </Link>
-          ))}
-        </ul>
+        <AccountTabs activeManageAccountTab={activeManageAccountTab} />
       </div>
 
       <div className="flex-1 px-2 lg:px-16 py-6">
@@ -75,7 +42,6 @@ const ManageAccount = async ({
             <AccountPersonalInfo />
           </>
         )}
-
       </div>
     </div>
   );
