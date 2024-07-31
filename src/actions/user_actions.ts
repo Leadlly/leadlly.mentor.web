@@ -239,6 +239,9 @@ export const Studentinfo = async (id: string) => {
     }
 
     const responseData = await res.json();
+    revalidateTag('weeklyReport')
+    revalidateTag('monthlyReport')
+    revalidateTag('overallReport')
 
     return responseData;
   } catch (error) {

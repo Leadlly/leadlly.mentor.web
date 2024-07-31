@@ -5,10 +5,10 @@ import BarChart from "@/components/charts/BarChart";
 import TabContent from "@/components/shared/TabContent";
 import TabNavItem from "@/components/shared/TabNavItem";
 import AreaChartOver from "@/components/charts/AreaChartOver";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { weeklyReport, monthlyReport, overallReport } from "@/helpers/types";
 import { toast } from "sonner";
-import { getWeeklyReport,getMonthlyReport } from "@/actions/student_report_actions";
+import { getWeeklyReport,getMonthlyReport, getOverallReport } from "@/actions/student_report_actions";
 import { usePathname } from "next/navigation";
 
 const progressAnalyticsMenus = [
@@ -26,13 +26,14 @@ const progressAnalyticsMenus = [
   },
 ];
 
-const ProgressAnalytics = ({ monthly, weekly }: any) => {
+const ProgressAnalytics: React.FC = () => {
   const [activeTab, setActiveTab] = useState("weekly");
   const [reportweekly, setReportweekly] = useState<weeklyReport | null>(null);
   const [reportmonthly, setreportmonthly] = useState<monthlyReport | null>(null);
+  const [reportoverall, setreportoverall] = useState<any[] | null>(null);
   const pathname = usePathname();
   const segments = pathname.split('/');
-  const studentId = segments[segments.length - 2];
+  const studentId = segments[segments.length - 1];
 
   useEffect(() => {
     const getReportweekly = async () => {
@@ -48,6 +49,7 @@ const ProgressAnalytics = ({ monthly, weekly }: any) => {
     getReportweekly();
   }, [studentId]);
 
+
   useEffect(() => {
     const getreportmonthly = async () => {
       try {
@@ -60,6 +62,21 @@ const ProgressAnalytics = ({ monthly, weekly }: any) => {
     };
 
     getreportmonthly();
+  }, [studentId]);
+
+  useEffect(() => {
+    const getreportoverall = async () => {
+      try {
+        const data = await getOverallReport(studentId);
+        const overall = data.overallReport;
+        console.log(data)
+        setreportoverall(overall);
+      } catch (error:any) {
+        toast.error(error.message);
+      }
+    };
+
+    getreportoverall();
   }, [studentId]);
 
   return (
@@ -94,7 +111,7 @@ const ProgressAnalytics = ({ monthly, weekly }: any) => {
         </TabContent>
         <TabContent id="overall" activeTab={activeTab}>
           <div className="flex items-center gap-3">
-            <AreaChartOver />
+            <AreaChartOver progress={reportoverall}/>
           </div>
         </TabContent>
       </div>

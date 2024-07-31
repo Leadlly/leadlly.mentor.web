@@ -3,22 +3,36 @@
 import dynamic from "next/dynamic";
 const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const AreaChartOver = () => {
+const AreaChartOver = ({
+  progress,
+}: {
+  progress: any[] | null;
+}) => {
+  const sessionData =
+    progress && progress.length
+      ? progress?.map((data) => Math.round(data.session))
+      : [0];
+
+  const quizData =
+    progress && progress.length
+      ? progress.map((data) => Math.round(data.quiz))
+      : [0];
+
   return (
     <>
       <div className="flex-1">
         <Charts
           type="area"
           width={"100%"}
-          height={125}
+          height={140}
           series={[
             {
               name: "Revision Session",
-              data: [31, 40],
+              data: sessionData,
             },
             {
               name: "Quizzes",
-              data: [11, 32],
+              data: quizData,
             },
           ]}
           options={{
@@ -28,10 +42,6 @@ const AreaChartOver = () => {
             stroke: {
               curve: "smooth",
               width: [1, 1],
-            },
-            xaxis: {
-              type: "category",
-              categories: ["Jan12", "Feb12"],
             },
             fill: {
               colors: ["#9654F4", "#56CFE1"],
