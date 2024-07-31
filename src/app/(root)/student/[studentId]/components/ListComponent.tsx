@@ -33,7 +33,7 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <div className="overflow-y-scroll custom__scrollbar">
             {
               students.map((profile:any) => (
-              <Link href={`/student/${profile.id}`} className="flex items-center px-[25px] gap-6 mb-0.5 bg-white border-b-2 rounded-md min-h-fit" key={profile.id}>
+              <Link href={`/student/${profile._id}`} className="flex items-center px-[25px] gap-6 mb-0.5 bg-white border-b-2 rounded-md min-h-fit" key={profile.id}>
               <Avatar className="size-8 md:hidden">
               <AvatarImage
                 src={profile?.avatar?.url}
@@ -63,7 +63,7 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               </AvatarFallback>
             </Avatar>
                 <div className="flex flex-col justify-start">
-                  <label htmlFor={`profile-${profile.id}`} className="text-left font-semibold">{profile.firstname}</label>
+                  <label htmlFor={`profile-${profile._id}`} className="text-left font-semibold">{profile.firstname}</label>
                   <p className="text-[10px] text-left">MessageText</p>
                 </div>
                 {/* <div className="flex flex-col items-center ml-auto">
