@@ -19,7 +19,7 @@ export default function RootLayout({
   return (
     <>
       <MessageBox />
-      <div className="w-full">{children}</div>
+      <div className="h-main-height w-full">{children}</div>
     </>
   );
 }
