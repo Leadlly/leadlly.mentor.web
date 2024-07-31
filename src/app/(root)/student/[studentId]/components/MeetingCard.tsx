@@ -5,6 +5,8 @@ import TopicIcon from "@/components/icons/TopicIcon"; // Assume this icon exists
 import { getFormattedDate } from "@/helpers/utils";
 import { MeetingDataProps } from "@/helpers/types";
 import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface MeetingCardProps {
   data: MeetingDataProps;
@@ -63,12 +65,12 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
         </div>
       </div>
 
-      <div className="flex gap-3">
-        <div className="flex justify-between py-2">
-          <button
+      <div className="w-full flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Button
             onClick={onAccept}
             disabled={isAcceptingMeeting === data._id || data.accepted}
-            className="bg-[#56249E] text-white text-[14px] font-medium px-4 py-2 rounded-[6px] disabled:opacity-70"
+            size={"sm"}
           >
             {isAcceptingMeeting === data._id ? (
               <Loader2 className="w-4 h-4 animate-spin" />
@@ -77,16 +79,20 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
             ) : (
               "Accept"
             )}
-          </button>
-        </div>
-        <div className="flex justify-center py-2">
-          <button
-            onClick={onReschedule}
-            className="bg-[#56249E] text-white text-[14px] font-medium px-4 py-2 rounded-[6px]"
-          >
+          </Button>
+
+          <Button size={"sm"} onClick={onReschedule}>
             Reschedule
-          </button>
+          </Button>
         </div>
+        <Button size={"sm"} disabled={!data.accepted || !data.gmeet.link}>
+          <Link
+            href={data.gmeet && data.gmeet.link ? data.gmeet.link : "#"}
+            target={data.gmeet && data.gmeet.link ? "_blank" : ""}
+          >
+            Join Meeting
+          </Link>
+        </Button>
       </div>
     </div>
   );
