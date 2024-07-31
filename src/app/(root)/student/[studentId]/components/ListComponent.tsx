@@ -14,6 +14,7 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       try {
         const data = await getAllStudents();
         console.log(data); 
+        setStudents(data.students)
       } catch (err) {
         console.error((err as Error).message); 
       }
