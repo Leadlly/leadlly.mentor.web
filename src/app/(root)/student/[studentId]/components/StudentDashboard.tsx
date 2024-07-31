@@ -61,7 +61,7 @@ export default function StudentDashboard({
           <MoodOfTheWeek />
           {/* <SubjectStreak /> */}
         </div>
-        <div className="flex gap-2 pt-1 mb-3">
+        <div className="flex flex-col gap-2 pt-1 mb-3">
           <DailyReport
             dailyreportquiz={studentData.details.report.dailyReport.quiz}
             dailyreportsession={studentData.details.report.dailyReport.session}
@@ -72,8 +72,8 @@ export default function StudentDashboard({
         <ProgressAnalytics />
       </div>
 
-      <div className="bg-[] py-2 lg:px-4 lg:hidden lg:rounded-tr-2xl w-full">
-        <div className="bg-[#E8DAFE75] shadow-custom-combined lg:rounded-t-2xl flex px-3 md:px-7 pt-6 pb-2 justify-between">
+      <div className="bg-[] py-2 lg:px-4 overflow-y-auto custom__scrollbar lg:hidden lg:rounded-tr-2xl w-full">
+        <div className="bg-[#E8DAFE75] mx-[24px] shadow-custom-combined lg:rounded-t-2xl flex px-3 md:px-7 pt-6 pb-2 justify-between">
           <div className="flex justify-center items-center gap-1 md:gap-4">
             <Avatar className="size-20">
               <AvatarImage
@@ -109,7 +109,8 @@ export default function StudentDashboard({
             {/* <SubjectStreak /> */}
           </div>
           <div className="flex flex-col pt-[8px] gap-[8px] mb-3">
-            <DailyReport />
+            <DailyReport dailyreportquiz={studentData.details.report.dailyReport.quiz}
+                 dailyreportsession={studentData.details.report.dailyReport.session}/>
             <SubjectProgress userSubjects={studentData.academic.subjects} />
           </div>
           <ProgressAnalytics />

@@ -70,44 +70,37 @@ const Plannercontent = ({ weekstopic }: { weekstopic: TweeksTopic[] }) => {
               <Trash2 className="text-[#6200EE] bg-white rounded-[9999%] p-[1.5%]" />
             </div>
           </div>
-          <div className="bg-[#F5EFFF] w-full border py-[0.9%] mb-[11px] flex justify-center rounded-b-[6px] border-[#DFDBDB]">
-            <div className="flex overflow-x-auto mx-[10px] md:mx-[0px] my-[11px] md:my-[0px] no-scrollbar justify-between md:gap-[41px] gap-[21px]">
-              {datecard.continuousRevisionTopics.map(
-                (topic, topicIndex) =>
-                  visibleTopics[dateIndex].continuous[topicIndex] && (
-                    <div
-                      key={topicIndex}
-                      className="bg-[#E2D0FF] flex p-[8px] rounded-[9px] relative"
-                    >
-                      <p className="text-[15px] pr-[10px] font-medium">
-                        {topic.topic.name}
-                      </p>
-                      {/* <X
-                      onClick={() => handleClose(dateIndex, topicIndex, 'continuous')}
-                      className='absolute cursor-pointer top-0 right-[3px] w-[10px]'
-                    /> */}
-                    </div>
-                  )
-              )}
-              {datecard.backRevisionTopics.map(
-                (topic, topicIndex) =>
-                  visibleTopics[dateIndex].back[topicIndex] && (
-                    <div
-                      key={topicIndex}
-                      className="bg-[#E2D0FF] flex p-[8px] rounded-[9px] relative"
-                    >
-                      <p className="text-[15px] pr-[10px] font-medium">
-                        {topic.topic.name}
-                      </p>
-                      {/* <X
-                      onClick={() => handleClose(dateIndex, topicIndex, 'back')}
-                      className='absolute cursor-pointer top-0 right-[3px] w-[10px]'
-                    /> */}
-                    </div>
-                  )
-              )}
-            </div>
-          </div>
+          <div className="bg-[#F5EFFF] h-[70px] w-full border py-[0.9%] mb-[11px] flex justify-center rounded-b-[6px] border-[#DFDBDB]">
+              <div className="flex overflow-x-auto mx-[10px] md:mx-[0px] mb-[11px] md:mb-0 lg:my-[11px] md:my-[0px] no-scrollbar flex-row items-center gap-[21px] md:gap-[41px] h-full">
+                {datecard.continuousRevisionTopics.map(
+                  (topic, topicIndex) =>
+                    visibleTopics[dateIndex].continuous[topicIndex] && (
+                      <div
+                        key={topicIndex}
+                        className="bg-[#E2D0FF] flex-shrink-0 p-[8px] rounded-[9px] relative"
+                      >
+                        <p className="text-[15px] pr-[10px] font-medium">
+                          {topic.topic.name}
+                        </p>
+                      </div>
+                    )
+                )}
+                {datecard.backRevisionTopics.map(
+                  (topic, topicIndex) =>
+                    visibleTopics[dateIndex].back[topicIndex] && (
+                      <div
+                        key={topicIndex}
+                        className="bg-[#E2D0FF] flex-shrink-0 p-[8px] rounded-[9px] relative"
+                      >
+                        <p className="text-[15px] pr-[10px] font-medium">
+                          {topic.topic.name}
+                        </p>
+                      </div>
+                    )
+                )}
+              </div>
+</div>
+
         </div>
       ))}
       {showPopup && (

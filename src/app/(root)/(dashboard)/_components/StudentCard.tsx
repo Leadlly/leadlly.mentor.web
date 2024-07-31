@@ -14,7 +14,6 @@ import { cn } from "@/lib/utils";
 import clsx from "clsx";
 import { getBackgroundColor } from "@/helpers/constants/efficiency";
 import Link from "next/link";
-// import Avatar from "@/components/shared/Avatar";
 import Progressbar from "@/components/shared/Progressbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -49,7 +48,7 @@ const StudentCard = ({ studentInfo }: { studentInfo: Studentinformation }) => {
       >
         <div className="flex flex-col  border-b-[2px] pb-2 border-[#00AF9661] w-full justify-center items-center">
           <div className="flex flex-col mt-[10px] items-center">
-            {/* <Avatar alt="User Avatar" size={32} className="md:hidden" />{" "} */}
+            
             <Avatar className="size-8 md:hidden">
               <AvatarImage
                 src={studentInfo?.avatar?.url}
@@ -64,8 +63,6 @@ const StudentCard = ({ studentInfo }: { studentInfo: Studentinformation }) => {
                 </span>
               </AvatarFallback>
             </Avatar>
-            {/* Visible on small screens */}
-            {/* <Avatar alt="User Avatar" size={44} className="hidden md:block" /> */}
             <Avatar className="size-11 hidden md:block">
               <AvatarImage
                 src={studentInfo?.avatar?.url}
