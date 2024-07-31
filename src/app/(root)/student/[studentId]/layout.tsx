@@ -1,12 +1,15 @@
+"use client"
 import type { Metadata } from "next";
 import { Mada as FontSans } from "next/font/google";
 import Sidebar from "@/components/shared/Sidebar";
 import MobileMenu from "@/components/shared/MobileMenu";
 import MessageBox from "@/components/shared/MessageBox";
+import { useState } from "react";
+import Popup from "./components/ListComponent";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
-export const metadata: Metadata = {
+const metadata: Metadata = {
   title: "Leadlly",
   description:
     "Say goodbye to one-size-fits-all! We tailor study plans and resources to your individual learning style and goals.",
