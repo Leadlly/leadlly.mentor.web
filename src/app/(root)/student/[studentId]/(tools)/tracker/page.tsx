@@ -10,12 +10,12 @@ const page = async ({
   const studentInfo = await Studentinfo(studentId);
 
   return (
-    <div>
+    <>
       <Tracker
         studentId={studentId}
         studentSubjects={studentInfo.student.academic.subjects}
       />
-    </div>
+    </>
   );
 };
 
