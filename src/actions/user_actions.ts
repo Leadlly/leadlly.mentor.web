@@ -196,11 +196,11 @@ export const getAllStudents = async () => {
       credentials: "include",
     });
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.error(`status: ${res.status}, response: ${errorText}`);
-      throw new Error(`status: ${res.status}, response: ${errorText}`);
-    }
+    // if (!res.ok) {
+    //   const errorText = await res.text();
+    //   console.error(`status: ${res.status}, response: ${errorText}`);
+    //   throw new Error(`status: ${res.status}, response: ${errorText}`);
+    // }
 
     const responseData = await res.json();
 
@@ -262,18 +262,13 @@ export const getplanner = async (id: any) => {
         "Content-Type": "application/json",
         Cookie: `token=${token}`,
       },
-      cache: "force-cache",
-      next: {
-        tags: ["allocatedStudents"],
-      },
+      // cache: "force-cache",
+      // next: {
+      //   tags: ["plannerData"],
+      // },
       credentials: "include",
     });
 
-    if (!res.ok) {
-      const errortext = await res.text();
-      console.error(`status: ${res.status}, response: ${errortext}`);
-      throw new Error(`status: ${res.status}, response: ${errortext}`);
-    }
 
     const responseData = await res.json();
     return responseData;
