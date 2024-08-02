@@ -276,6 +276,7 @@ export interface Studentinformation {
     }[];
     report: {
       dailyReport: {
+        date: string;
         session: number;
         quiz: number;
         overall: number;
