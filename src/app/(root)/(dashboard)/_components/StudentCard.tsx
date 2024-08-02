@@ -17,6 +17,7 @@ import Link from "next/link";
 // import Avatar from "@/components/shared/Avatar";
 import Progressbar from "@/components/shared/Progressbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatDate } from "@/helpers/utils";
 
 const StudentCard = ({ studentInfo }: { studentInfo: Studentinformation }) => {
   const studentCurrentMood = studentInfo?.details?.mood;
@@ -36,8 +37,18 @@ const StudentCard = ({ studentInfo }: { studentInfo: Studentinformation }) => {
       : neutralEmoji;
 
   const cardBackgroundColor = useMemo(
-    () => getBackgroundColor(studentInfo.details.report.dailyReport.overall),
-    [studentInfo.details.report.dailyReport.overall]
+    () =>
+      getBackgroundColor(
+        studentInfo.details.report.dailyReport.date &&
+          formatDate(new Date(studentInfo.details.report.dailyReport.date)) ===
+            formatDate(new Date(Date.now()))
+          ? studentInfo.details.report.dailyReport.overall
+          : 0
+      ),
+    [
+      studentInfo.details.report.dailyReport.date,
+      studentInfo.details.report.dailyReport.overall,
+    ]
   );
   return (
     <Link href={`/student/${studentInfo._id}`}>
