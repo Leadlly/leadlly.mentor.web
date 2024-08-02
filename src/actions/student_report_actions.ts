@@ -15,7 +15,7 @@ export const getWeeklyReport = async (id:any) => {
           Cookie: `token=${token}`,
         },
         credentials: "include",
-        cache: "force-cache",
+        // cache: "force-cache",
         next: {
           tags: ["weeklyReport"],
         },
@@ -51,7 +51,7 @@ export const getMonthlyReport = async (id:any) => {
           Cookie: `token=${token}`,
         },
         credentials: "include",
-        cache: "force-cache",
+        // cache: "force-cache",
         next: {
           tags: ["monthlyReport"],
         },
@@ -87,7 +87,7 @@ export const getOverallReport = async (id:any) => {
           Cookie: `token=${token}`,
         },
         credentials: "include",
-        cache: "force-cache",
+        // cache: "force-cache",
         next: {
           tags: ["overallReport"],
         },

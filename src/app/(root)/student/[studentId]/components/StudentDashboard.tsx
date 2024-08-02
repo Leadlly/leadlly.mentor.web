@@ -9,6 +9,7 @@ import Link from "next/link";
 import { Studentinformation } from "@/helpers/types";
 import Loader from "@/components/shared/Loader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatDate } from "@/helpers/utils";
 
 export default function StudentDashboard({
   studentId,
@@ -20,6 +21,7 @@ export default function StudentDashboard({
   if (!studentData) {
     return <Loader />;
   }
+
   return (
     <>
       <div className="bg-[#E8E3F063] lg:block hidden lg:overflow-y-auto custom__scrollbar py-2 px-4 border-[#DDDDDD] border-[1px] rounded-tr-2xl w-full">
@@ -63,8 +65,22 @@ export default function StudentDashboard({
         </div>
         <div className="flex flex-col gap-2 pt-1 mb-3">
           <DailyReport
-            dailyreportquiz={studentData.details.report.dailyReport.quiz}
-            dailyreportsession={studentData.details.report.dailyReport.session}
+            dailyreportquiz={
+              studentData.details.report.dailyReport.date &&
+              formatDate(
+                new Date(studentData.details.report.dailyReport.date)
+              ) === formatDate(new Date(Date.now()))
+                ? studentData.details.report.dailyReport.quiz
+                : 0
+            }
+            dailyreportsession={
+              studentData.details.report.dailyReport.date &&
+              formatDate(
+                new Date(studentData.details.report.dailyReport.date)
+              ) === formatDate(new Date(Date.now()))
+                ? studentData.details.report.dailyReport.session
+                : 0
+            }
           />
 
           <SubjectProgress userSubjects={studentData.academic.subjects} />
@@ -101,7 +117,11 @@ export default function StudentDashboard({
               </Link>
             </div>
           </div>
-          <PointsBox />
+          <PointsBox
+            points={studentData.details.points.number}
+            level={studentData.details.level.number}
+            streak={studentData.details.streak.number}
+          />
         </div>
         <div className="mx-[24px]">
           <div className="flex flex-col w-full gap-[8px] mt-4 pb-2 lg:border-b-2 border-[#DEDEDE]">
@@ -109,8 +129,26 @@ export default function StudentDashboard({
             {/* <SubjectStreak /> */}
           </div>
           <div className="flex flex-col pt-[8px] gap-[8px] mb-3">
-            <DailyReport dailyreportquiz={studentData.details.report.dailyReport.quiz}
-                 dailyreportsession={studentData.details.report.dailyReport.session}/>
+
+            <DailyReport
+              dailyreportquiz={
+                studentData.details.report.dailyReport.date &&
+                formatDate(
+                  new Date(studentData.details.report.dailyReport.date)
+                ) === formatDate(new Date(Date.now()))
+                  ? studentData.details.report.dailyReport.quiz
+                  : 0
+              }
+              dailyreportsession={
+                studentData.details.report.dailyReport.date &&
+                formatDate(
+                  new Date(studentData.details.report.dailyReport.date)
+                ) === formatDate(new Date(Date.now()))
+                  ? studentData.details.report.dailyReport.session
+                  : 0
+              }
+            />
+
             <SubjectProgress userSubjects={studentData.academic.subjects} />
           </div>
           <ProgressAnalytics />
