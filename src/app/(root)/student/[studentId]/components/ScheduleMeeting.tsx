@@ -55,12 +55,6 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
   const mentorGMeetLink = useAppSelector(
     (state) => state.user.user?.gmeet.link
   );
-  // const currentStudentIndex = mentorStudents?.findIndex(
-  //   (student) => student.id === studentId
-  // );
-  // const currentStudent = mentorStudents?.[currentStudentIndex!];
-
-  // const isGMeetLink = !!currentStudent?.gmeet.link;
 
   const form = useForm<z.infer<typeof RequestMeetingFormSchema>>({
     resolver: zodResolver(RequestMeetingFormSchema),
