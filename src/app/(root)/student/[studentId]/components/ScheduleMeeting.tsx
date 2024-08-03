@@ -79,6 +79,7 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
       date: new Date(data.date_of_meeting),
       time: data.time,
       studentIds: [studentId],
+      message: data?.meeting_agenda
     };
 
     setIsSubmitting(true);
