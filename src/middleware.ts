@@ -13,10 +13,11 @@ export async function middleware(request: NextRequest) {
   // console.log(userData)
 
   const isPublicPath =
-    path === "/login" ||
-    path === "/signup" ||
-    path === "/verify" ||
-    path === "/forgot-password";
+    path.startsWith("/login") ||
+    path.startsWith("/signup") ||
+    path.startsWith("/verify") ||
+    path.startsWith("/forgot-password") ||
+    path.startsWith("/resetpassword");
 
 
     if (token && isPublicPath) {
