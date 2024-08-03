@@ -154,6 +154,7 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
                               const currentDate = new Date();
                               const endDate = new Date();
                               endDate.setDate(currentDate.getDate() + 7); // Set end date to 7 days from today
+                              currentDate.setHours(0, 0, 0, 0);                           
                               return date < currentDate || date > endDate;
                             }}
                             initialFocus
