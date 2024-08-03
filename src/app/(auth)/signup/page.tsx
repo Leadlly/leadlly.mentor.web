@@ -19,10 +19,11 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import Input from "@/components/shared/Input";
+// import Input from "@/components/shared/Input";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import apiClient from "@/apiClient/apiClient";
+import { Input } from "@/components/ui/input";
 
 const SignUp = () => {
   const [togglePassword, setTogglePassword] = useState(false);

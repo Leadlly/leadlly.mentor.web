@@ -1,25 +1,24 @@
 import Image from "next/image";
-import {
-  sadEmoji,
-  unhappyEmoji,
-  neutralEmoji,
-  smilingEmoji,
-  laughingEmoji,
-  moodEmojis,
-} from "@/helpers/constants/moodEmojis";
-import MessageIcon from "@/components/icons/MessageIcon";
-import { Student, Studentinformation } from "@/helpers/types";
+import { neutralEmoji, moodEmojis } from "@/helpers/constants/moodEmojis";
+import { Studentinformation } from "@/helpers/types";
 import { useMemo } from "react";
 import { cn } from "@/lib/utils";
-import clsx from "clsx";
 import { getBackgroundColor } from "@/helpers/constants/efficiency";
 import Link from "next/link";
-// import Avatar from "@/components/shared/Avatar";
-import Progressbar from "@/components/shared/Progressbar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDate } from "@/helpers/utils";
 
-const StudentCard = ({ studentInfo }: { studentInfo: Studentinformation }) => {
+const StudentCard = ({
+  studentInfo,
+  canSelectStudents,
+  setStudentIds,
+  studentIds,
+}: {
+  studentInfo: Studentinformation;
+  canSelectStudents: boolean;
+  studentIds: string[];
+  setStudentIds: React.Dispatch<React.SetStateAction<string[]>>;
+}) => {
   const studentCurrentMood = studentInfo?.details?.mood;
   const today = new Date().toISOString().split("T")[0];
 
@@ -50,79 +49,99 @@ const StudentCard = ({ studentInfo }: { studentInfo: Studentinformation }) => {
       studentInfo.details.report.dailyReport.overall,
     ]
   );
+
+  const handleOnSelectStudent = (studentId: string) => {
+    setStudentIds((prevIds: string[]) => {
+      if (prevIds.includes(studentId)) {
+        return prevIds.filter((id) => id !== studentId);
+      } else {
+        return [...prevIds, studentId];
+      }
+    });
+  };
+
   return (
-    <Link href={`/student/${studentInfo._id}`}>
-      <div
-        className={cn(
-          "flex-grow  bg-slate-500 rounded-2xl justify-center flex p-1 px-2 flex-col items-center",
-          cardBackgroundColor
-        )}
-      >
-        <div className="flex flex-col  border-b-[2px] pb-2 border-[#00AF9661] w-full justify-center items-center">
-          <div className="flex flex-col mt-[10px] items-center">
-            {/* <Avatar alt="User Avatar" size={32} className="md:hidden" />{" "} */}
-            <Avatar className="size-8 md:hidden">
-              <AvatarImage
-                src={studentInfo?.avatar?.url}
-                alt={`${studentInfo.firstname}'s avatar`}
+    <div className="relative">
+      {canSelectStudents && (
+        <input
+          type="checkbox"
+          className="absolute top-2 left-3 w-4 h-4 border-white cursor-pointer rounded-sm checked:bg-primary checked:hover:bg-primary checked:focus:bg-primary focus:ring-primary"
+          checked={studentIds?.includes(studentInfo._id)}
+          onChange={() => handleOnSelectStudent(studentInfo._id)}
+        />
+      )}
+      <Link href={`/student/${studentInfo._id}`}>
+        <div
+          className={cn(
+            "bg-slate-500 rounded-2xl justify-center flex p-1 px-2 flex-col items-center",
+            cardBackgroundColor
+          )}
+        >
+          <div className="flex flex-col  border-b-[2px] pb-2 border-[#00AF9661] w-full justify-center items-center">
+            <div className="flex flex-col mt-[10px] items-center">
+              {/* <Avatar alt="User Avatar" size={32} className="md:hidden" />{" "} */}
+              <Avatar className="size-8 md:hidden">
+                <AvatarImage
+                  src={studentInfo?.avatar?.url}
+                  alt={`${studentInfo.firstname}'s avatar`}
+                />
+                <AvatarFallback>
+                  <span className="capitalize text-base font-medium">
+                    {studentInfo.firstname.charAt(0)}
+                  </span>
+                  <span className="capitalize text-base font-medium">
+                    {studentInfo.lastname ? studentInfo.lastname.charAt(0) : ""}
+                  </span>
+                </AvatarFallback>
+              </Avatar>
+              {/* Visible on small screens */}
+              {/* <Avatar alt="User Avatar" size={44} className="hidden md:block" /> */}
+              <Avatar className="size-11 hidden md:block">
+                <AvatarImage
+                  src={studentInfo?.avatar?.url}
+                  alt={`${studentInfo.firstname}'s avatar`}
+                />
+                <AvatarFallback>
+                  <span className="capitalize text-base font-medium">
+                    {studentInfo.firstname.charAt(0)}
+                  </span>
+                  <span className="capitalize text-base font-medium">
+                    {studentInfo.lastname ? studentInfo.lastname.charAt(0) : ""}
+                  </span>
+                </AvatarFallback>
+              </Avatar>
+              <Image
+                src={moodOption.moodImg}
+                alt="checkbox-label"
+                width={20}
+                height={20}
+                className="md:size-4 w-[10.9px] translate-x-3 -translate-y-2 "
               />
-              <AvatarFallback>
-                <span className="capitalize text-base font-medium">
-                  {studentInfo.firstname.charAt(0)}
-                </span>
-                <span className="capitalize text-base font-medium">
-                  {studentInfo.lastname ? studentInfo.lastname.charAt(0) : ""}
-                </span>
-              </AvatarFallback>
-            </Avatar>
-            {/* Visible on small screens */}
-            {/* <Avatar alt="User Avatar" size={44} className="hidden md:block" /> */}
-            <Avatar className="size-11 hidden md:block">
-              <AvatarImage
-                src={studentInfo?.avatar?.url}
-                alt={`${studentInfo.firstname}'s avatar`}
-              />
-              <AvatarFallback>
-                <span className="capitalize text-base font-medium">
-                  {studentInfo.firstname.charAt(0)}
-                </span>
-                <span className="capitalize text-base font-medium">
-                  {studentInfo.lastname ? studentInfo.lastname.charAt(0) : ""}
-                </span>
-              </AvatarFallback>
-            </Avatar>
-            <Image
-              src={moodOption.moodImg}
-              alt="checkbox-label"
-              width={20}
-              height={20}
-              className="md:size-4 w-[10.9px] translate-x-3 -translate-y-2 "
-            />
+            </div>
+            <div className="font-semibold md:text-base text-[10px]">
+              {studentInfo.firstname}
+            </div>
+            <div className="text-[#504F4F] md:text-base text-[10px] font-medium">
+              Class: {studentInfo.academic.standard}
+            </div>
+            <div className="font-semibold md:mb-0 mb-[2%] md:text-base text-[8px] text-[#464646]">
+              Level-
+              <span className="font-bold text-[#0075FF]">
+                {studentInfo.details.level.number
+                  ? studentInfo.details.level.number
+                  : 0}
+              </span>
+            </div>
+            {/* <Progressbar
+              value={
+                studentInfo.details.level.number
+                  ? studentInfo.details.level.number
+                  : 0
+              }
+              indicatorClassName="h-[3px] md:h-[6px]"
+            /> */}
           </div>
-          <div className="font-semibold md:text-base text-[10px]">
-            {studentInfo.firstname}
-          </div>
-          <div className="text-[#504F4F] md:text-base text-[10px] font-medium">
-            Class: {studentInfo.academic.standard}
-          </div>
-          <div className="font-semibold md:mb-0 mb-[2%] md:text-base text-[8px] text-[#464646]">
-            Level-
-            <span className="font-bold text-[#0075FF]">
-              {studentInfo.details.level.number
-                ? studentInfo.details.level.number
-                : 0}
-            </span>
-          </div>
-          <Progressbar
-            value={
-              studentInfo.details.level.number
-                ? studentInfo.details.level.number
-                : 0
-            }
-            indicatorClassName="h-[3px] md:h-[6px]"
-          />
-        </div>
-        {/* {messages ? (
+          {/* {messages ? (
           <div className="flex bg-[#ffffff] gap-[1px] md:gap-[3px] px-1 py-[2px] my-1 rounded justify-center items-center">
             <MessageIcon />
             <div className="md:text-[9px] line-clamp-1 text-balance text-[6px] text-[#3D6CA1] font-bold">
@@ -140,8 +159,9 @@ const StudentCard = ({ studentInfo }: { studentInfo: Studentinformation }) => {
             </div>
           </div>
         )} */}
-      </div>
-    </Link>
+        </div>
+      </Link>
+    </div>
   );
 };
 

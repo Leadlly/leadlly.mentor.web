@@ -60,7 +60,7 @@ const MeetingCard: React.FC<MeetingCardProps> = ({
             <p className="text-[14px]">Topic</p>
           </div>
           <p className="text-[black] text-[16px] font-regular capitalize">
-            {data.message}
+            {data.message ? data.message : "New meeting scheduled"}
           </p>
         </div>
       </div>

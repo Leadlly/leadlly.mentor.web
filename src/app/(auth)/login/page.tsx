@@ -25,10 +25,11 @@ import {
   FormItem,
   FormMessage,
 } from "@/components/ui/form";
-import Input from "@/components/shared/Input";
+// import Input from "@/components/shared/Input";
 import GoogleLoginButton from "../_components/GoogleLoginButton";
 
 import apiClient from "@/apiClient/apiClient";
+import { Input } from "@/components/ui/input";
 
 const Login = () => {
   const [togglePassword, setTogglePassword] = useState(false);
@@ -110,7 +111,8 @@ const Login = () => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onFormSubmit)}
-                className="space-y-4">
+                className="space-y-4"
+              >
                 <FormField
                   control={form.control}
                   name="email"
@@ -120,8 +122,7 @@ const Login = () => {
                         <Input
                           placeholder="Email"
                           icon1={<User className="w-5 h-5 opacity-70" />}
-                          className="focus-visible:ring-0 text-lg focus:ring-offset-0"
-                          
+                          className="focus-visible:ring-0 border-none text-lg focus:ring-offset-0"
                           {...field}
                         />
                       </FormControl>
@@ -143,9 +144,8 @@ const Login = () => {
                           icon2={
                             <div
                               className="cursor-pointer"
-                              onClick={() =>
-                                setTogglePassword(!togglePassword)
-                              }>
+                              onClick={() => setTogglePassword(!togglePassword)}
+                            >
                               {togglePassword ? (
                                 <EyeOff className="w-5 h-5 opacity-70" />
                               ) : (
@@ -154,7 +154,6 @@ const Login = () => {
                             </div>
                           }
                           className="focus-visible:ring-0 text-lg focus:ring-offset-0"
-                          
                           {...field}
                         />
                       </FormControl>
@@ -181,7 +180,8 @@ const Login = () => {
                 <Button
                   type="submit"
                   className="w-full text-lg md:text-xl h-12"
-                  disabled={isLoggingIn}>
+                  disabled={isLoggingIn}
+                >
                   {isLoggingIn ? (
                     <span className="flex items-center">
                       <Loader2 className="w-6 h-6 animate-spin mr-2" />{" "}
