@@ -101,7 +101,8 @@ export const rescheduleMeeting = async (
 export const scheduleMeeting = async (data: {
   date: Date;
   time: string;
-  studentIds: string[];
+  studentIds: string[] | undefined;
+  message?: string;
 }) => {
   try {
     const token = await getCookie("token");

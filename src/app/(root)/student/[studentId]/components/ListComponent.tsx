@@ -5,23 +5,29 @@ import { useEffect } from "react";
 import { getAllStudents } from "@/actions/user_actions";
 import { Avatar, AvatarImage, AvatarFallback } from "@radix-ui/react-avatar";
 import Link from "next/link";
+import Loader from "@/components/shared/Loader";
 
 const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const [students, setStudents] = useState<[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchStudents = async () => {
+      setIsLoading(true);
       try {
         const data = await getAllStudents();
-        console.log(data); 
-        setStudents(data.students)
+        setStudents(data.students);
       } catch (err) {
-        console.error((err as Error).message); 
+        console.error((err as Error).message);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchStudents();
   }, []);
+
+  if (isLoading) return <Loader />;
 
   return (
     <>
@@ -65,7 +71,12 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               </AvatarFallback>
             </Avatar>
                 <div className="flex flex-col justify-start">
-                  <label htmlFor={`profile-${profile._id}`} className="text-left font-semibold">{profile.firstname}</label>
+                  <label
+                    htmlFor={`profile-${profile._id}`}
+                    className="text-left font-semibold"
+                  >
+                    {profile.firstname}
+                  </label>
                   <p className="text-[10px] text-left">MessageText</p>
                 </div>
                 {/* <div className="flex flex-col items-center ml-auto">
@@ -73,8 +84,7 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                   <div className="bg-red-600 text-white rounded-full w-[15px] h-[15px] text-[8px] text-center font-semibold">2</div>
                 </div> */}
               </Link>
-              ))
-            }
+            ))}
           </div>
         </div>
       </div>
