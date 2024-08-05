@@ -1,4 +1,4 @@
-import { rescheduleMeeting } from "@/actions/meeting_actions";
+import { rescheduleMeeting, scheduleMeeting } from "@/actions/meeting_actions";
 import Modal from "@/components/shared/Modal";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -25,8 +25,7 @@ import {
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { CalendarDaysIcon, CalendarIcon, Loader2, X } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { CalendarDaysIcon, Loader2, X } from "lucide-react";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -42,19 +41,24 @@ const RescheduleMeetingFormSchema = z.object({
 const RescheduleDialogBox = ({
   setOpenRescheduleDialog,
   meetingId,
+  meetingType = "reschedule",
+  studentIds,
+  onClose,
 }: {
   setOpenRescheduleDialog: (openRescheduleDialog: boolean) => void;
-  meetingId: string | null;
+  meetingId?: string | null;
+  studentIds?: string[];
+  meetingType?: string;
+  onClose?: () => void;
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof RescheduleMeetingFormSchema>>({
     resolver: zodResolver(RescheduleMeetingFormSchema),
   });
 
-  const onSubmit = async (
+  // for rescheduling the particular meeting
+  const onRescheduleMeetingSubmit = async (
     data: z.infer<typeof RescheduleMeetingFormSchema>
   ) => {
     setIsSubmitting(true);
@@ -74,24 +78,67 @@ const RescheduleDialogBox = ({
     }
   };
 
+  // for scheduling Group meeting
+  const onGroupMeetingSubmit = async (
+    data: z.infer<typeof RescheduleMeetingFormSchema>
+  ) => {
+    setIsSubmitting(true);
+
+    try {
+      const res = await scheduleMeeting({
+        date: new Date(data.date),
+        time: data.time,
+        studentIds,
+      });
+      if (res.success && res.success === false) {
+        return toast.error(res.message);
+      }
+
+      toast.success("Group meeting scheduled successfully");
+      if (onClose) {
+        onClose();
+      }
+      setOpenRescheduleDialog(false);
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const formatTime = (hour: number, minute: number) => {
+    const period = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${minute.toString().padStart(2, "0")} ${period}`;
+  };
+
+  const intervalCount = (22 - 9) * 4 + 1;
+
   return (
-    <Modal setOpenDialogBox={setOpenRescheduleDialog}>
+    <Modal setOpenDialogBox={setOpenRescheduleDialog} className="max-w-lg">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg md:text-2xl font-semibold leading-tight">
-          Reschedule Meeting
+        <h2 className="text-lg md:text-xl font-semibold leading-tight">
+          {meetingType === "reschedule"
+            ? "Reschedule Meeting"
+            : "Schedule Group Meeting"}
         </h2>
-        <button
+        <Button
+          variant={"outline"}
+          size={"sm"}
           onClick={() => setOpenRescheduleDialog(false)}
-          className="w-7 h-7 md:w-10 md:h-10 rounded-lg border flex items-center justify-center"
         >
-          <X className="w-4 h-4 md:w-5 md:h-5" />
-        </button>
+          <X className="w-3 h-3 md:w-4 md:h-4" />
+        </Button>
       </div>
 
       <Form {...form}>
         <form
           className="flex flex-col items-center justify-center space-y-5 w-full"
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={form.handleSubmit(
+            meetingType === "reschedule"
+              ? onRescheduleMeetingSubmit
+              : onGroupMeetingSubmit
+          )}
         >
           <div className="w-full grid sm:grid-cols-2 gap-4 sm:gap-10">
             <FormField
@@ -128,6 +175,7 @@ const RescheduleDialogBox = ({
                           const currentDate = new Date();
                           const endDate = new Date();
                           endDate.setDate(currentDate.getDate() + 7); // Set end date to 7 days from today
+                          currentDate.setHours(0, 0, 0, 0); 
                           return date < currentDate || date > endDate;
                         }}
                         initialFocus
@@ -154,11 +202,17 @@ const RescheduleDialogBox = ({
                         <SelectValue placeholder="Select a time" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="9:00 AM">9:00 AM</SelectItem>
-                      <SelectItem value="9:30 AM">9:30 AM</SelectItem>
-                      <SelectItem value="10:00 AM">10:00 AM</SelectItem>
-                      <SelectItem value="10:30 AM">10:30 AM</SelectItem>
+                    <SelectContent className="max-h-72">
+                      {Array.from({ length: intervalCount }).map((_, i) => {
+                        const hour = Math.floor(i / 4) + 9;
+                        const minute = (i % 4) * 15;
+                        const timeSlot = formatTime(hour, minute);
+                        return (
+                          <SelectItem key={i} value={timeSlot}>
+                            {timeSlot}
+                          </SelectItem>
+                        );
+                      })}
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -174,8 +228,10 @@ const RescheduleDialogBox = ({
           >
             {isSubmitting ? (
               <Loader2 className="w-5 h-5 animate-spin" />
-            ) : (
+            ) : meetingType === "reschedule" ? (
               "Reschedule"
+            ) : (
+              "Schedule Meeting"
             )}
           </Button>
         </form>

@@ -53,20 +53,6 @@ export function getFormattedDate(date: Date): string {
   return `${dayOfMonth} ${month} ${year}`;
 }
 
-export function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  const day = date.getDate();
-  const month = date.toLocaleString("default", { month: "short" });
-  return `${day} ${month}`;
-}
-
-export function capitalizeFirstLetter(sentence: string): string {
-  if (!sentence) {
-    return sentence;
-  }
-
-  return sentence.charAt(0).toUpperCase() + sentence.slice(1);
-}
 export function convertDateString(inputDate: Date): string {
   const utcDate = new Date(inputDate);
 
@@ -80,4 +66,20 @@ export function convertDateString(inputDate: Date): string {
 
   // Format the date as DD-MM-YYYY
   return `${day}-${month}-${year}`;
+}
+
+export function formatDate(dateString: Date): string {
+
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = date.toLocaleString("default", { month: "short" });
+  return `${day} ${month}`;
+}
+
+export function capitalizeFirstLetter(sentence: string): string {
+  if (!sentence) {
+    return sentence;
+  }
+
+  return sentence.charAt(0).toUpperCase() + sentence.slice(1);
 }

@@ -6,11 +6,11 @@ import TabNavItem from "@/components/shared/TabNavItem";
 import TabContent from "@/components/shared/TabContent";
 import { useAppSelector } from "@/redux/hooks";
 
-const SubjectProgress = ({userSubjects}:any) => {
+const SubjectProgress = ({ userSubjects }: any) => {
   const [activeTab, setActiveTab] = useState(userSubjects?.[0].name);
 
   const subject = userSubjects?.filter(
-    (subject:any) => subject.name === activeTab
+    (subject: any) => subject.name === activeTab
   )[0];
 
   const roundedProgress = Math.round(subject?.overall_progress || 0);
@@ -22,7 +22,7 @@ const SubjectProgress = ({userSubjects}:any) => {
       <div className="px-3 flex items-center justify-between">
         <h4 className="text-xs md:text-sm font-bold">Subject Progress</h4>
         <ul className="flex items-center gap-1 border p-[2px] rounded-md">
-          {userSubjects?.map((tab:any, i:any) => (
+          {userSubjects?.map((tab: any, i: any) => (
             <TabNavItem
               key={i}
               title={tab.name}
@@ -41,6 +41,7 @@ const SubjectProgress = ({userSubjects}:any) => {
           <div className="h-full grid grid-cols-2 mt-3 place-items-center">
             <div className="h-full flex flex-col gap-2">
               <SemiRadialChart
+
                 series={[roundedProgress]}
                 colors={["#6200EE"]}
                 chartLabel="revision"
@@ -49,7 +50,7 @@ const SubjectProgress = ({userSubjects}:any) => {
 
             <div className="h-full flex flex-col gap-2">
               <SemiRadialChart
-                series={[subject?.overall_efficiency!]}
+                series={[subject?.overall_efficiency]}
                 colors={["#56CFE1"]}
                 chartLabel="efficiency"
               />

@@ -34,6 +34,7 @@ const ProfileComponent = ({ params: { studentId }, searchParams }: Params) => {
               { label: "Email", value: data.student.email },
               { label: "Class", value: data.student.academic.standard },
               { label: "Gender", value: data.student.about.gender },
+              { label: "Phone", value: data.student.phone.personal },
             ],
           },
           {

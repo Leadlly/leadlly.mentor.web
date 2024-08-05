@@ -55,12 +55,6 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
   const mentorGMeetLink = useAppSelector(
     (state) => state.user.user?.gmeet.link
   );
-  // const currentStudentIndex = mentorStudents?.findIndex(
-  //   (student) => student.id === studentId
-  // );
-  // const currentStudent = mentorStudents?.[currentStudentIndex!];
-
-  // const isGMeetLink = !!currentStudent?.gmeet.link;
 
   const form = useForm<z.infer<typeof RequestMeetingFormSchema>>({
     resolver: zodResolver(RequestMeetingFormSchema),
@@ -79,6 +73,7 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
       date: new Date(data.date_of_meeting),
       time: data.time,
       studentIds: [studentId],
+      message: data?.meeting_agenda
     };
 
     setIsSubmitting(true);
@@ -98,6 +93,14 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
       setIsSubmitting(false);
     }
   };
+
+  const formatTime = (hour: number, minute: number) => {
+    const period = hour >= 12 ? "PM" : "AM";
+    const formattedHour = hour % 12 || 12;
+    return `${formattedHour}:${minute.toString().padStart(2, "0")} ${period}`;
+  };
+
+  const intervalCount = (22 - 9) * 4 + 1;
 
   return (
     <div>
@@ -146,6 +149,7 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
                               const currentDate = new Date();
                               const endDate = new Date();
                               endDate.setDate(currentDate.getDate() + 7); // Set end date to 7 days from today
+                              currentDate.setHours(0, 0, 0, 0);                           
                               return date < currentDate || date > endDate;
                             }}
                             initialFocus
@@ -173,11 +177,17 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
                             <SelectValue placeholder="Select a time" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent>
-                          <SelectItem value="9:00 AM">9:00 AM</SelectItem>
-                          <SelectItem value="9:30 AM">9:30 AM</SelectItem>
-                          <SelectItem value="10:00 AM">10:00 AM</SelectItem>
-                          <SelectItem value="10:30 AM">10:30 AM</SelectItem>
+                        <SelectContent className="max-h-72">
+                          {Array.from({ length: intervalCount }).map((_, i) => {
+                            const hour = Math.floor(i / 4) + 9;
+                            const minute = (i % 4) * 15;
+                            const timeSlot = formatTime(hour, minute);
+                            return (
+                              <SelectItem key={i} value={timeSlot}>
+                                {timeSlot}
+                              </SelectItem>
+                            );
+                          })}
                         </SelectContent>
                       </Select>
                       <FormMessage />
