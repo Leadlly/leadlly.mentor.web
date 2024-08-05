@@ -37,7 +37,6 @@ const SubjectOverview = ({ subject }: { subject: ISubject | undefined }) => {
             width="80%"
             hollowSize="60%"
             dataLabel="questions"
-            totalQuestionsSolved={subject?.total_questions_solved.number}
           />
         </div>
 
