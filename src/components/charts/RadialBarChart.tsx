@@ -1,8 +1,12 @@
 "use client";
-
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
-const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
+import RadialBarChartSkeleton from "./_skeletons/RadialBarChartSkeleton";
+import { ISubject } from "@/helpers/types";
+const Charts = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+  loading: () => <RadialBarChartSkeleton />,
+});
 
 type RadialBarChartProps = {
   series: number[];
@@ -12,7 +16,7 @@ type RadialBarChartProps = {
   width: string;
   hollowSize: string;
   fontSize?: string;
-  totalQuestionsSolved?: number;
+  subject?: ISubject;
 };
 
 const RadialBarChart = ({
@@ -23,7 +27,7 @@ const RadialBarChart = ({
   width,
   hollowSize,
   fontSize,
-  totalQuestionsSolved,
+  subject,
 }: RadialBarChartProps) => {
   return (
     <div className="relative h-full">
@@ -88,7 +92,9 @@ const RadialBarChart = ({
       >
         {labels.includes("No. of Questions Solved") && (
           <p className="text-2xl leading-none font-semibold text-center">
-            {totalQuestionsSolved! > 120 ? "120+" : totalQuestionsSolved}
+            {subject?.total_questions_solved.number! > 120
+              ? "120+"
+              : subject?.total_questions_solved.number}
           </p>
         )}
         <p

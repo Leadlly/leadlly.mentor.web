@@ -5,6 +5,9 @@ import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { getBackgroundColor } from "@/helpers/constants/efficiency";
 import Link from "next/link";
+
+import Progressbar from "@/components/shared/Progressbar";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDate } from "@/helpers/utils";
 

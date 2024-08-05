@@ -5,15 +5,18 @@ import { toast } from "sonner";
 import { acceptMeeting } from "@/actions/meeting_actions";
 import { MeetingDataProps } from "@/helpers/types";
 import RescheduleDialogBox from "./RescheduleDialogBox";
+import { convertDateString } from "@/helpers/utils";
 
 const MeetingContent = ({
   meetings,
+  doneMeetings,
   studentId,
 }: {
   meetings: MeetingDataProps[];
+  doneMeetings: MeetingDataProps[];
   studentId: string;
 }) => {
-  const [activeTab, setActiveTab] = useState<"upcoming" | "schedule">(
+  const [activeTab, setActiveTab] = useState<"upcoming" | "schedule" | "done">(
     "upcoming"
   );
   const [isAcceptingMeeting, setIsAcceptingMeeting] = useState<string | null>(
@@ -68,6 +71,16 @@ const MeetingContent = ({
         >
           Schedule Meeting
         </button>
+        <button
+          className={`px-4 py-2 font-semibold transition-colors duration-300 ${
+            activeTab === "done"
+              ? "text-[#56249E]"
+              : "text-black hover:border-b-[1px] hover:border-[#56249E]"
+          }`}
+          onClick={() => setActiveTab("done")}
+        >
+          Done
+        </button>
       </div>
       <div className="tab-content">
         {activeTab === "upcoming" && (
@@ -100,6 +113,29 @@ const MeetingContent = ({
           </>
         )}
         {activeTab === "schedule" && <ScheduleMeeting studentId={studentId} />}
+
+        {activeTab === "done" && (
+          <div style={{ display: activeTab === "done" ? "block" : "none" }}>
+            {doneMeetings && doneMeetings.length ? (
+              doneMeetings.map((meeting) => (
+                <div key={meeting._id} className="mb-4 mx-4">
+                  <h3 className="text-lg font-semibold">{meeting.message}</h3>
+                  <p className="text-gray-600">
+                    Date:{" "}
+                    {meeting.rescheduled && meeting.rescheduled.isRescheduled
+                      ? convertDateString(new Date(meeting.rescheduled.date))
+                      : convertDateString(new Date(meeting.date))}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div className="w-full text-center text-lg text-muted-foreground font-medium">
+                <p>No meetings done yet!</p>
+              </div>
+            )}
+          </div>
+        )}
+
       </div>
     </div>
   );
