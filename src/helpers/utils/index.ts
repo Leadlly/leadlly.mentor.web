@@ -53,21 +53,6 @@ export function getFormattedDate(date: Date): string {
   return `${dayOfMonth} ${month} ${year}`;
 }
 
-export function convertDateString(inputDate: Date): string {
-  const utcDate = new Date(inputDate);
-
-  // Convert to IST by adding 5 hours and 30 minutes
-  const istDate = new Date(utcDate.getTime() + 5.5 * 60 * 60 * 1000);
-
-  // Format the date
-  const day = istDate.getDate().toString().padStart(2, "0");
-  const month = (istDate.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed
-  const year = istDate.getFullYear();
-
-  // Format the date as DD-MM-YYYY
-  return `${day}-${month}-${year}`;
-}
-
 export function formatDate(dateString: string): string {
   const date = new Date(dateString);
   const day = date.getDate();
@@ -81,4 +66,18 @@ export function capitalizeFirstLetter(sentence: string): string {
   }
 
   return sentence.charAt(0).toUpperCase() + sentence.slice(1);
+}
+export function convertDateString(inputDate: Date): string {
+  const utcDate = new Date(inputDate);
+
+  // Convert to IST by adding 5 hours and 30 minutes
+  const istDate = new Date(utcDate.getTime() + 5.5 * 60 * 60 * 1000);
+
+  // Format the date
+  const day = istDate.getDate().toString().padStart(2, "0");
+  const month = (istDate.getMonth() + 1).toString().padStart(2, "0"); // Months are 0-indexed
+  const year = istDate.getFullYear();
+
+  // Format the date as DD-MM-YYYY
+  return `${day}-${month}-${year}`;
 }

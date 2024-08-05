@@ -108,9 +108,9 @@ export default function StudentDashboard({
             <MoodOfTheWeek />
             {/* <SubjectStreak /> */}
           </div>
-          <div className="flex flex-col pt-[8px] gap-[8px] mb-3">
+          <div className="flex pt-[8px] gap-[8px] mb-3">
             <DailyReport dailyreportquiz={studentData.details.report.dailyReport.quiz}
-                 dailyreportsession={studentData.details.report.dailyReport.session}/>
+            dailyreportsession={studentData.details.report.dailyReport.session}/>
             <SubjectProgress userSubjects={studentData.academic.subjects} />
           </div>
           <ProgressAnalytics />
