@@ -3,12 +3,12 @@
 import { revalidateTag } from "next/cache";
 import { getCookie } from "./cookie_actions";
 
-export const getMeetings = async (studentId: string,meeting:string) => {
+export const getMeetings = async (studentId: string,meeting?:string,createdBy?:string) => {
   try {
     const token = await getCookie("token");
 
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/get?studentId=${studentId}&meeting=${meeting}`,
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/get?studentId=${studentId}&meeting=${meeting}&createdBy=${createdBy}`,
       {
         method: "GET",
         headers: {

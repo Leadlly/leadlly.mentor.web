@@ -11,14 +11,17 @@ const MeetingContent = ({
   meetings,
   doneMeetings,
   studentId,
+  mentorMeetings
 }: {
   meetings: MeetingDataProps[];
   doneMeetings: MeetingDataProps[];
   studentId: string;
+  mentorMeetings:MeetingDataProps[]
 }) => {
   const [activeTab, setActiveTab] = useState<"upcoming" | "schedule" | "done">(
     "upcoming"
   );
+  const [upcomingSubTab, setUpcomingSubTab] = useState<"Request" | "Your Meetings">("Request");
   const [isAcceptingMeeting, setIsAcceptingMeeting] = useState<string | null>(
     null
   );
@@ -82,28 +85,77 @@ const MeetingContent = ({
           Done
         </button>
       </div>
+
       <div className="tab-content">
         {activeTab === "upcoming" && (
           <>
-            <div>
-              {meetings && meetings.length ? (
-                meetings.map((meeting) => (
-                  <MeetingCard
-                    key={meeting._id}
-                    data={meeting}
-                    isAcceptingMeeting={isAcceptingMeeting}
-                    onAccept={() => handleAccept(meeting._id)}
-                    onReschedule={() => handleReschedule(meeting._id)}
-                  />
-                ))
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <p className="text-sm text-muted-foreground font-semibold">
-                    No meetings scheduled!
-                  </p>
-                </div>
-              )}
+            <div className="mb-4 justify-center flex space-x-4">
+              <button
+                className={`px-3 py-2 font-medium transition-colors duration-300 ${
+                  upcomingSubTab === "Request"
+                    ? "text-[#56249E]"
+                    : "text-black hover:text-[#56249E] hover:border-b-[1px] hover:border-[#56249E]"
+                }`}
+                onClick={() => setUpcomingSubTab("Request")}
+              >
+                Request
+              </button>
+              <button
+                className={`px-3 py-2 font-medium transition-colors duration-300 ${
+                  upcomingSubTab === "Your Meetings"
+                    ? "text-[#56249E]"
+                    : "text-black hover:text-[#56249E] hover:border-b-[1px] hover:border-[#56249E]"
+                }`}
+                onClick={() => setUpcomingSubTab("Your Meetings")}
+              >
+                Your Meetings
+              </button>
             </div>
+
+            {upcomingSubTab === "Request" && (
+              <div>
+                {meetings && meetings.length ? (
+                  meetings.map((meeting) => (
+                    <MeetingCard
+                      key={meeting._id}
+                      data={meeting}
+                      isAcceptingMeeting={isAcceptingMeeting}
+                      onAccept={() => handleAccept(meeting._id)}
+                      onReschedule={() => handleReschedule(meeting._id)}
+                    />
+                  ))
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <p className="text-sm text-muted-foreground font-semibold">
+                      No Request yet!
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {upcomingSubTab === "Your Meetings" && (
+              <div>
+                {mentorMeetings && mentorMeetings.length ? (
+                  mentorMeetings.map((meeting) => (
+                    <MeetingCard
+                      key={meeting._id}
+                      data={meeting}
+                      isAcceptingMeeting={isAcceptingMeeting}
+                      onAccept={() => handleAccept(meeting._id)}
+                      onReschedule={() => handleReschedule(meeting._id)}
+                    />
+                  ))
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <p className="text-sm text-muted-foreground font-semibold">
+                      No Meetings yet!
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
+
             {openRescheduleDialog && (
               <RescheduleDialogBox
                 setOpenRescheduleDialog={setOpenRescheduleDialog}
@@ -112,6 +164,7 @@ const MeetingContent = ({
             )}
           </>
         )}
+
         {activeTab === "schedule" && <ScheduleMeeting studentId={studentId} />}
 
         {activeTab === "done" && (
@@ -135,7 +188,6 @@ const MeetingContent = ({
             )}
           </div>
         )}
-
       </div>
     </div>
   );

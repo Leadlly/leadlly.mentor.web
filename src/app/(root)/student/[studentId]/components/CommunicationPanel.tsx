@@ -9,11 +9,13 @@ import { MeetingDataProps } from "@/helpers/types";
 const CommunicationPanel = ({
   meetings,
   studentId,
-  doneMeeting
+  doneMeeting,
+  mentorMeetings
 }: {
   meetings: MeetingDataProps[];
   studentId: string;
   doneMeeting:MeetingDataProps[];
+  mentorMeetings: MeetingDataProps[];
 }) => {
   const [activeTab, setActiveTab] = useState<"chat" | "meeting">("meeting");
 
@@ -60,7 +62,7 @@ const CommunicationPanel = ({
             }}
           />
         ) : ( */}
-        <MeetingContent doneMeetings={doneMeeting} meetings={meetings} studentId={studentId} />
+        <MeetingContent mentorMeetings={mentorMeetings} doneMeetings={doneMeeting} meetings={meetings} studentId={studentId} />
         {/* )} */}
       </div>
     </div>
