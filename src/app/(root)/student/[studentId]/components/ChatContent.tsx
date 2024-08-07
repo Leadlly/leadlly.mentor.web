@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import MessageInput from "./MessageInput";
-import useSocket from "@/hooks/useSocket";
+
 import { useAppSelector } from "@/redux/hooks";
 import AttachIcon from "@/components/icons/AttachIcon";
 import { Form, FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
@@ -12,8 +12,7 @@ import { Button } from "@/components/ui/button";
 import Smile from "@/components/icons/Smile";
 import { Textarea } from "@/components/ui/textarea";
 import { MicIcon, SendIcon } from "lucide-react";
-import { sendMessage } from "@/actions/chat_action";
-import { timeStamp } from "console";
+import { useSocket } from "@/contexts/socket/socketProvider";
 
 
 interface ChatContentProps {

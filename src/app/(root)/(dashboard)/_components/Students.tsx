@@ -6,7 +6,7 @@ import StudentCard from "./StudentCard";
 import { getAllStudents } from "@/actions/user_actions";
 import Loader from "@/components/shared/Loader";
 import { Studentinformation } from "@/helpers/types";
-import useSocket from "@/hooks/useSocket";
+import { useSocket } from "@/contexts/socket/socketProvider";
 
 const Students = ({
   canSelectStudents,
@@ -23,29 +23,6 @@ const Students = ({
 }) => {
 
   const socket = useSocket()
-
-  useEffect(() => {
-    if (socket) {
-      console.log(socket)
-      socket.on("connect", () => {
-        // setSocketId(socket.id); // Store the socket ID when connected
-        console.log(`Connected with socket ID: ${socket.id}`);
-      });
-     
-      socket.on('join_mentor_room', (data) => {
-        console.log('Received join room event:', data);
-        socket.emit('join_mentor_room', { userEmail: data.userEmail });
-      });
-      
-     }
-
-
-    return () => {
-      if (socket) {
-        socket.off('chat_message');
-      }
-    };
-  }, [socket]);
 
   return (
     <div className="grid lg:grid-cols-5 md:grid-cols-4 h-[calc(100dvh-120px)] grid-cols-3 lg:gap-[30px] md:gap-[20px] gap-[10px]">
