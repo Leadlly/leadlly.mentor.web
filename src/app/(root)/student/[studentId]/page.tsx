@@ -17,7 +17,9 @@ export default async function StudentPage({ params: { studentId } }: Params) {
         <CommunicationPanel meetings={meetings.meetings} studentId={studentId} />
       </div>
       <div className="mx-[1px] overflow-auto flex h-[calc(100dvh-160px)] lg:hidden">
-        <StudentDashboard studentId={studentId} studentData={student.student} />
+        {/* <StudentDashboard studentId={studentId} studentData={student.student} /> */}
+        <CommunicationPanel meetings={meetings.meetings} studentId={studentId} />
+
       </div>
     </>
   );

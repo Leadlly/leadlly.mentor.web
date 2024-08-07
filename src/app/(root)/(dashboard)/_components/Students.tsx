@@ -31,13 +31,14 @@ const Students = ({
         // setSocketId(socket.id); // Store the socket ID when connected
         console.log(`Connected with socket ID: ${socket.id}`);
       });
-
+     
       socket.on('join_mentor_room', (data) => {
-        console.log(data)
         console.log('Received join room event:', data);
+        socket.emit('join_mentor_room', { userEmail: data.userEmail });
       });
-  
+      
      }
+
 
     return () => {
       if (socket) {

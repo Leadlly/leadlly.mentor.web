@@ -74,8 +74,9 @@ const StudentCard = ({
     try {
       console.log(studentInfo.email)
       const userData = { email: studentInfo.email }; // Send socket ID with user data
-      const response = await joinRoom(userData);
-      console.log('Room joined successfully:', response);
+      if(socket)
+      socket.emit('join_mentor_room', { userEmail: studentInfo.email });
+      // console.log('Room joined successfully:', response);
     } catch (error) {
       console.error('Failed to join room:', error);
     }

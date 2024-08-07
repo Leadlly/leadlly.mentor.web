@@ -19,7 +19,7 @@ const CommunicationPanel = ({
       <TabHeader activeTab={activeTab} setActiveTab={setActiveTab} />
       <div className="flex-1 bg-white overflow-y-auto custom__scrollbar">
         {activeTab === "chat" ? (
-          <ChatContent />
+          <ChatContent studentId={studentId}/>
         ) : (
         <MeetingContent meetings={meetings} studentId={studentId} />
        )}

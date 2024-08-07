@@ -13,24 +13,27 @@ import Smile from "@/components/icons/Smile";
 import { Textarea } from "@/components/ui/textarea";
 import { MicIcon, SendIcon } from "lucide-react";
 import { sendMessage } from "@/actions/chat_action";
+import { timeStamp } from "console";
 
 
 interface ChatContentProps {
   overrideClass?:string
+  studentId: string
 }
 interface ChatMessage {
-  sender: string;
+  sender: string | null | undefined;
   message: string;
   timestamp: string;
   sendBy: string
+  room: string
 }
 
 
-const ChatContent: React.FC<ChatContentProps> = ({ overrideClass }) => {
+const ChatContent: React.FC<ChatContentProps> = ({ studentId, overrideClass }) => {
 
   const socket = useSocket();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const userEmail = useAppSelector((state) => state.user.user?.email);
+  const [messages, setMessages] = useState<any[]>([]);
+  const mentor = useAppSelector((state) => state.user.user);
 
   const form = useForm()
   
@@ -39,12 +42,12 @@ const ChatContent: React.FC<ChatContentProps> = ({ overrideClass }) => {
 
   useEffect(() => {
     if (socket) {
-      socket.on('chat_message', (data: { message: string, sender: string, timestamp: string, sendBy: string }) => {
+      socket.on('room_message', (data: { message: string, sender: string, timestamp: string, sendBy: string }) => {
         setMessages(prevMessages => [...prevMessages, data]);
-        console.log('Received chat message room event:', data);
+        console.log('Received mentor room message room event:', data);
       });
       return () => {
-        socket.off('chat_message');
+        socket.off('room_message');
       };
     }
   }, [socket]);
@@ -53,13 +56,20 @@ const ChatContent: React.FC<ChatContentProps> = ({ overrideClass }) => {
     console.log(data, "here is th edata sending as message")
     const formattedData = {
       message: data.content,
-      email: userEmail,
-      sendBy: "mentor"
+      sender: mentor?.firstname,
+      room: '',
+      studentId: studentId,
+      sendBy: "mentor",
+      timeStamp: new Date(Date.toString()),
+      socketId: socket?.id
     };
 
     try {
-      const response = await sendMessage(formattedData);
-      console.log(response);
+      // const response = await sendMessage(formattedData);
+      // console.log(response);
+      if(socket)
+      socket.emit('chat_message', formattedData) 
+
       reset(); // Clear the textarea after sending the message
     } catch (error) {
       console.error('Failed to send message:', error);
