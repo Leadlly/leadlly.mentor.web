@@ -7,8 +7,20 @@ export const getMeetings = async (studentId: string,meeting?:string,createdBy?:s
   try {
     const token = await getCookie("token");
 
+    const queryParams = new URLSearchParams({ studentId });
+
+    if (meeting) {
+      queryParams.append("meeting", meeting);
+    }
+    if (createdBy) {
+      queryParams.append("createdBy", createdBy);
+    }
+
+    console.log(queryParams)
+
+
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/get?studentId=${studentId}&meeting=${meeting}&createdBy=${createdBy}`,
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/get?${queryParams.toString()}`,
       {
         method: "GET",
         headers: {
