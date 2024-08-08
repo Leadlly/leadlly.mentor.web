@@ -2,11 +2,11 @@ import type { Metadata } from "next";
 import { Mada as FontSans } from "next/font/google";
 import "./globals.css";
 import StoreProvider from "@/app/StoreProvider";
-import { Container } from "@/components";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { getUser } from "@/actions/user_actions";
+import { SocketProvider } from "@/contexts/socket/socketProvider";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -30,6 +30,7 @@ export default async function RootLayout({
           fontSans.variable
         )}
       >
+      <SocketProvider>
         <StoreProvider user={userData?.user}>
           <GoogleOAuthProvider
             clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
@@ -38,6 +39,7 @@ export default async function RootLayout({
             <Toaster richColors position="top-center" />
           </GoogleOAuthProvider>
         </StoreProvider>
+      </SocketProvider>
       </body>
     </html>
   );
