@@ -1,15 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import TabHeader from "./TabHeader";
-import ChatContent from "./ChatContent";
 import MeetingContent from "./MeetingContent";
-import { MeetingDataProps } from "@/helpers/types";
+
 
 const CommunicationPanel = ({
-  meetings,
   studentId,
 }: {
-  meetings: MeetingDataProps[];
   studentId: string;
 }) => {
   const [activeTab, setActiveTab] = useState<"chat" | "meeting">("chat");

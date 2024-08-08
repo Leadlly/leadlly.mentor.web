@@ -6,12 +6,12 @@ interface SearchBarProps {
   className?: string;
 }
 
-const SearchBar = () => {
+const SearchBar = ({className}:SearchBarProps) => {
   return (
     <Input
       placeholder="Search by student name"
       icon1={<SearchIcon />}
-      className="border-none focus-visible:ring-0"
+      className={className ||"border-none focus-visible:ring-0" }
     />
   );
 };
