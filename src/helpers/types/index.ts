@@ -369,6 +369,7 @@ interface IStudent {
 }
 
 export interface MentorPersonalInfoProps {
+  _id: string;
   firstname: string | null;
   lastname: string | null;
   email: string;

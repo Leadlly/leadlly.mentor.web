@@ -13,35 +13,40 @@ import Smile from "@/components/icons/Smile";
 import { Textarea } from "@/components/ui/textarea";
 import { MicIcon, SendIcon } from "lucide-react";
 import { useSocket } from "@/contexts/socket/socketProvider";
-
-
+import { Studentinformation } from "@/helpers/types";
+import { formatTimestamp } from "@/helpers/utils";
+import ScrollToBottom from 'react-scroll-to-bottom';
 interface ChatContentProps {
   overrideClass?:string
-  studentId: string
+  studentInfo: Studentinformation | null,
+  chatData: {
+    messages: ChatMessage[]
+  }
 }
 interface ChatMessage {
-  sender: string | null | undefined;
   message: string;
   timestamp: string;
   sendBy: string
-  room: string
 }
 
 
-const ChatContent: React.FC<ChatContentProps> = ({ studentId, overrideClass }) => {
+const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overrideClass }) => {
 
+  console.log(chatData, "here is the cchat data")
   const socket = useSocket();
-  const [messages, setMessages] = useState<any[]>([]);
-  const mentor = useAppSelector((state) => state.user.user);
+    const mentor = useAppSelector((state) => state.user.user);
+
+  const [messages, setMessages] = useState<ChatMessage[]>(chatData.messages || []);
 
   const form = useForm()
-  
 
   const { reset, handleSubmit, control } = form;
 
+
   useEffect(() => {
     if (socket) {
-      socket.on('room_message', (data: { message: string, sender: string, timestamp: string, sendBy: string }) => {
+      socket.emit('join_mentor_room', { userEmail: studentInfo?.email });
+      socket.on('room_message', (data: { message: string, timestamp: string, sendBy: string }) => {
         setMessages(prevMessages => [...prevMessages, data]);
         console.log('Received mentor room message room event:', data);
       });
@@ -55,21 +60,19 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentId, overrideClass }) =
     console.log(data, "here is th edata sending as message")
     const formattedData = {
       message: data.content,
-      sender: mentor?.firstname,
-      room: '',
-      studentId: studentId,
-      sendBy: "mentor",
-      timeStamp: new Date(Date.toString()),
+      sender: mentor?._id,
+      receiver: studentInfo?._id,
+      sendBy: mentor?.firstname,
+      room: studentInfo?.email,
+      timestamp: new Date(Date.now()),
       socketId: socket?.id
     };
 
     try {
-      // const response = await sendMessage(formattedData);
-      // console.log(response);
       if(socket)
       socket.emit('chat_message', formattedData) 
 
-      reset(); // Clear the textarea after sending the message
+      reset({ content: "" });
     } catch (error) {
       console.error('Failed to send message:', error);
     }
@@ -82,12 +85,13 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentId, overrideClass }) =
             Today
           </span>
         </div>
+        <ScrollToBottom className="flex flex-col space-y-4">
         <div className="flex flex-col space-y-4">
           {messages.map((message, index) => (
             <div
               className={cn(  
                 "flex ",
-                message.sendBy === "mentor" ? "justify-end" : "justify-start"
+                message.sendBy === mentor?.firstname ? "justify-end" : "justify-start"
               )}
               key={index}
             >
@@ -95,7 +99,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentId, overrideClass }) =
                 <div
                   className={cn(
                     "p-4 rounded-2xl text-sm font-medium max-w-xs",
-                    message.sendBy === "mentor"
+                    message.sendBy === mentor?.firstname
                       ? "bg-[#EDE2FD]  border-2 border-white drop-shadow-custom-user-chat"
                       : "bg-white border-2 border-[#D8D5D5] text-black shadow-sm"
                   )}
@@ -103,15 +107,17 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentId, overrideClass }) =
                   <p>{message.message}</p>
                 </div>
                 <span className="block text-right font-semibold text-xs pt-1 px-1 text-[#878787]">
-                  {message.sendBy === "mentor"
+                  {message.sendBy === mentor?.firstname
                     ? "You, "
-                    : message.sender + ", "}
-                  {message.timestamp}
+                    : message.sendBy + ", "}
+                  {formatTimestamp(message?.timestamp ||  new Date(Date.now()).toString())}
                 </span>
               </div>
             </div>
           ))}
         </div>
+
+    </ScrollToBottom>
       </div>
       <Form {...form}>
         <form

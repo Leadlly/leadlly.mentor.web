@@ -83,3 +83,16 @@ export function capitalizeFirstLetter(sentence: string): string {
 
   return sentence.charAt(0).toUpperCase() + sentence.slice(1);
 }
+export const formatTimestamp = (timestamp: string) => {
+  const date = new Date(timestamp);
+
+  if (isNaN(date.getTime())) {
+    return 'Invalid Date';
+  }
+
+  return new Intl.DateTimeFormat("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  }).format(date);
+};
