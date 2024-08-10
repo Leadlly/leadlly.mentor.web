@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { MicIcon, SendIcon } from "lucide-react";
 import { useSocket } from "@/contexts/socket/socketProvider";
 import { Studentinformation } from "@/helpers/types";
-import { formatTimestamp } from "@/helpers/utils";
+import { formatTimestamp, getFormattedDate } from "@/helpers/utils";
 import ScrollToBottom from 'react-scroll-to-bottom';
 interface ChatContentProps {
   overrideClass?:string
@@ -82,11 +82,45 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overri
     }
   };
 
+   // Group messages by date
+   const groupMessagesByDate = (messages: ChatMessage[]) => {
+    const groupedMessages: { [date: string]: ChatMessage[] } = {};
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    messages.forEach(message => {
+      const messageDate = new Date(message.timestamp);
+      let dateLabel;
+
+      if (messageDate.toDateString() === today.toDateString()) {
+        dateLabel = 'Today';
+      } else if (messageDate.toDateString() === yesterday.toDateString()) {
+        dateLabel = 'Yesterday';
+      } else {
+        dateLabel = getFormattedDate(messageDate); 
+      }
+
+      if (!groupedMessages[dateLabel]) {
+        groupedMessages[dateLabel] = [];
+      }
+      groupedMessages[dateLabel].push(message);
+    });
+
+    return groupedMessages;
+  };
+
+  const groupedMessages = groupMessagesByDate(messages);
+
+
 
   return (
     <div className="flex flex-col h-full bg-white w-full justify-center items-center border overflow-hidden">
       <div className={cn("flex-1 w-full overflow-y-auto custom__scrollbar px-1 md:px-2 py-4")}>
         <ScrollToBottom className="h-[100%]" scrollViewClassName="custom__scrollbar">
+        {Object.entries(groupedMessages).map(([dateLabel, messages]) => (
+            <div key={dateLabel}>
+              <div className="text-center text-gray-500 py-2">{dateLabel}</div>
           {messages.map((message, index) => (
             <div
               className={cn(  
@@ -115,6 +149,8 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overri
               </div>
             </div>
           ))}
+          </div>
+        ))}
 
     </ScrollToBottom>
         </div>
