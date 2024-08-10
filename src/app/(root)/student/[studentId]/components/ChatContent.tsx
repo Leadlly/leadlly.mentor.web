@@ -73,16 +73,20 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overri
       console.error('Failed to send message:', error);
     }
   };
+
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      handleSubmit(onMessageSubmit)();
+    }
+  };
+
+
   return (
     <div className="flex flex-col h-full bg-white w-full justify-center items-center border overflow-hidden">
-      <div className={cn("flex-1 w-full overflow-y-auto custom__scrollbar px-1 md:px-2 py-4", overrideClass)}>
-        <div className="text-center my-2">
-          <span className="inline-block bg-gray-200 text-gray-700 px-2 py-1 rounded">
-            Today
-          </span>
-        </div>
-        <ScrollToBottom className="flex flex-col space-y-4">
-        <div className="flex flex-col space-y-4">
+      <div className={cn("flex-1 w-full overflow-y-auto custom__scrollbar px-1 md:px-2 py-4")}>
+        <ScrollToBottom className="h-[100%]" scrollViewClassName="custom__scrollbar">
           {messages.map((message, index) => (
             <div
               className={cn(  
@@ -111,10 +115,9 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overri
               </div>
             </div>
           ))}
-        </div>
 
     </ScrollToBottom>
-      </div>
+        </div>
       <Form {...form}>
         <form
           onSubmit={handleSubmit(onMessageSubmit)}
@@ -131,6 +134,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overri
                 <FormControl>
                   <Textarea
                     placeholder="Type a Message here!..."
+                    onKeyDown={handleKeyDown} 
                     className="resize-none border-none min-h-10 custom__scrollbar outline-none focus:outline-none focus-visible:ring-0 text-base"
                     rows={1}
                     {...field}
