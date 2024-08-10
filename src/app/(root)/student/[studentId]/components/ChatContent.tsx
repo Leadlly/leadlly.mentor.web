@@ -1,9 +1,6 @@
 "use client"
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
-import MessageInput from "./MessageInput";
-
 import { useAppSelector } from "@/redux/hooks";
 import AttachIcon from "@/components/icons/AttachIcon";
 import { Form, FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
@@ -32,7 +29,6 @@ interface ChatMessage {
 
 const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overrideClass }) => {
 
-  console.log(chatData, "here is the cchat data")
   const socket = useSocket();
     const mentor = useAppSelector((state) => state.user.user);
 
