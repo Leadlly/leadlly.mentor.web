@@ -66,7 +66,7 @@ const StudentCard = ({
   const handleClick = async () => {
     try {
     if(socket)
-      socket.emit('join_mentor_room', { userEmail: studentInfo.email });
+      socket.emit('mentor_joining_room', { userEmail: studentInfo.email });
     } catch (error) {
       console.error('Failed to join room:', error);
     }

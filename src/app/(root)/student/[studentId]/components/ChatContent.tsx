@@ -41,7 +41,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overri
 
   useEffect(() => {
     if (socket) {
-      socket.emit('join_mentor_room', { userEmail: studentInfo?.email });
+      socket.emit('mentor_joining_room', { userEmail: studentInfo?.email });
       socket.on('room_message', (data: { message: string, timestamp: string, sendBy: string }) => {
         setMessages(prevMessages => [...prevMessages, data]);
         console.log('Received mentor room message room event:', data);
