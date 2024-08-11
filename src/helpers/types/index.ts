@@ -132,6 +132,14 @@ export interface ChatData {
     timestamp: string;
   }>;
 }
+
+export interface ChatMessage {
+  message: string;
+  timestamp: string;
+  sendBy: string
+}
+
+
 export type chapterOverviewProps = {
   chapter: string;
   chapterEfficiency: number;

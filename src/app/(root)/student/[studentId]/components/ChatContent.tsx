@@ -10,7 +10,7 @@ import Smile from "@/components/icons/Smile";
 import { Textarea } from "@/components/ui/textarea";
 import { MicIcon, SendIcon } from "lucide-react";
 import { useSocket } from "@/contexts/socket/socketProvider";
-import { Studentinformation } from "@/helpers/types";
+import { ChatMessage, Studentinformation } from "@/helpers/types";
 import { formatTimestamp, getFormattedDate } from "@/helpers/utils";
 import ScrollToBottom from 'react-scroll-to-bottom';
 interface ChatContentProps {
@@ -19,11 +19,6 @@ interface ChatContentProps {
   chatData: {
     messages: ChatMessage[]
   }
-}
-interface ChatMessage {
-  message: string;
-  timestamp: string;
-  sendBy: string
 }
 
 
@@ -50,7 +45,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overri
         socket.off('room_message');
       };
     }
-  }, [socket]);
+  }, [socket, studentInfo?.email]);
 
   const onMessageSubmit = async (data: any) => {
     console.log(data, "here is th edata sending as message")
