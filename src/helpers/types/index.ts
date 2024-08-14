@@ -16,6 +16,11 @@ export type CheckBoxProps = {
   labelClassName?: string;
 };
 
+export interface NotificationBadgeProps {
+  type: "all" | "chat" | "meeting"; 
+  room: string
+}
+
 export type MoodEmoji = {
   moodImg: string;
   mood_id: string;

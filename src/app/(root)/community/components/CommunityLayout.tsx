@@ -6,22 +6,32 @@ import React, { useEffect, useState } from "react";
 import SearchBar from "../../(dashboard)/_components/SearchBar";
 import ChatContent from "./ChatContent";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { getChat, getGroupChat } from "@/actions/chat_action";
-import { useAppSelector } from "@/redux/hooks";
+import { getChat, getGroupChat, getUnreadMessage } from "@/actions/chat_action";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useSocket } from "@/contexts/socket/socketProvider";
+import NotificationBadge from "./NotificationBadge";
+import { setUnreadMessages } from "@/redux/slices/unreadMessagesSlice";
 
 interface CommunityLayoutProps {
   students: Studentinformation[];
+  unreadMessagesMap: {[room: string]: number;}
 }
 
-const CommunityLayout = ({ students }: CommunityLayoutProps) => {
+const CommunityLayout = ({ students, unreadMessagesMap }: CommunityLayoutProps) => {
   const [selectedStudent, setSelectedStudent] =
     useState<Studentinformation | null>(students[0] || null);
   const [allStudent, setAllStudent] =
     useState<Studentinformation[] | null>(null);
   const [chatData, setChatData] = useState([]);
   const mentor = useAppSelector((state) => state.user.user);
-  const socket = useSocket();
+  const {socket} = useSocket();
+  const dispatch = useAppDispatch()
+
+  useEffect(() => {
+    Object.entries(unreadMessagesMap).forEach(([room, count]) => {
+      dispatch(setUnreadMessages({ room, count }));
+    });
+  })
 
   useEffect(() => {
  
@@ -125,7 +135,7 @@ const CommunityLayout = ({ students }: CommunityLayoutProps) => {
               {students && students.length > 0 ? (
                 students.map((profile: Studentinformation) => (
                   <div
-                    className="flex items-center mb-0.5 bg-white border rounded-md min-h-fit p-2 hover:bg-gray-100 hover:cursor-pointer"
+                    className="relative flex items-center mb-0.5 bg-white border rounded-md min-h-fit p-2 hover:bg-gray-100 hover:cursor-pointer"
                     key={profile._id}
                     onClick={() => handleClick(profile)}
                   >
@@ -151,6 +161,7 @@ const CommunityLayout = ({ students }: CommunityLayoutProps) => {
                     <label htmlFor={`student-${profile._id}`} className="">
                       {profile.firstname}
                     </label>
+                    <NotificationBadge type='chat' room={profile.email} />
                     {/* <input type="checkbox" id={`student-${profile._id}`} className="mr-2 custom-radio" value="Select Members" /> */}
                   </div>
                 ))

@@ -13,7 +13,7 @@ import {
 import { MultiSelect } from "@/components/ui/multi-select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAppDispatch } from "@/redux/hooks";
-import { userData } from "@/redux/slices";
+import { userData } from "@/redux/slices/userSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "lucide-react";
 import Image from "next/image";

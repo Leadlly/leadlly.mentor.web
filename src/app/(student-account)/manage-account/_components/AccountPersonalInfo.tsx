@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { userData } from "@/redux/slices";
+import { userData } from "@/redux/slices/userSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit3, Globe, Loader2, MailOpen, Phone, User } from "lucide-react";
 import { useState } from "react";

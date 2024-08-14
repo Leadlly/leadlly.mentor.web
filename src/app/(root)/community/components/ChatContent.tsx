@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { ChatMessage, Studentinformation } from "@/helpers/types";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { formatTimestamp, getFormattedDate } from "@/helpers/utils";
 import { useForm } from "react-hook-form";
 import { useSocket } from "@/contexts/socket/socketProvider";
@@ -20,6 +20,7 @@ import MicIcon from "@/components/icons/MicIcon";
 import SendIcon from "@/components/icons/SendIcon";
 import { Textarea } from "@/components/ui/textarea";
 import Loader from "@/components/shared/Loader";
+import { setUnreadMessages } from "@/redux/slices/unreadMessagesSlice";
 
 interface ChatContentProps {
   selectedStudent: Studentinformation | null;
@@ -32,10 +33,11 @@ const ChatContent = ({
   allStudents,
   chatData,
 }: ChatContentProps) => {
-  const socket = useSocket();
+  const {socket} = useSocket();
   const mentor = useAppSelector((state) => state.user.user);
 
   const [messages, setMessages] = useState<ChatMessage[]>(chatData || []);
+  const dispatch = useAppDispatch()
 
   useEffect(() => {
     setMessages(chatData || []);
@@ -72,6 +74,20 @@ const ChatContent = ({
       };
     }
   }, [socket, allStudents, selectedStudent, messages]);
+
+  useEffect(() => {
+    if (socket && mentor && selectedStudent) {
+      socket.emit("mentor_open_chat", { userId: mentor._id, room: selectedStudent?.email });
+  
+      const roomEmail = selectedStudent?.email;
+  
+      if (roomEmail) {
+        dispatch(setUnreadMessages({ room: roomEmail, count: 0 }));
+      } else {
+        console.warn("Selected student's email is undefined.");
+      }
+    }
+  }, [socket, mentor, selectedStudent, dispatch]);
 
   const onMessageSubmit = async (data: any) => {
     const formattedData = {

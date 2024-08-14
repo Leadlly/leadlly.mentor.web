@@ -24,7 +24,7 @@ interface ChatContentProps {
 
 const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overrideClass }) => {
 
-  const socket = useSocket();
+  const {socket} = useSocket();
     const mentor = useAppSelector((state) => state.user.user);
 
   const [messages, setMessages] = useState<ChatMessage[]>(chatData.messages || []);

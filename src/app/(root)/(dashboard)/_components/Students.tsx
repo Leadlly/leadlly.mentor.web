@@ -22,7 +22,7 @@ const Students = ({
   setStudentIds: React.Dispatch<React.SetStateAction<string[]>>;
 }) => {
 
-  const socket = useSocket()
+  const {socket} = useSocket()
 
   return (
     <div className="grid lg:grid-cols-5 md:grid-cols-4 h-[calc(100dvh-120px)] grid-cols-3 lg:gap-[30px] md:gap-[20px] gap-[10px]">
