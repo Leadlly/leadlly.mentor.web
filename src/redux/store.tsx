@@ -1,10 +1,13 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "@/redux/slices/index";
+import userReducer from "@/redux/slices/userSlice/index";
+import unreadMessagesReducer from "@/redux/slices/unreadMessagesSlice";
+
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
       user: userReducer,
+      unreadMessages: unreadMessagesReducer
     },
   });
 };

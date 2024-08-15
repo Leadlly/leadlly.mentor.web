@@ -16,6 +16,11 @@ export type CheckBoxProps = {
   labelClassName?: string;
 };
 
+export interface NotificationBadgeProps {
+  type: "all" | "chat" | "meeting"; 
+  room: string
+}
+
 export type MoodEmoji = {
   moodImg: string;
   mood_id: string;
@@ -132,6 +137,14 @@ export interface ChatData {
     timestamp: string;
   }>;
 }
+
+export interface ChatMessage {
+  message: string;
+  timestamp: string;
+  sendBy: string
+}
+
+
 export type chapterOverviewProps = {
   chapter: string;
   chapterEfficiency: number;
@@ -369,6 +382,7 @@ interface IStudent {
 }
 
 export interface MentorPersonalInfoProps {
+  _id: string;
   firstname: string | null;
   lastname: string | null;
   email: string;

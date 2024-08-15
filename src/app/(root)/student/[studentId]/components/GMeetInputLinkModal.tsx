@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useAppDispatch } from "@/redux/hooks";
-import { userData } from "@/redux/slices";
+import { userData } from "@/redux/slices/userSlice";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, X } from "lucide-react";
 import Link from "next/link";

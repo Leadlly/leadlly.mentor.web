@@ -5,22 +5,22 @@ import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { getBackgroundColor } from "@/helpers/constants/efficiency";
 import Link from "next/link";
-
-import Progressbar from "@/components/shared/Progressbar";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDate } from "@/helpers/utils";
+import { Socket } from "socket.io-client";
 
 const StudentCard = ({
   studentInfo,
   canSelectStudents,
   setStudentIds,
   studentIds,
+  socket
 }: {
   studentInfo: Studentinformation;
   canSelectStudents: boolean;
   studentIds: string[];
   setStudentIds: React.Dispatch<React.SetStateAction<string[]>>;
+  socket: Socket | null
 }) => {
   const studentCurrentMood = studentInfo?.details?.mood;
   const today = new Date().toISOString().split("T")[0];
@@ -63,6 +63,16 @@ const StudentCard = ({
     });
   };
 
+  const handleClick = async () => {
+    try {
+    if(socket)
+      socket.emit('mentor_joining_room', { userEmail: studentInfo.email });
+    } catch (error) {
+      console.error('Failed to join room:', error);
+    }
+  };
+
+
   return (
     <div className="relative">
       {canSelectStudents && (
@@ -73,7 +83,7 @@ const StudentCard = ({
           onChange={() => handleOnSelectStudent(studentInfo._id)}
         />
       )}
-      <Link href={`/student/${studentInfo._id}`}>
+      <Link href={`/student/${studentInfo._id}`} onClick={handleClick}>
         <div
           className={cn(
             "bg-slate-500 rounded-2xl justify-center flex p-1 px-2 flex-col items-center",
