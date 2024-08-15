@@ -415,3 +415,50 @@ export type MeetingDataProps = {
   createdAt: string;
   updatedAt: string;
 };
+export type ChapterProps = {
+  chapter: string;
+  totalQuestions: number;
+};
+
+export type SubjectProps = {
+  subject: string;
+  chapters: ChapterProps[];
+};
+
+export type ErrorBookProps = {
+  errorBook?: SubjectProps[];
+};
+export interface QuestionOption {
+  name: string;
+  tag: "Correct" | "Incorrect";
+  images?: Image[];
+  _id: string;
+}
+export interface Image {
+  url: string;
+  key: string;
+  _id:string
+}
+export interface EQuestion {
+    _id: string;
+    question: string;
+    options: QuestionOption[];
+    standard: number;
+    subject: string;
+    chapter: string[];
+    topics: string[];
+    subtopics: string[];
+    level: string;
+    images: Image[];
+    createdBy: string;
+    createdAt: string;
+    __v: number;
+  };
+export interface ErrorBookQuestion {
+  _id: string;
+  question: EQuestion
+}
+export type ChapterErrorBookProps = {
+  chapterErrorBook: ErrorBookQuestion[];
+  chapterName: string;
+};
