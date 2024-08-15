@@ -6,15 +6,17 @@ interface ChapterCardProps {
   number: number;
   title: string;
   questions: number;
+  studentId: string
 }
 
 const ChapterCard: React.FC<ChapterCardProps> = ({
   number,
   title,
   questions,
+  studentId
 }) => {
   return (
-    <Link href={`/errorBook/chapter/${title}/erroredQuestions`}>
+    <Link href={`/student/${studentId}/error-book/chapter/${title}/erroredQuestions`}>
       <div className="border flex items-center justify-between bg-[#ffffff] rounded-lg px-8 py-2 mb-4 border-[#0000000A] shadow-sm">
         <div className="flex justify-start items-center gap-10">
           <div className="text-2xl font-medium">

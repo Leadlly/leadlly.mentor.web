@@ -3,8 +3,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ChapterCard from "./ChapterCard";
 import { ErrorBookProps } from "@/helpers/types";
 
-export default function ErrorList({ errorBook }: ErrorBookProps) {
-  console.log("this is errorbook" , errorBook)
+interface UpdatedErrorBookProps extends ErrorBookProps {
+  studentId: string; 
+}
+
+export default function ErrorList({ errorBook, studentId }: UpdatedErrorBookProps) {
   if (!errorBook || errorBook.length < 1) {
     return (
       <div className="w-full text-center py-10">
@@ -47,6 +50,7 @@ export default function ErrorList({ errorBook }: ErrorBookProps) {
                 number={index + 1}
                 title={chapter.chapter}
                 questions={chapter.totalQuestions}
+                studentId={studentId}
               />
             ))}
           </TabsContent>

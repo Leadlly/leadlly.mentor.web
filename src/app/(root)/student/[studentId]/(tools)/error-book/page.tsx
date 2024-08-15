@@ -4,9 +4,8 @@ import { Pencil } from "lucide-react";
 import Link from "next/link";
 import { getErrorBook } from "@/actions/errorbook_actions";
 
-const ErrorBook = async ({params: { studentId }}: { params: { studentId: string };}) => {
+const ErrorBook = async ({params: { studentId }}: { params: { studentId: string }}) => {
   const errorBook = await getErrorBook(studentId);
-  console.log("this is errorbook", errorBook.errorBook)
   return (
     <div className="max-h-screen">
       <h1 className="text-3xl md:text-4xl lg:text-5xl font-semibold py-4 text-center md:text-left">
@@ -20,7 +19,7 @@ const ErrorBook = async ({params: { studentId }}: { params: { studentId: string 
       </div>
 
     
-        <ErrorBookContainer errorBook={errorBook.errorBook} />
+        <ErrorBookContainer errorBook={errorBook.errorBook} studentId={studentId}/>
     </div>
   );
 };
