@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { Provider } from "react-redux";
 import { makeStore, AppStore } from "@/redux/store";
 import { MentorPersonalInfoProps } from "@/helpers/types";
-import { userData } from "@/redux/slices/userSlice";
+import { userData } from "@/redux/slices";
 
 export default function StoreProvider({
   children,

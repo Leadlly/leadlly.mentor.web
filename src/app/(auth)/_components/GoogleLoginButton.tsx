@@ -3,7 +3,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import { useAppDispatch } from "@/redux/hooks";
 import axios from "axios";
 import { getUser } from "@/actions/user_actions";
-import { userData } from "@/redux/slices/userSlice";
+import { userData } from "@/redux/slices";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
