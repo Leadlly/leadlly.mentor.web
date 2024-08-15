@@ -45,37 +45,37 @@ export default function MessageBox({}: Props) {
       >
         <ChatContent
           overrideClass={"max-h-[calc(100dvh-300px)]"}
-          studentInfo={null}
           chatData={{
+            studentName: "John musk",
             messages: [
               {
-                sendBy: "user",
-                message: "Hello there!",
+                sender: "user",
+                text: "Hello there!",
                 timestamp: "9:00 AM",
               },
               {
-                sendBy: "mentor",
-                message: "Hi! How can I help you today?",
+                sender: "mentor",
+                text: "Hi! How can I help you today?",
                 timestamp: "9:05 AM",
               },
               {
-                sendBy: "user",
-                message: "I need some assistance with my project.",
+                sender: "user",
+                text: "I need some assistance with my project.",
                 timestamp: "9:10 AM",
               },
               {
-                sendBy: "mentor",
-                message: "Sure, I'd be happy to help. What specifically do you need assistance with?",
+                sender: "mentor",
+                text: "Sure, I'd be happy to help. What specifically do you need assistance with?",
                 timestamp: "9:15 AM",
               },
               {
-                sendBy: "user",
-                message: "I'm having trouble with the implementation of a feature.",
+                sender: "user",
+                text: "I'm having trouble with the implementation of a feature.",
                 timestamp: "9:20 AM",
               },
               {
-                sendBy: "mentor",
-                message: "Okay, let's take a look at your code and debug it together.",
+                sender: "mentor",
+                text: "Okay, let's take a look at your code and debug it together.",
                 timestamp: "9:25 AM",
               },
             ],

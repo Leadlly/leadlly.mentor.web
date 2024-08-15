@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAppDispatch } from "@/redux/hooks";
 import { getUser } from "@/actions/user_actions";
-import { userData } from "@/redux/slices/userSlice";
+import { userData } from "@/redux/slices";
 import { useRouter } from "next/navigation";
 
 import { signInSchema } from "@/schemas/signInSchema";

@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { Button } from "../ui/button";
 
 import { useAppDispatch } from "@/redux/hooks";
-import { userData } from "@/redux/slices/userSlice";
+import { userData } from "@/redux/slices";
 
 const LogoutButton = () => {
   const router = useRouter();
