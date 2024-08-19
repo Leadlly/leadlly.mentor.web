@@ -9,6 +9,7 @@ type UnattemptedWeeklyQuizzesProps = {
 const UnattemptedWeeklyQuizzes: React.FC<UnattemptedWeeklyQuizzesProps> = ({
   unattemptedQuizzes,
 }) => {
+
   return (
     <div className="border-[2px] w-full border-[#D7D7D7] rounded-xl">
       <div className="capitalize text-[20px] pl-4 md:pl-[10%] rounded-t-xl border-b-[2px] border-[#B3B3B3] font-medium py-4 bg-[#FFFFFF] shadow-inner">
@@ -22,7 +23,7 @@ const UnattemptedWeeklyQuizzes: React.FC<UnattemptedWeeklyQuizzesProps> = ({
               title={`Quiz from ${quiz.startDate} to ${quiz.endDate}`} // Display quiz date range as title
               description={`Quiz type: ${quiz.quizType}`} // Customize description as needed
               daysPending={`${Math.max(0, Math.floor((new Date(quiz.startDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))} days pending`} // Calculate days pending
-              subject="Sample Subject" // Replace with actual subject if available
+              subject="Sample Subject" 
               status="Pending"
             />
           ))

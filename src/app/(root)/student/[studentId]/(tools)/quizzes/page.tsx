@@ -3,8 +3,7 @@ import React from "react";
 import QuizzTab from "./components/QuizzTab";
 import UnattemptedQuizContainer from "./components/UnattemptedQuizContainer";
 import AttemptedQuizContainer from "./components/AttemptedQuizContainer";
-import { getQuiz } from "@/actions/errorbook_actions";
-import { Quiz } from "@/helpers/types";
+import { getQuiz } from "@/actions/quiz_actions";
 
 type Params = {
   params: {
@@ -15,9 +14,11 @@ type Params = {
 
 const Page = async ({ params: { studentId }, searchParams }: Params) => {
   const activeTab = (searchParams["quiz"] as string) ?? "unattempted";
-  const unattemptedQuizzes = await getQuiz(studentId, "");
-  const attemptedQuizzes = await getQuiz(studentId, "attempted");
-  console.log("this is quiz", attemptedQuizzes)
+  const unattemptedQuizzesData = await getQuiz(studentId, "");
+  const attemptedQuizzesData = await getQuiz(studentId, "attempted");
+
+  const [unattemptedQuizzes, attemptedQuizzes ] = await Promise.all([unattemptedQuizzesData, attemptedQuizzesData])
+  // console.log("this is quiz", attemptedQuizzes, "adn untnete", unattemptedQuizzes)
 
   return (
     <div className="flex flex-col justify-center h-[calc(100dvh-120px)] max-w-[1120px] gap-3 md:pt-0 mx-auto">
@@ -30,10 +31,10 @@ const Page = async ({ params: { studentId }, searchParams }: Params) => {
       </div>
       <div className="h-full overflow-y-auto custom__scrollbar md:p-3 max-md:p-5 mb-16 md:mb-0">
         {activeTab === "unattempted" && (
-          <UnattemptedQuizContainer quizzes={unattemptedQuizzes} />
+          <UnattemptedQuizContainer quizzes={unattemptedQuizzes.weeklyQuiz} />
         )}
         {activeTab === "attempted" && (
-          <AttemptedQuizContainer quizzes={attemptedQuizzes} />
+          <AttemptedQuizContainer quizzes={attemptedQuizzes.weeklyQuiz} />
         )}
       </div>
     </div>
