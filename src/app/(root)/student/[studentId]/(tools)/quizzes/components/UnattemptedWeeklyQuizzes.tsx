@@ -1,6 +1,7 @@
 import React from "react";
 import UnattemptedQuiz from "./UnattemptedQuiz";
 import { Quiz } from "@/helpers/types";
+import { getFormattedDate } from "@/helpers/utils";
 
 type UnattemptedWeeklyQuizzesProps = {
   unattemptedQuizzes: Quiz[];
@@ -20,11 +21,11 @@ const UnattemptedWeeklyQuizzes: React.FC<UnattemptedWeeklyQuizzesProps> = ({
           unattemptedQuizzes.map((quiz) => (
             <UnattemptedQuiz
               key={quiz._id}
-              title={`Quiz from ${quiz.startDate} to ${quiz.endDate}`} // Display quiz date range as title
-              description={`Quiz type: ${quiz.quizType}`} // Customize description as needed
-              daysPending={`${Math.max(0, Math.floor((new Date(quiz.startDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))} days pending`} // Calculate days pending
+              title={`${getFormattedDate(new Date(quiz.createdAt))} - ${getFormattedDate(new Date(quiz.endDate))}`} // Display quiz date range as title
+              description={Object.keys(quiz.questions).map(key => key.replace(/_/g, " ")).join(" , ")} 
+              daysPending={`${Math.max(0, Math.floor((new Date(quiz.createdAt).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))} days pending`} // Calculate days pending
               subject="Sample Subject" 
-              status="Pending"
+              status={quiz.attempted ? "Completed" : "Pending"}
             />
           ))
         ) : (

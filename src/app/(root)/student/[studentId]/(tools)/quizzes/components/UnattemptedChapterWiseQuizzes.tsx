@@ -1,17 +1,19 @@
 "use client";
 import React, { useState } from "react";
 import UnattemptedQuiz from "./UnattemptedQuiz";
+import { Quiz } from "@/helpers/types";
+import { getFormattedDate } from "@/helpers/utils";
 
 type QuizCardProps = {
   title: string;
-  description: string;
+  description: string[];
   daysPending: string;
   subject: string;
   status: string;
 };
 
 type UnattemptedChapterWiseQuizzesProps = {
-  quizzes: QuizCardProps[];
+  quizzes: Quiz[];
 };
 
 const UnattemptedChapterWiseQuizzes = ({
@@ -50,12 +52,12 @@ const UnattemptedChapterWiseQuizzes = ({
         {filteredQuizzes.length > 0 ? (
           filteredQuizzes.map((quiz, index) => (
             <UnattemptedQuiz
-              key={index}
-              title={quiz.title}
-              description={quiz.description}
-              daysPending={quiz.daysPending}
-              subject={quiz.subject}
-              status={quiz.status}
+            key={quiz._id}
+            title={`${getFormattedDate(new Date(quiz.createdAt))} - ${getFormattedDate(new Date(quiz.endDate))}`} // Display quiz date range as title
+            description={Object.keys(quiz.questions).map(key => key.replace(/_/g, " ")).join(" , ")} // Customize description as needed
+            subject="Sample Subject" // Replace with actual subject if available
+            status={quiz.attempted ? "Completed" : "Not Completed"}
+            daysPending={`${Math.max(0, Math.floor((new Date(quiz.createdAt).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))} days pending`} // Calculate days pending
             />
           ))
         ) : (

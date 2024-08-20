@@ -1,6 +1,7 @@
 import React from "react";
 import AttemptedQuiz from "./AttemptedQuiz";
 import { Quiz } from "@/helpers/types";
+import { getFormattedDate } from "@/helpers/utils";
 
 type AttemptedWeeklyQuizzesProps = {
   attemptedQuizzes: Quiz[];
@@ -19,8 +20,8 @@ const AttemptedWeeklyQuizzes: React.FC<AttemptedWeeklyQuizzesProps> = ({
           attemptedQuizzes.map((quiz) => (
             <AttemptedQuiz
               key={quiz._id}
-              title={`Quiz from ${quiz.startDate} to ${quiz.endDate}`} // Display quiz date range as title
-              description={`Quiz type: ${quiz.quizType}`} // Customize description as needed
+              title={`${getFormattedDate(new Date(quiz.createdAt))} - ${getFormattedDate(new Date(quiz.endDate))}`} // Display quiz date range as title
+              description={Object.keys(quiz.questions).map(key => key.replace(/_/g, " ")).join(" , ")} // Customize description as needed
               completionDate={quiz.endDate} // Use endDate as completion date
               subject="Sample Subject" // Replace with actual subject if available
               numberOfQuestions={Object.keys(quiz.questions).length} // Count questions from the quiz

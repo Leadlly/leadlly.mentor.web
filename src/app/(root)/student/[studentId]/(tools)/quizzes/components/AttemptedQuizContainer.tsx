@@ -5,9 +5,10 @@ import { Quiz } from "@/helpers/types";
 
 type Props = {
   quizzes: Quiz[]; 
+  chapter:Quiz[];
 };
 
-const AttemptedQuizContainer: React.FC<Props> = ({ quizzes }) => {
+const AttemptedQuizContainer: React.FC<Props> = ({ quizzes,chapter }) => {
   const chapterQuizzes = [
     {
       title: "Dec 03 - Dec 10",
@@ -35,7 +36,7 @@ const AttemptedQuizContainer: React.FC<Props> = ({ quizzes }) => {
   return (
     <div className="flex flex-col gap-5">
       <AttemptedWeeklyQuizzes attemptedQuizzes={quizzes} />
-      <AttemptedChapterWiseQuizzes attemptedQuizzes={chapterQuizzes} />
+      <AttemptedChapterWiseQuizzes attemptedQuizzes={chapter} />
     </div>
   );
 };
