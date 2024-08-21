@@ -58,4 +58,3 @@ export const getErrorBook = async (id: string) => {
       }
     }
   };
-  

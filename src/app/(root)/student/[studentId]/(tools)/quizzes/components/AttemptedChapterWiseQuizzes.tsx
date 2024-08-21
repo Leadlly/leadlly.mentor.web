@@ -1,19 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import AttemptedQuiz from "./AttemptedQuiz";
-
-type QuizProps = {
-  title: string;
-  description: string;
-  completionDate: string;
-  subject: string;
-  status: string;
-  numberOfQuestions: number;
-  efficiency: number;
-};
+import { Quiz } from "@/helpers/types";
+import { getFormattedDate } from "@/helpers/utils";
 
 type AttemptedChapterWiseQuizzesProps = {
-  attemptedQuizzes: QuizProps[];
+  attemptedQuizzes: Quiz[];
 };
 
 const AttemptedChapterWiseQuizzes = ({
@@ -52,14 +44,14 @@ const AttemptedChapterWiseQuizzes = ({
         {filteredQuizzes.length > 0 ? (
           filteredQuizzes.map((quiz, index) => (
             <AttemptedQuiz
-              key={index}
-              title={quiz.title}
-              description={quiz.description}
-              numberOfQuestions={quiz.numberOfQuestions}
-              completionDate={quiz.completionDate}
-              subject={quiz.subject}
-              status={quiz.status}
-              efficiency={quiz.efficiency}
+            key={quiz._id}
+            title={`${getFormattedDate(new Date(quiz.createdAt))} - ${getFormattedDate(new Date(quiz.endDate))}`} // Display quiz date range as title
+            description={Object.keys(quiz.questions).map(key => key.replace(/_/g, " ")).join(" , ")} // Customize description as needed
+            completionDate={quiz.endDate} // Use endDate as completion date
+            subject="Sample Subject" // Replace with actual subject if available
+            numberOfQuestions={Object.keys(quiz.questions).length} // Count questions from the quiz
+            status={quiz.attempted ? "Completed" : "Not Completed"}
+            efficiency={quiz.reattempted * 10} // Calculate efficiency or use an available field
             />
           ))
         ) : (

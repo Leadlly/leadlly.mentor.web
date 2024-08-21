@@ -462,3 +462,16 @@ export type ChapterErrorBookProps = {
   chapterErrorBook: ErrorBookQuestion[];
   chapterName: string;
 };
+
+export type Quiz = {
+  _id: string;
+  user: string;
+  subject:string
+  questions: Record<string, any>;
+  quizType: string;
+  attempted: boolean;
+  reattempted: number;
+  startDate: string;
+  endDate: string;
+  createdAt: string;
+};

@@ -1,40 +1,32 @@
 import React from "react";
 import AttemptedQuiz from "./AttemptedQuiz";
-
-type QuizProps = {
-  title: string;
-  description: string;
-  completionDate: string;
-  subject: string;
-  status: string;
-  numberOfQuestions: number;
-  efficiency: number;
-};
+import { Quiz } from "@/helpers/types";
+import { getFormattedDate } from "@/helpers/utils";
 
 type AttemptedWeeklyQuizzesProps = {
-  attemptedQuizzes: QuizProps[];
+  attemptedQuizzes: Quiz[];
 };
 
-const AttemptedWeeklyQuizzes = ({
+const AttemptedWeeklyQuizzes: React.FC<AttemptedWeeklyQuizzesProps> = ({
   attemptedQuizzes,
-}: AttemptedWeeklyQuizzesProps) => {
+}) => {
   return (
     <div className="border-[2px] w-full border-[#D7D7D7] rounded-xl">
       <div className="capitalize text-[20px] pl-4 md:pl-[10%] rounded-t-xl border-b-[2px] border-[#B3B3B3] font-medium py-4 bg-[#FFFFFF] shadow-inner">
         Weekly Quizzes
       </div>
-      <div className="overflow-x-auto w-full horizontal-scrollbar min-h-20 p-5 flex  gap-4 md:flex-row flex-col">
+      <div className="overflow-x-auto w-full horizontal-scrollbar min-h-20 p-5 flex gap-4 md:flex-row flex-col">
         {attemptedQuizzes.length > 0 ? (
-          attemptedQuizzes.map((quiz, index) => (
+          attemptedQuizzes.map((quiz) => (
             <AttemptedQuiz
-              key={index}
-              title={quiz.title}
-              description={quiz.description}
-              completionDate={quiz.completionDate}
-              subject={quiz.subject}
-              numberOfQuestions={quiz.numberOfQuestions}
-              status={quiz.status}
-              efficiency={quiz.efficiency}
+              key={quiz._id}
+              title={`${getFormattedDate(new Date(quiz.createdAt))} - ${getFormattedDate(new Date(quiz.endDate))}`} // Display quiz date range as title
+              description={Object.keys(quiz.questions).map(key => key.replace(/_/g, " ")).join(" , ")} // Customize description as needed
+              completionDate={quiz.endDate} // Use endDate as completion date
+              subject="Sample Subject" // Replace with actual subject if available
+              numberOfQuestions={Object.keys(quiz.questions).length} // Count questions from the quiz
+              status={quiz.attempted ? "Completed" : "Not Completed"}
+              efficiency={quiz.reattempted * 10} // Calculate efficiency or use an available field
             />
           ))
         ) : (

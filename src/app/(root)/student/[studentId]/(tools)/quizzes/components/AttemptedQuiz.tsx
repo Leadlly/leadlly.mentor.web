@@ -28,7 +28,6 @@ const AttemptedQuiz = ({
         <div className="flex justify-between items-center">
           <div className="text-md md:text-lg font-medium flex justify-center md:flex-row flex-col items-center md:gap-3 gap-1">
             <h2>{title}</h2>
-            <span className="text-xs text-[#9654F4]">({completionDate})</span>
           </div>
         </div>
         <div className="text-[#525252] text-xs font-normal max-w-48 md:max-w-[300px]">
