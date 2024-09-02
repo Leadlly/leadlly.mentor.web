@@ -7,6 +7,7 @@ interface SearchBarProps {
 }
 
 const SearchBar = ({className}:SearchBarProps) => {
+  
   return (
     <Input
       placeholder="Search by student name"
