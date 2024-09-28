@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Leadlly Mentor Platform
 
-## Getting Started
+Welcome to **Leadlly Mentor Platform**, the companion platform to **Leadlly**, designed specifically for mentors who want to guide students on their academic journey. This platform connects mentors with students and provides the tools needed to offer personalized mentorship, track progress, and ensure students achieve their full potential.
 
-First, run the development server:
+### Key Features:
+- **Manage Mentees**: View and manage the list of students assigned to each mentor.
+- **Progress Tracking**: Gain insights into students' progress in different subjects and topics.
+- **Personalized Guidance**: Provide custom feedback and recommendations based on student performance.
+- **Session Scheduling**: Schedule and conduct mentoring sessions with students (e.g., Google Meet, Zoom).
+- **Performance Metrics**: Access detailed analytics and reports on student learning patterns and progress.
+- **Study Resources**: Share resources, notes, and materials with students to help them prepare for exams and complete their studies.
+- **Error Book Management**: Help students track their mistakes and avoid repeating them, while reviewing overall performance.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 🎯 How Leadlly Mentor Platform Works:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Mentor Dashboard**: Get a personalized dashboard showing mentees, upcoming sessions, and student progress at a glance.
+2. **Mentee Assignment**: Each mentor is assigned students for mentorship based on their expertise and student needs.
+3. **Progress and Feedback**: The platform tracks students' progress and provides a space for mentors to give feedback on learning plans and completed tasks.
+4. **Mentoring Sessions**: Mentors can schedule mentoring sessions, conduct reviews, and provide guidance during live or recorded sessions.
+5. **Data Analytics**: The platform presents student progress in an easily understandable format, helping mentors adjust their teaching strategies.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🛠️ Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+The Leadlly Mentor Platform is built with a modern technology stack to ensure high performance, scalability, and ease of use:
 
-## Learn More
+- **Frontend**: [Next.js](https://nextjs.org/), [React](https://reactjs.org/)
+- **Backend**: [Node.js](https://nodejs.org/), [Express](https://expressjs.com/)
+- **Database**: [MongoDB](https://www.mongodb.com/)
+- **Authentication**: [Google OAuth](https://developers.google.com/identity), JWT
+- **Real-time Updates**: WebSockets or Server-Sent Events (SSE)
+- **Messaging/Queueing**: [BullMQ](https://docs.bullmq.io/)
+- **Cloud Hosting**: AWS EC2
 
-To learn more about Next.js, take a look at the following resources:
+## Contribution
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+We welcome your contributions! Please refer to our [Contribution Guidelines](CONTRIBUTION.md) for more details on how to get involved.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## 🐛 Reporting Issues
 
-## Deploy on Vercel
+If you encounter any issues while using the platform, please feel free to open an issue on the repository. Provide as much detail as possible to help us address the problem quickly.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🛡️ Security
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+If you find any security vulnerabilities, please report them privately to [business@leadlly.in](mailto:business@leadlly.in). We take security issues seriously and will address them promptly.
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [`LICENSE`](./LICENSE) file for more details.
+
+## 📞 Contact
+
+For any further questions or support, reach out to us at:
+- **Email**: [support@leadlly.in](mailto:support@leadlly.in)
+- **Website**: [Leadlly.in](https://leadlly.in)
