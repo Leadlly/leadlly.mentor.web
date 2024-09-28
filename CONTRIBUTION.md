@@ -10,7 +10,8 @@ We are thrilled to welcome contributors to **Leadlly**! Below are the guidelines
 - **npm** or **yarn** (package manager)
 - **MongoDB** (Local or hosted via MongoDB Atlas)
 - **Redis** (for job queues if using BullMQ)
-- **Google OAuth API** (for mentor authentication)
+- **Google OAuth API**: To generate your Google OAuth credentials, follow this [this guide](https://support.google.com/cloud/answer/6158849?hl=en)
+- **Leadlly Mentor API**: You'll need to set up the backend API. Follow the instructions in the [Leadlly Mentor API Contribution Guide](https://github.com/leadlly/leadlly.mentor.api/blob/main/CONTRIBUTING.md)
 
 ### Installation:
 
