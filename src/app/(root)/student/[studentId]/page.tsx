@@ -4,6 +4,7 @@ import StudentDashboard from "./components/StudentDashboard";
 import { ReactElement } from "react";
 import { getMeetings } from "@/actions/meeting_actions";
 import { Studentinfo } from "@/actions/user_actions";
+import CommunicationPanelSmall from "./components/CommunicationSmall";
 
 export default async function StudentPage({ params: { studentId } }: Params) {
   const studentData = Studentinfo(studentId);
@@ -17,6 +18,7 @@ export default async function StudentPage({ params: { studentId } }: Params) {
       </div>
       <div className="mx-[1px] overflow-auto flex h-[calc(100dvh-160px)] lg:hidden">
         <StudentDashboard studentId={studentId} studentData={student.student} />
+        <CommunicationPanelSmall studentId={studentId}/>
       </div>
     </>
   );
