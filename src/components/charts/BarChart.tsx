@@ -53,7 +53,7 @@ const BarChart = ({ weekly }: { weekly: any }) => {
               colors: ["transparent"],
             },
             xaxis: {
-              categories: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+              categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
             },
             fill: {
               colors: ["#9654F4", "#56CFE1"],

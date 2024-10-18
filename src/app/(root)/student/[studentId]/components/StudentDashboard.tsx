@@ -60,7 +60,7 @@ export default function StudentDashboard({
           />
         </div>
         <div className="flex w-full gap-2 mt-4 pb-2 border-b-2 border-[#DEDEDE]">
-          <MoodOfTheWeek />
+          <MoodOfTheWeek mood={studentData.details.mood} />
           {/* <SubjectStreak /> */}
         </div>
         <div className="flex flex-col gap-2 pt-1 mb-3">
@@ -125,7 +125,7 @@ export default function StudentDashboard({
         </div>
         <div className="mx-[24px]">
           <div className="flex flex-col w-full gap-[8px] mt-4 pb-2 lg:border-b-2 border-[#DEDEDE]">
-            <MoodOfTheWeek />
+            <MoodOfTheWeek mood={studentData.details.mood} />
             {/* <SubjectStreak /> */}
           </div>
 

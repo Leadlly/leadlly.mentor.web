@@ -1,24 +1,20 @@
-
 import { moodEmojis } from "@/helpers/constants/moodEmojis";
 import Image from "next/image";
 import React from "react";
 
-const MoodOfTheWeek = () => {
-  const moodData = [
-    { day: "Mon", mood: "neutral" },
-    { day: "Tue", mood: "smiling" },
-    { day: "Wed", mood: "sad" },
-    { day: "Thu", mood: "smiling" },
-    { day: "Fri", mood: "laughing" },
-    { day: "Sat", mood: "unhappy" },
-  ];
+
+type MoodData = {
+  mood: Array<{ day: string; date?: string| null; emoji?: string|null}>;
+};
+const MoodOfTheWeek = ({mood}:MoodData) => {
+  
 
   const moodColors = {
-    sad: "#D50000", 
-    unhappy: "#FFA500", 
+    sad: "#D50000",
+    unhappy: "#FFA500",
     neutral: "#FFDD00",
     smiling: "#00C853",
-    laughing: "#FFD700", 
+    laughing: "#FFD700",
   };
 
   return (
@@ -27,19 +23,28 @@ const MoodOfTheWeek = () => {
         Mood of the week
       </h2>
       <div className="flex justify-around items-center rounded p-3 bg-[#F1E7FF] lg:bg-white">
-        {moodData.length > 0 ? (
-          moodData.map(({ day, mood }, index) => (
+        {mood.length > 0 ? (
+          mood.map(({ day, emoji }, index) => (
             <div key={day} className="flex flex-col items-center">
               <Image
-                src={moodEmojis[mood as keyof typeof moodEmojis].moodImg}
-                alt={moodEmojis[mood as keyof typeof moodEmojis].mood}
+                src={
+                  moodEmojis[(emoji ?? "neutral") as keyof typeof moodEmojis]
+                    .moodImg
+                }
+                alt={
+                  moodEmojis[(emoji ?? "neutral") as keyof typeof moodEmojis]
+                    .mood
+                }
                 className="w-4 h-4 mb-1"
                 width={24}
                 height={24}
               />
               <span
                 className="text-xs font-semibold"
-                style={{ color: moodColors[mood as keyof typeof moodColors] }}
+                style={{
+                  color:
+                    moodColors[(emoji ?? "neutral") as keyof typeof moodColors],
+                }}
               >
                 {day}
               </span>
