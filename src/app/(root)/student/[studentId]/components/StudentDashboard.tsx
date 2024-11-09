@@ -67,19 +67,15 @@ export default function StudentDashboard({
           <DailyReport
             dailyreportquiz={
               studentData.details.report.dailyReport.date &&
-              formatDate(
-                new Date(studentData.details.report.dailyReport.date)
-              ) === formatDate(new Date(Date.now()))
-                ? studentData.details.report.dailyReport.quiz
-                : 0
+
+                studentData.details.report.dailyReport.quiz
+                
             }
             dailyreportsession={
               studentData.details.report.dailyReport.date &&
-              formatDate(
-                new Date(studentData.details.report.dailyReport.date)
-              ) === formatDate(new Date(Date.now()))
-                ? studentData.details.report.dailyReport.session
-                : 0
+              
+                studentData.details.report.dailyReport.session
+               
             }
           />
 
