@@ -2,18 +2,18 @@ import { EfficiencyOption } from "./../types/index";
 
 export const efficiencyOptions: EfficiencyOption[] = [
   {
-    max: 30,
-    label: ">> 30%",
-    labelClassName: "bg-[#FF8A83] border-[#FC0F00]",
-    cardBackgroundColor: "bg-[#FF8A83]",
-    textColor: "text-[#FC0F00]",
+    max: 1,
+    label: "0%",
+    labelClassName: "bg-[#ff6b6b] border-[#ff6b6b]",
+    cardBackgroundColor: "bg-[#ff6b6b]",
+    textColor: "text-[#FE8C8C]",
   },
   {
-    min: 0,
+    min: 1,
     max: 30,
-    label: "0-30%",
-    labelClassName: "bg-[#FFC2C2] border-[#FE8C8C]",
-    cardBackgroundColor: "bg-[#FFC2C2]",
+    label: "1-30%",
+    labelClassName: "bg-[#ed9a7b] border-[#ed9a7b]",
+    cardBackgroundColor: "bg-[#ed9a7b]",
     textColor: "text-[#FE8C8C]",
   },
   {
