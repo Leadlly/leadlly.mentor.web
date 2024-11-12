@@ -1,8 +1,10 @@
 "use client";
 import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 import RadialBarChartSkeleton from "./_skeletons/RadialBarChartSkeleton";
 import { ISubject } from "@/helpers/types";
+
 const Charts = dynamic(() => import("react-apexcharts"), {
   ssr: false,
   loading: () => <RadialBarChartSkeleton />,
@@ -29,6 +31,35 @@ const RadialBarChart = ({
   fontSize,
   subject,
 }: RadialBarChartProps) => {
+  const [currentHollowSize, setCurrentHollowSize] = useState(hollowSize);
+
+  // Adjust hollow size based on screen width for responsiveness
+  useEffect(() => {
+    const updateHollowSize = () => {
+      const screenWidth = window.innerWidth;
+
+      if (screenWidth < 640) {
+        // Small screens
+        setCurrentHollowSize("40%"); // Smaller hollow size for mobile devices
+      } else if (screenWidth < 1024) {
+        // Medium screens
+        setCurrentHollowSize("40%");
+      } else {
+        // Large screens
+        setCurrentHollowSize(hollowSize); // Use default size for larger screens
+      }
+    };
+
+    // Set initial size on load
+    updateHollowSize();
+
+    // Update hollow size when the window is resized
+    window.addEventListener("resize", updateHollowSize);
+
+    // Cleanup the event listener on unmount
+    return () => window.removeEventListener("resize", updateHollowSize);
+  }, [hollowSize]);
+
   return (
     <div className="relative h-full">
       <Charts
@@ -46,14 +77,14 @@ const RadialBarChart = ({
             radialBar: {
               hollow: {
                 margin: 5,
-                size: hollowSize,
+                size: currentHollowSize, // Use responsive hollow size
               },
               dataLabels: {
                 show: labels.includes("No. of Questions Solved") ? false : true,
                 value: {
                   fontSize: fontSize ?? "18px",
                   fontWeight: 600,
-                  fontFamily: "Mada,sans-serif",
+                  fontFamily: "Mada, sans-serif",
                   offsetY: 2,
                 },
                 name: {
@@ -66,11 +97,10 @@ const RadialBarChart = ({
                       (acc: number, value: number) => acc + value,
                       0
                     );
-
                     const average = sum / w?.globals?.series.length;
-
-                    const averagePercentage = Math.round((average / 100) * 100);
-
+                    const averagePercentage = Math.round(
+                      (average / 100) * 100
+                    );
                     return `${averagePercentage}%`;
                   },
                 },
@@ -84,12 +114,14 @@ const RadialBarChart = ({
         }}
       />
 
+      {/* Custom Label in the Center */}
       <div
         className={cn(
           "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
           dataLabel === "questions" ? "-mt-3" : ""
         )}
       >
+        {/* Display Number of Questions Solved */}
         {labels.includes("No. of Questions Solved") && (
           <p className="text-2xl leading-none font-semibold text-center">
             {subject?.total_questions_solved.number! > 120
@@ -97,6 +129,7 @@ const RadialBarChart = ({
               : subject?.total_questions_solved.number}
           </p>
         )}
+        {/* Data Label Text */}
         <p
           className={cn(
             "text-sm leading-none font-medium mt-2 capitalize",
