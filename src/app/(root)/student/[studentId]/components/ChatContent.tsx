@@ -1,9 +1,15 @@
-"use client"
+"use client";
 import React, { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useAppSelector } from "@/redux/hooks";
 import AttachIcon from "@/components/icons/AttachIcon";
-import { Form, FormField, FormItem, FormControl, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import Smile from "@/components/icons/Smile";
@@ -12,88 +18,92 @@ import { MicIcon, SendIcon } from "lucide-react";
 import { useSocket } from "@/contexts/socket/socketProvider";
 import { ChatMessage, Studentinformation } from "@/helpers/types";
 import { formatTimestamp, getFormattedDate } from "@/helpers/utils";
-import ScrollToBottom from 'react-scroll-to-bottom';
+import ScrollToBottom from "react-scroll-to-bottom";
 interface ChatContentProps {
-  overrideClass?:string
-  studentInfo: Studentinformation | null,
+  overrideClass?: string;
+  studentInfo: Studentinformation | null;
   chatData: {
-    messages: ChatMessage[]
-  }
+    messages: ChatMessage[];
+  };
 }
 
+const ChatContent: React.FC<ChatContentProps> = ({
+  studentInfo,
+  chatData,
+  overrideClass,
+}) => {
+  const { socket } = useSocket();
+  const mentor = useAppSelector((state) => state.user.user);
 
-const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overrideClass }) => {
+  const [messages, setMessages] = useState<ChatMessage[]>(
+    chatData.messages || []
+  );
 
-  const {socket} = useSocket();
-    const mentor = useAppSelector((state) => state.user.user);
-
-  const [messages, setMessages] = useState<ChatMessage[]>(chatData.messages || []);
-
-  const form = useForm()
+  const form = useForm();
 
   const { reset, handleSubmit, control } = form;
 
-
   useEffect(() => {
     if (socket) {
-      socket.emit('mentor_joining_room', { userEmail: studentInfo?.email });
-      socket.on('room_message', (data: { message: string, timestamp: string, sendBy: string }) => {
-        setMessages(prevMessages => [...prevMessages, data]);
-        console.log('Received mentor room message room event:', data);
-      });
+      socket.emit("mentor_joining_room", { userEmail: studentInfo?.email });
+      socket.on(
+        "room_message",
+        (data: { message: string; timestamp: string; sendBy: string }) => {
+          setMessages((prevMessages) => [...prevMessages, data]);
+          console.log("Received mentor room message room event:", data);
+        }
+      );
       return () => {
-        socket.off('room_message');
+        socket.off("room_message");
       };
     }
   }, [socket, studentInfo?.email]);
 
   const onMessageSubmit = async (data: any) => {
-    console.log(data, "here is th edata sending as message")
+    console.log(data, "here is th edata sending as message");
     const formattedData = {
       message: data.content,
       sender: mentor?._id,
       receiver: studentInfo?._id,
-      sendBy: mentor?.firstname,
+      sendBy: mentor?._id,
       room: studentInfo?.email,
       timestamp: new Date(Date.now()),
-      socketId: socket?.id
+      socketId: socket?.id,
     };
 
     try {
-      if(socket)
-      socket.emit('chat_message', formattedData) 
+      if (socket) socket.emit("chat_message", formattedData);
 
       reset({ content: "" });
     } catch (error) {
-      console.error('Failed to send message:', error);
+      console.error("Failed to send message:", error);
     }
   };
 
-
   const handleKeyDown = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (event.key === "Enter" && !event.shiftKey) {
       event.preventDefault();
       handleSubmit(onMessageSubmit)();
     }
   };
 
-   // Group messages by date
-   const groupMessagesByDate = (messages: ChatMessage[]) => {
+  // Group messages by date
+  const groupMessagesByDate = (messages: ChatMessage[]) => {
     const groupedMessages: { [date: string]: ChatMessage[] } = {};
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(today.getDate() - 1);
 
-    messages.forEach(message => {
+    messages.forEach((message) => {
       const messageDate = new Date(message.timestamp);
       let dateLabel;
 
       if (messageDate.toDateString() === today.toDateString()) {
-        dateLabel = 'Today';
+        dateLabel = "Today";
       } else if (messageDate.toDateString() === yesterday.toDateString()) {
-        dateLabel = 'Yesterday';
+        dateLabel = "Yesterday";
       } else {
-        dateLabel = getFormattedDate(messageDate); 
+        dateLabel = getFormattedDate(messageDate);
       }
 
       if (!groupedMessages[dateLabel]) {
@@ -107,48 +117,54 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overri
 
   const groupedMessages = groupMessagesByDate(messages);
 
-
-
   return (
     <div className="flex flex-col h-full bg-white w-full justify-center items-center border overflow-hidden">
-      <div className={cn("flex-1 w-full overflow-y-auto custom__scrollbar px-1 md:px-2 py-4")}>
-        <ScrollToBottom className="h-[100%]" scrollViewClassName="custom__scrollbar">
-        {Object.entries(groupedMessages).map(([dateLabel, messages]) => (
+      <div
+        className={cn(
+          "flex-1 w-full overflow-y-auto custom__scrollbar px-1 md:px-2 py-4"
+        )}
+      >
+        <ScrollToBottom
+          className="h-[100%]"
+          scrollViewClassName="custom__scrollbar"
+        >
+          {Object.entries(groupedMessages).map(([dateLabel, messages]) => (
             <div key={dateLabel}>
               <div className="text-center text-gray-500 py-2">{dateLabel}</div>
-          {messages.map((message, index) => (
-            <div
-              className={cn(  
-                "flex ",
-                message.sendBy === mentor?.firstname ? "justify-end" : "justify-start"
-              )}
-              key={index}
-            >
-              <div>
+              {messages.map((message, index) => (
                 <div
                   className={cn(
-                    "p-4 rounded-2xl text-sm font-medium max-w-xs",
-                    message.sendBy === mentor?.firstname
-                      ? "bg-[#EDE2FD]  border-2 border-white drop-shadow-custom-user-chat"
-                      : "bg-white border-2 border-[#D8D5D5] text-black shadow-sm"
+                    "flex ",
+                    message.sendBy === mentor?._id
+                      ? "justify-end"
+                      : "justify-start"
                   )}
+                  key={index}
                 >
-                  <p>{message.message}</p>
+                  <div>
+                    <div
+                      className={cn(
+                        "p-4 rounded-2xl text-sm font-medium max-w-xs",
+                        message.sendBy === mentor?._id
+                          ? "bg-[#EDE2FD]  border-2 border-white drop-shadow-custom-user-chat"
+                          : "bg-white border-2 border-[#D8D5D5] text-black shadow-sm"
+                      )}
+                    >
+                      <p>{message.message}</p>
+                    </div>
+                    <span className="block text-right font-semibold text-xs pt-1 px-1 text-[#878787]">
+                      {message.sendBy === mentor?._id ? "You, " : "Student, "}
+                      {formatTimestamp(
+                        message?.timestamp || new Date(Date.now()).toString()
+                      )}
+                    </span>
+                  </div>
                 </div>
-                <span className="block text-right font-semibold text-xs pt-1 px-1 text-[#878787]">
-                  {message.sendBy === mentor?.firstname
-                    ? "You, "
-                    : message.sendBy + ", "}
-                  {formatTimestamp(message?.timestamp ||  new Date(Date.now()).toString())}
-                </span>
-              </div>
+              ))}
             </div>
           ))}
-          </div>
-        ))}
-
-    </ScrollToBottom>
-        </div>
+        </ScrollToBottom>
+      </div>
       <Form {...form}>
         <form
           onSubmit={handleSubmit(onMessageSubmit)}
@@ -165,7 +181,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ studentInfo, chatData, overri
                 <FormControl>
                   <Textarea
                     placeholder="Type a Message here!..."
-                    onKeyDown={handleKeyDown} 
+                    onKeyDown={handleKeyDown}
                     className="resize-none border-none min-h-10 custom__scrollbar outline-none focus:outline-none focus-visible:ring-0 text-base"
                     rows={1}
                     {...field}
