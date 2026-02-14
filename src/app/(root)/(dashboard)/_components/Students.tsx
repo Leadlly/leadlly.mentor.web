@@ -20,15 +20,17 @@ const Students = ({
 }) => {
   return (
     <div className="grid lg:grid-cols-5 md:grid-cols-4 h-[calc(100dvh-120px)] grid-cols-3 lg:gap-[30px] md:gap-[20px] gap-[10px]">
-      {students.map((student) => (
-        <StudentCard
-          key={student._id}
-          studentInfo={student}
-          setStudentIds={setStudentIds}
-          studentIds={studentIds}
-          canSelectStudents={canSelectStudents}
-        />
-      ))}
+      {students &&
+        students.length > 0 &&
+        students.map((student) => (
+          <StudentCard
+            key={student._id}
+            studentInfo={student}
+            setStudentIds={setStudentIds}
+            studentIds={studentIds}
+            canSelectStudents={canSelectStudents}
+          />
+        ))}
     </div>
   );
 };

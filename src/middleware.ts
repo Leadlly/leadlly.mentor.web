@@ -9,9 +9,6 @@ export async function middleware(request: NextRequest) {
 
   const token = getTokenFromStorage(request);
 
-  const userData = await getUser();
-  // console.log(userData)
-
   const isPublicPath =
     path.startsWith("/login") ||
     path.startsWith("/signup") ||
@@ -19,45 +16,55 @@ export async function middleware(request: NextRequest) {
     path.startsWith("/forgot-password") ||
     path.startsWith("/resetpassword");
 
+  if (!token && !isPublicPath) {
+    return NextResponse.redirect(new URL("/login", request.nextUrl));
+  }
 
-    if (token && isPublicPath) {
-      return NextResponse.redirect(new URL("/", request.nextUrl));
+  if (token) {
+    const userData = await getUser();
+
+    if (isPublicPath) {
+      return NextResponse.redirect(
+        new URL(
+          userData?.user?.role === "teacher" ? "/teacher/dashboard" : "/",
+          request.nextUrl
+        )
+      );
     }
-  
-    if (!token && !isPublicPath) {
-      return NextResponse.redirect(new URL("/login", request.nextUrl));
-    }
-  
+
     // initial personal info middleware
-    if (token && !isPublicPath) {
+    if (!isPublicPath) {
       const hasSubmittedInitialInfo = !!userData.user?.about.gender;
-  
+
       if (!hasSubmittedInitialInfo && path !== "/initial-info") {
         return NextResponse.redirect(new URL("/initial-info", request.nextUrl));
       }
-  
+
       if (hasSubmittedInitialInfo && path === "/initial-info") {
         return NextResponse.redirect(new URL("/Status", request.nextUrl));
       }
     }
-  
-    if (token && !isPublicPath && path !== "/initial-info") {
+
+    if (!isPublicPath && path !== "/initial-info") {
       const isVerified = userData.user?.status === "Verified";
-  
+
       if (!isVerified && path !== "/Status") {
+        return NextResponse.redirect(new URL("/Status", request.nextUrl));
+      }
+
+      if (isVerified && path === "/Status") {
         return NextResponse.redirect(
-          new URL("/Status", request.nextUrl)
+          new URL(
+            userData?.user?.role === "teacher" ? "/teacher/dashboard" : "/",
+            request.nextUrl
+          )
         );
       }
-  
-      if (isVerified && path === "/Status") {
-        return NextResponse.redirect(new URL("/", request.nextUrl));
-      }
     }
-  
-  
-    return NextResponse.next();
   }
+
+  return NextResponse.next();
+}
 
 function getTokenFromStorage(request: NextRequest) {
   const cookies = request.cookies;
@@ -74,6 +81,6 @@ export const config = {
     "/forgot-password",
     "/",
     "/Status",
-    "/initial-info"
+    "/initial-info",
   ],
 };
