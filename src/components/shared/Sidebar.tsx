@@ -1,12 +1,14 @@
 "use client";
 import React, { useState } from "react";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { cn } from "@/lib/utils";
+import Popup from "@/app/(protected)/(root)/student/[studentId]/components/ListComponent";
 import { userSidebarLinks } from "@/helpers/constants";
+import { cn } from "@/lib/utils";
+
 import ListIcon from "../icons/ListIcon";
-import Popup from "@/app/(root)/student/[studentId]/components/ListComponent";
 
 const Sidebar = ({ id }: { id: string }) => {
   const pathname = usePathname();
@@ -27,17 +29,21 @@ const Sidebar = ({ id }: { id: string }) => {
 
   return (
     <>
-      <aside className="md:rounded-xl rounded-l h-full bg-[#ffffff] shadow-custom-inset md:mr-[6%] mr-[15px] px-[4px] max-w-[8rem]">
+      <aside className="md:rounded-xl rounded-l h-full bg-[#ffffff] shadow-custom-inset md:mr-[6%] mr-[15px] px-[4px] max-w-32">
         <ul className="flex flex-col justify-start items-start h-full no-scrollbar overflow-y-auto pt-5">
           <div className="relative px-4 py-2 rounded-xl md:rounded-full xl:rounded-xl w-full flex items-center justify-start md:justify-center xl:justify-start bg-white shadow-custom-inset">
             <Link href="#" onClick={handleListClick}>
-              <li className={cn(
-                isPopupOpen ? "bg-[#9654F4] rounded-full p-4" : "bg-none p-4"
-              )}>
-                <ListIcon className={cn(
-                  'size-5',
-                  isPopupOpen ? "stroke-white" : "stroke-[#9654F4]"
-                )} />
+              <li
+                className={cn(
+                  isPopupOpen ? "bg-[#9654F4] rounded-full p-4" : "bg-none p-4"
+                )}
+              >
+                <ListIcon
+                  className={cn(
+                    "size-5",
+                    isPopupOpen ? "stroke-white" : "stroke-[#9654F4]"
+                  )}
+                />
               </li>
             </Link>
           </div>
@@ -60,7 +66,8 @@ const Sidebar = ({ id }: { id: string }) => {
                 )}
               >
                 <item.icon
-                  className={cn('size-5',
+                  className={cn(
+                    "size-5",
                     isPopupOpen
                       ? "stroke-[#9654F4]" // Inactive styling for icon when popup is open
                       : pathname === `/student/${id}${item.href}`

@@ -1,12 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+
 import Image from "next/image";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 
-import { resetPassword } from "@/actions/user_actions";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
+import { resetPassword } from "@/actions/user_actions";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,18 +24,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { Loader2 } from "lucide-react";
-
-import { toast } from "sonner";
-
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-
 const ResetPasswordSchema = z.object({
-  password: z.string({ required_error: "Please enter your new password." }),
+  password: z.string({ error: "Please enter your new password." }),
   confirmPassword: z.string({
-    required_error: "Please confirm your password!",
+    error: "Please confirm your password!",
   }),
 });
 

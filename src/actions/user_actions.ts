@@ -1,17 +1,20 @@
 "use server";
 
-import {
-  ForgotPasswordProps,
-  ResetPasswordProps,
-  SignUpDataProps,
-  MentorPersonalInfoProps,
-} from "@/helpers/types";
-import { getCookie } from "./cookie_actions";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, updateTag } from "next/cache";
+
+import { error } from "console";
+
 // import { Student } from "@/helpers/types";
 
 import apiClient from "@/apiClient/apiClient";
-import { error } from "console";
+import {
+  ForgotPasswordProps,
+  MentorPersonalInfoProps,
+  ResetPasswordProps,
+  SignUpDataProps,
+} from "@/helpers/types";
+
+import { getCookie } from "./cookie_actions";
 
 export const signUpUser = async (data: SignUpDataProps) => {
   try {
@@ -165,7 +168,7 @@ export const mentorPersonalInfo = async (data: any) => {
     );
 
     const responseData = await res.json();
-    revalidateTag("userData");
+    updateTag("userData");
 
     return responseData;
   } catch (error: unknown) {
@@ -239,9 +242,9 @@ export const Studentinfo = async (id: string) => {
     }
 
     const responseData = await res.json();
-    revalidateTag('weeklyReport')
-    revalidateTag('monthlyReport')
-    revalidateTag('overallReport')
+    updateTag("weeklyReport");
+    updateTag("monthlyReport");
+    updateTag("overallReport");
 
     return responseData;
   } catch (error) {
@@ -268,7 +271,6 @@ export const getplanner = async (id: any) => {
       // },
       credentials: "include",
     });
-
 
     const responseData = await res.json();
     return responseData;

@@ -1,5 +1,16 @@
 "use client";
 
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,23 +26,13 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { toast } from "sonner";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-
-import { Loader2 } from "lucide-react";
 import ResendOtpButton from "./ResendOtpButton";
-import Image from "next/image";
 
 const OTPFormSchema = z.object({
   otp: z
-    .string({ required_error: "OTP is required!" })
-    .min(6, { message: "Your OTP must be 6 characters" }),
+    .string({ error: "OTP is required!" })
+    .min(6, { error: "Your OTP must be 6 characters" }),
 });
 
 const Verify = () => {

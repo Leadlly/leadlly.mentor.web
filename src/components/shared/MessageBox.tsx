@@ -1,10 +1,13 @@
 "use client";
-import { EllipsisVertical } from "lucide-react";
-import Avatar from "./Avatar";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
-import ChatContent from "@/app/(root)/student/[studentId]/components/ChatContent";
+
 import { motion } from "framer-motion";
+import { EllipsisVertical } from "lucide-react";
+
+import ChatContent from "@/app/(protected)/(root)/student/[studentId]/components/ChatContent";
+import { cn } from "@/lib/utils";
+
+import Avatar from "./Avatar";
 
 type Props = {};
 

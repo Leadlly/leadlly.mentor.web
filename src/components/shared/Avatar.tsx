@@ -1,7 +1,7 @@
-import Image from "next/image";
 import React from "react";
 
-import avatarImg from "/public/assets/images/d4ab00b00e2c1292dc8d8cfaa7144e3d.png";
+import Image from "next/image";
+
 interface AvatarProps {
   src?: string;
   alt: string;
@@ -9,14 +9,14 @@ interface AvatarProps {
   className?: string;
 }
 
-const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 38,className }) => {
+const Avatar: React.FC<AvatarProps> = ({ src, alt, size = 38, className }) => {
   return (
     <div
-    className={`cursor-pointer rounded-full overflow-hidden ${className}`}
-    style={{ width: size, height: size }}
+      className={`cursor-pointer rounded-full overflow-hidden ${className}`}
+      style={{ width: size, height: size }}
     >
       <Image
-        src={src || avatarImg}
+        src={src || "/assets/images/avatar.png"}
         alt={alt}
         width={size}
         height={size}

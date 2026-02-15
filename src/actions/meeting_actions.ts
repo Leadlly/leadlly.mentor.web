@@ -1,9 +1,14 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
+
 import { getCookie } from "./cookie_actions";
 
-export const getMeetings = async (studentId: string,meeting?:string,createdBy?:string) => {
+export const getMeetings = async (
+  studentId: string,
+  meeting?: string,
+  createdBy?: string
+) => {
   try {
     const token = await getCookie("token");
 
@@ -16,8 +21,7 @@ export const getMeetings = async (studentId: string,meeting?:string,createdBy?:s
       queryParams.append("createdBy", createdBy);
     }
 
-    console.log(queryParams)
-
+    console.log(queryParams);
 
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/get?${queryParams.toString()}`,
@@ -64,7 +68,7 @@ export const acceptMeeting = async (meetingId: string) => {
 
     const data = await res.json();
 
-    revalidateTag("meetingsData");
+    updateTag("meetingsData");
 
     return data;
   } catch (error: unknown) {
@@ -98,7 +102,7 @@ export const rescheduleMeeting = async (
 
     const responseData = await res.json();
 
-    revalidateTag("meetingsData");
+    updateTag("meetingsData");
 
     return responseData;
   } catch (error: unknown) {
@@ -134,7 +138,7 @@ export const scheduleMeeting = async (data: {
 
     const responseData = await res.json();
 
-    revalidateTag("meetingsData");
+    updateTag("meetingsData");
 
     return responseData;
   } catch (error: unknown) {

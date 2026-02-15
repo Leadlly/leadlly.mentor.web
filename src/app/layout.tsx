@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 import { Mada as FontSans } from "next/font/google";
-import "./globals.css";
-import StoreProvider from "@/app/StoreProvider";
-import { Container } from "@/components";
-import { cn } from "@/lib/utils";
-import { Toaster } from "sonner";
+
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { getUser } from "@/actions/user_actions";
+import { Toaster } from "sonner";
+
+import { cn } from "@/lib/utils";
+
+import "./globals.css";
 
 const fontSans = FontSans({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
-  title: "Leadlly",
+  title: "Leadlly Mentor",
   description:
-    "Say goodbye to one-size-fits-all! We tailor study plans and resources to your individual learning style and goals.",
+    "Leadlly Mentor is a platform for mentors to connect with students and provide guidance and support.",
 };
 
 export default async function RootLayout({
@@ -21,7 +21,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const userData = await getUser();
   return (
     <html lang="en">
       <body
@@ -30,14 +29,12 @@ export default async function RootLayout({
           fontSans.variable
         )}
       >
-        <StoreProvider user={userData?.user}>
-          <GoogleOAuthProvider
-            clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
-          >
-            <main className="">{children}</main>
-            <Toaster richColors position="top-center" />
-          </GoogleOAuthProvider>
-        </StoreProvider>
+        <GoogleOAuthProvider
+          clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
+        >
+          <main className="">{children}</main>
+          <Toaster richColors position="top-center" />
+        </GoogleOAuthProvider>
       </body>
     </html>
   );

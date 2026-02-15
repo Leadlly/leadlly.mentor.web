@@ -1,5 +1,17 @@
 "use client";
 
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+
 import { forgotPassword } from "@/actions/user_actions";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,22 +23,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-
-import * as z from "zod";
 
 const ForgotPasswordSchema = z.object({
-  email: z
-    .string({ required_error: "Please enter your email." })
-    .email({ message: "Invalid email address!" }),
-  
+  email: z.email({ error: "Invalid email address!" }),
 });
 
 const ForgotPassword = () => {
