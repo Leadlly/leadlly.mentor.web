@@ -1,16 +1,19 @@
-import { ArrowLeft } from "lucide-react";
-import AccountPersonalInfo from "./_components/AccountPersonalInfo";
 import Link from "next/link";
-import LogoutButton from "@/components/shared/LogoutButton";
-import AccountUserProfile from "./_components/AccountUserProfile";
-import AccountTabs from "./_components/AccountTabs";
 
-const ManageAccount = ({
+import { ArrowLeft } from "lucide-react";
+
+import LogoutButton from "@/components/shared/LogoutButton";
+
+import AccountPersonalInfo from "./_components/AccountPersonalInfo";
+import AccountTabs from "./_components/AccountTabs";
+import AccountUserProfile from "./_components/AccountUserProfile";
+
+const ManageAccount = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
-  const activeManageAccountTab = searchParams["tab"] ?? "personal-info";
+  const activeManageAccountTab = (await searchParams).tab ?? "personal-info";
 
   return (
     <div className="h-full flex flex-col">

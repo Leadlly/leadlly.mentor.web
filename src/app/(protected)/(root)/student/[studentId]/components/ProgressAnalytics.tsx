@@ -1,19 +1,22 @@
 "use client";
 
+import React, { useEffect, useState } from "react";
+
+import { usePathname } from "next/navigation";
+
+import { toast } from "sonner";
+
+import {
+  getMonthlyReport,
+  getOverallReport,
+  getWeeklyReport,
+} from "@/actions/student_report_actions";
 import AreaChart from "@/components/charts/AreaChart";
+import AreaChartOver from "@/components/charts/AreaChartOver";
 import BarChart from "@/components/charts/BarChart";
 import TabContent from "@/components/shared/TabContent";
 import TabNavItem from "@/components/shared/TabNavItem";
-import AreaChartOver from "@/components/charts/AreaChartOver";
-import React, { useState, useEffect } from "react";
-import { weeklyReport, monthlyReport, overallReport } from "@/helpers/types";
-import { toast } from "sonner";
-import {
-  getWeeklyReport,
-  getMonthlyReport,
-  getOverallReport,
-} from "@/actions/student_report_actions";
-import { usePathname } from "next/navigation";
+import { monthlyReport, overallReport, weeklyReport } from "@/helpers/types";
 
 const progressAnalyticsMenus = [
   {
@@ -85,7 +88,7 @@ const ProgressAnalytics: React.FC = () => {
   }, [studentId]);
 
   return (
-    <div className="px-3 flex-1 pt-2 bg-[#FBFAFC] rounded-2xl border-[1px] border-[#D8D5D5] shadow-custom-black">
+    <div className="px-3 flex-1 pt-2 bg-[#FBFAFC] rounded-2xl border border-[#D8D5D5] shadow-custom-black">
       <div className="flex items-center justify-between">
         <h4 className="text-xs md:text-sm font-bold">Progress Analytics</h4>
         <ul className="flex items-center gap-1 border border-[#989898] p-1 rounded">

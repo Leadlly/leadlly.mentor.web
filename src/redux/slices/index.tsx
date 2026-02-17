@@ -1,5 +1,6 @@
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import { MentorPersonalInfoProps } from "@/helpers/types";
-import { createSlice } from "@reduxjs/toolkit";
 
 export interface UserProps {
   user: MentorPersonalInfoProps | null;
@@ -13,7 +14,10 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    userData: (state, action) => {
+    userData: (
+      state,
+      action: PayloadAction<MentorPersonalInfoProps | null>
+    ) => {
       state.user = action.payload;
     },
   },

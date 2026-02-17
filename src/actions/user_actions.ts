@@ -9,6 +9,7 @@ import { error } from "console";
 import apiClient from "@/apiClient/apiClient";
 import {
   ForgotPasswordProps,
+  IMentorReportProps,
   MentorPersonalInfoProps,
   ResetPasswordProps,
   SignUpDataProps,
@@ -119,6 +120,7 @@ export const resetPassword = async (
 
 export const getUser = async () => {
   const token = await getCookie("token");
+
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/auth/user`,
@@ -129,14 +131,15 @@ export const getUser = async () => {
           Cookie: `token=${token}`,
         },
         credentials: "include",
-        // cache: "force-cache",
+        cache: "force-cache",
         next: {
           tags: ["userData"],
         },
       }
     );
 
-    const data = await res.json();
+    const data: { success: boolean; user: MentorPersonalInfoProps } =
+      await res.json();
 
     return data;
   } catch (error: unknown) {
@@ -307,6 +310,40 @@ export const getTracker = async (subject: string | string[], id: any) => {
       throw new Error(`Error in fetching user tracker: ${error.message}`);
     } else {
       throw new Error("An unknown error occurred while fetching user tracker!");
+    }
+  }
+};
+
+export const getTeacherReport = async () => {
+  try {
+    const token = await getCookie("token");
+
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/report`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "force-cache",
+        next: {
+          tags: ["teacher-report"],
+          revalidate: 60 * 60 * 24,
+        },
+      }
+    );
+
+    const data: { success: boolean; data: IMentorReportProps } =
+      await res.json();
+
+    return data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error in fetching report: ${error.message}`);
+    } else {
+      throw new Error("An unknown error occurred while fetching report!");
     }
   }
 };

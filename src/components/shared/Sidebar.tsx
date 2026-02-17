@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import Popup from "@/app/(protected)/(root)/student/[studentId]/components/ListComponent";
+import Popup from "@/components/shared/ListComponent";
 import { userSidebarLinks } from "@/helpers/constants";
 import { cn } from "@/lib/utils";
 

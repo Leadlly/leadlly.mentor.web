@@ -1,7 +1,7 @@
 // middleware.ts
-
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+
 import { getUser } from "./actions/user_actions";
 
 export async function proxy(request: NextRequest) {
@@ -29,6 +29,7 @@ export async function proxy(request: NextRequest) {
   if (token && !isPublicPath) {
     const userData = await getUser();
     const hasSubmittedInitialInfo = !!userData.user?.about.gender;
+    const isTeacher = userData.user?.role === "teacher";
 
     // initial personal info middleware
     if (!hasSubmittedInitialInfo && path !== "/initial-info") {
@@ -49,6 +50,12 @@ export async function proxy(request: NextRequest) {
       if (isVerified && path === "/Status") {
         return NextResponse.redirect(new URL("/", request.nextUrl));
       }
+    }
+
+    if (isTeacher && path === "/") {
+      return NextResponse.redirect(
+        new URL(`/teacher/${userData.user?._id}`, request.nextUrl)
+      );
     }
   }
 

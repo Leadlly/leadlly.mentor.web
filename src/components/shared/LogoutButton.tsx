@@ -3,13 +3,12 @@
 import { useRouter } from "next/navigation";
 
 import { LogOut } from "lucide-react";
-
 import { toast } from "sonner";
-
-import { Button } from "../ui/button";
 
 import { useAppDispatch } from "@/redux/hooks";
 import { userData } from "@/redux/slices";
+
+import { Button } from "../ui/button";
 
 const LogoutButton = () => {
   const router = useRouter();
@@ -18,18 +17,18 @@ const LogoutButton = () => {
 
   const logoutHandler = async () => {
     try {
-      const response = await fetch("/api/auth/logout", {
-        method: "Get",
-        headers: {
-          "Content-Type": "application/json",
-        },
+      const response = await fetch("/api/logout", {
+        method: "POST",
       });
 
       const responseData = await response.json();
+
       toast.success(responseData.message);
-      router.push("/login");
       dispatch(userData(null));
+      router.push("/login");
     } catch (error: any) {
+      console.log(error);
+
       toast.error("Logout Failed!", {
         description: error?.message,
       });
