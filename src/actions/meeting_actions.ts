@@ -9,9 +9,9 @@ export const getMeetings = async (
   meeting?: string,
   createdBy?: string
 ) => {
-  try {
-    const token = await getCookie("token");
+  const token = await getCookie("token");
 
+  try {
     const queryParams = new URLSearchParams({ studentId });
 
     if (meeting) {
@@ -51,9 +51,9 @@ export const getMeetings = async (
 };
 
 export const acceptMeeting = async (meetingId: string) => {
-  try {
-    const token = await getCookie("token");
+  const token = await getCookie("token");
 
+  try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/accept/${meetingId}`,
       {
@@ -84,9 +84,9 @@ export const rescheduleMeeting = async (
   meetingId: string,
   data: { date: Date; time: string }
 ) => {
-  try {
-    const token = await getCookie("token");
+  const token = await getCookie("token");
 
+  try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/reschedule/${meetingId}`,
       {
@@ -120,9 +120,9 @@ export const scheduleMeeting = async (data: {
   studentIds: string[] | undefined;
   message?: string;
 }) => {
-  try {
-    const token = await getCookie("token");
+  const token = await getCookie("token");
 
+  try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/schedule`,
       {

@@ -155,7 +155,7 @@ export const getUser = async () => {
 
 export const mentorPersonalInfo = async (data: any) => {
   const token = await getCookie("token");
-  console.log(data, "here");
+
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/info/save`,
@@ -315,9 +315,9 @@ export const getTracker = async (subject: string | string[], id: any) => {
 };
 
 export const getTeacherReport = async () => {
-  try {
-    const token = await getCookie("token");
+  const token = await getCookie("token");
 
+  try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/report`,
       {

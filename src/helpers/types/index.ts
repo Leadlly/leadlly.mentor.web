@@ -368,10 +368,27 @@ interface IStudent {
   gmeet: IGMeet;
 }
 
-interface IBatch {
+export interface IBatch {
+  schedule: { days: any[]; timezone: string };
+  _id: string;
+  name: string;
+  standard: string;
+  subjects: string[];
+  mentor: string;
+  students: any[];
+  status: string;
+  shareCode: string;
+  shareLink: string;
+  classReports: any[];
+  createdAt: string;
+  batchReports: any[];
+}
+
+interface IBatchesProps {
   _id: string;
   status: "pending" | "accepted" | "rejected";
   requestedAt: string;
+  details: IBatch;
 }
 
 interface IMonthlyStats {
@@ -404,8 +421,15 @@ export interface MentorPersonalInfoProps {
   lastname: string | null;
   email: string;
   role: "teacher" | "mentor";
-  institute: string | null;
-  batches: IBatch[];
+  institute: {
+    _id: string;
+    name: string;
+    standards: string[];
+    subjects: string[];
+    admins: string[];
+    batches: string[];
+  };
+  batches: IBatchesProps[];
   phone: IPhone;
   password?: string | null;
   salt?: string | null;
@@ -532,6 +556,38 @@ export interface IMentorReportProps {
     totalClasses: number;
     totalStudents: number;
   };
+}
+
+export interface IClassProps {
+  _id: string;
+  acceptingResponses: boolean;
+  batch: IBatch;
+  classReport: {
+    totalLectures: number;
+    totalDuration: number; //in minutes
+    syllabusCompleted: number;
+    lastUpdated: string;
+  };
+  createdAt: string;
+  description: string | null;
+  topic: string | null;
+  date: string;
+  startTime: string;
+  endTime: string;
+  meetingLink: string | null;
+  notes: string | null;
+  recordingLink: string | null;
+  resources: Array<{
+    title: string;
+    fileUrl: string;
+    fileType: string;
+    uploadedAt: string;
+  }>;
+  shareCode: string;
+  shareLink: string;
+  subject: string;
+  teacher: string;
+  updatedAt: string;
 }
 
 export interface ILectureProps {
