@@ -1,12 +1,17 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { updateTag } from "next/cache";
+
 import { getCookie } from "./cookie_actions";
 
-export const getMeetings = async (studentId: string,meeting?:string,createdBy?:string) => {
-  try {
-    const token = await getCookie("token");
+export const getMeetings = async (
+  studentId: string,
+  meeting?: string,
+  createdBy?: string
+) => {
+  const token = await getCookie("token");
 
+  try {
     const queryParams = new URLSearchParams({ studentId });
 
     if (meeting) {
@@ -16,8 +21,7 @@ export const getMeetings = async (studentId: string,meeting?:string,createdBy?:s
       queryParams.append("createdBy", createdBy);
     }
 
-    console.log(queryParams)
-
+    console.log(queryParams);
 
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/get?${queryParams.toString()}`,
@@ -47,9 +51,9 @@ export const getMeetings = async (studentId: string,meeting?:string,createdBy?:s
 };
 
 export const acceptMeeting = async (meetingId: string) => {
-  try {
-    const token = await getCookie("token");
+  const token = await getCookie("token");
 
+  try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/accept/${meetingId}`,
       {
@@ -64,7 +68,7 @@ export const acceptMeeting = async (meetingId: string) => {
 
     const data = await res.json();
 
-    revalidateTag("meetingsData");
+    updateTag("meetingsData");
 
     return data;
   } catch (error: unknown) {
@@ -80,9 +84,9 @@ export const rescheduleMeeting = async (
   meetingId: string,
   data: { date: Date; time: string }
 ) => {
-  try {
-    const token = await getCookie("token");
+  const token = await getCookie("token");
 
+  try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/reschedule/${meetingId}`,
       {
@@ -98,7 +102,7 @@ export const rescheduleMeeting = async (
 
     const responseData = await res.json();
 
-    revalidateTag("meetingsData");
+    updateTag("meetingsData");
 
     return responseData;
   } catch (error: unknown) {
@@ -116,9 +120,9 @@ export const scheduleMeeting = async (data: {
   studentIds: string[] | undefined;
   message?: string;
 }) => {
-  try {
-    const token = await getCookie("token");
+  const token = await getCookie("token");
 
+  try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/schedule`,
       {
@@ -134,7 +138,7 @@ export const scheduleMeeting = async (data: {
 
     const responseData = await res.json();
 
-    revalidateTag("meetingsData");
+    updateTag("meetingsData");
 
     return responseData;
   } catch (error: unknown) {

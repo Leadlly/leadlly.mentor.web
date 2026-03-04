@@ -1,33 +1,32 @@
-import { Button } from "@/components/ui/button";
-import { useGoogleLogin } from "@react-oauth/google";
-import { useAppDispatch } from "@/redux/hooks";
-import axios from "axios";
-import { getUser } from "@/actions/user_actions";
-import { userData } from "@/redux/slices";
+"use client";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+
+import { useGoogleLogin } from "@react-oauth/google";
+import axios from "axios";
 import { toast } from "sonner";
-import apiClient from "@/apiClient/apiClient";
+
+import { Button } from "@/components/ui/button";
 
 const GoogleLoginButton = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
 
   const login = useGoogleLogin({
     onSuccess: async (credentialResponse) => {
       try {
-        const res = await axios.post("/api/google/auth", {
-          access_token: credentialResponse.access_token
-        },{
-          withCredentials: true, 
-          headers: {
-            'Content-Type': 'application/json',
+        const res = await axios.post(
+          "/api/google/auth",
+          {
+            access_token: credentialResponse.access_token,
           },
-        }
-      );
-
-        const userInfo = await getUser();
-        dispatch(userData(userInfo.user));
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         toast.success("Login success", {
           description: res.data.message,
@@ -53,13 +52,13 @@ const GoogleLoginButton = () => {
     },
   });
 
-  
   return (
     <Button
       type="button"
       variant={"outline"}
       onClick={() => login()}
-      className="w-full font-medium hover:bg-[#e2e8f0] border-[#e2e8f0] rounded-[7px] text-[14px] md:text-[20px] lg:text-xl md:h-12 gap-2">
+      className="w-full font-medium hover:bg-[#e2e8f0] border-[#e2e8f0] rounded-[7px] text-[14px] md:text-[20px] lg:text-xl md:h-12 gap-2"
+    >
       <Image
         src="/assets/icons/google-icon.svg"
         alt="Sign in with Google"

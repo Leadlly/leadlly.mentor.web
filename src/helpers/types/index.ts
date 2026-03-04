@@ -326,6 +326,8 @@ export type SignUpDataProps = {
   name: string;
   email: string;
   password: string;
+  role: "teacher" | "mentor";
+  instituteCode?: string;
 };
 
 export type SignInDataProps = {
@@ -368,21 +370,75 @@ interface IStudent {
   gmeet: IGMeet;
 }
 
+export interface IBatch {
+  schedule: { days: any[]; timezone: string };
+  _id: string;
+  name: string;
+  standard: string;
+  subjects: string[];
+  mentor: string;
+  students: any[];
+  status: string;
+  shareCode: string;
+  shareLink: string;
+  classReports: any[];
+  createdAt: string;
+  batchReports: any[];
+}
+
+interface IBatchesProps {
+  _id: string;
+  status: "pending" | "accepted" | "rejected";
+  requestedAt: string;
+  details: IBatch;
+}
+
+interface IMonthlyStats {
+  month: string;
+  year: number;
+  classesCompleted: number;
+  classesCancelled: number;
+  newStudents: number;
+}
+
+interface IReports {
+  totalClasses: number;
+  completedClasses: number;
+  cancelledClasses: number;
+  rescheduledClasses: number;
+  totalStudents: number;
+  averageRating: number;
+  monthlyStats: IMonthlyStats[];
+}
+
+interface IMentorAcademic {
+  schoolOrCollegeName: string | null;
+  schoolOrCollegeAddress: string | null;
+  degree: string | null;
+}
+
 export interface MentorPersonalInfoProps {
+  _id: string;
   firstname: string | null;
   lastname: string | null;
   email: string;
+  role: "teacher" | "mentor";
+  institute: {
+    _id: string;
+    name: string;
+    standards: string[];
+    subjects: string[];
+    admins: string[];
+    batches: string[];
+  };
+  batches: IBatchesProps[];
   phone: IPhone;
   password?: string | null;
   salt?: string | null;
   address: IAddress;
   avatar: IAvatar;
   about: IAbout;
-  academic: {
-    schoolOrCollegeName: string | null;
-    schoolOrCollegeAddress: string | null;
-    degree: string | null;
-  };
+  academic: IMentorAcademic;
   status: "Verified" | "Not Verified";
   gmeet: IGMeet;
   preference: {
@@ -390,12 +446,8 @@ export interface MentorPersonalInfoProps {
     competitiveExam: string[];
   };
   students: IStudent[];
-  createdAt: Date;
-  resetPasswordToken?: string | null;
-  resetTokenExpiry?: Date | null;
-
-  comparePassword(candidatePassword: string): Promise<boolean>;
-  getToken(): Promise<string>;
+  reports: IReports;
+  createdAt: string;
 }
 
 export type MeetingDataProps = {
@@ -437,26 +489,26 @@ export interface QuestionOption {
 export interface Image {
   url: string;
   key: string;
-  _id:string
+  _id: string;
 }
 export interface EQuestion {
-    _id: string;
-    question: string;
-    options: QuestionOption[];
-    standard: number;
-    subject: string;
-    chapter: string[];
-    topics: string[];
-    subtopics: string[];
-    level: string;
-    images: Image[];
-    createdBy: string;
-    createdAt: string;
-    __v: number;
-  };
+  _id: string;
+  question: string;
+  options: QuestionOption[];
+  standard: number;
+  subject: string;
+  chapter: string[];
+  topics: string[];
+  subtopics: string[];
+  level: string;
+  images: Image[];
+  createdBy: string;
+  createdAt: string;
+  __v: number;
+}
 export interface ErrorBookQuestion {
   _id: string;
-  question: EQuestion
+  question: EQuestion;
 }
 export type ChapterErrorBookProps = {
   chapterErrorBook: ErrorBookQuestion[];
@@ -466,7 +518,7 @@ export type ChapterErrorBookProps = {
 export type Quiz = {
   _id: string;
   user: string;
-  subject:string
+  subject: string;
   questions: Record<string, any>;
   quizType: string;
   attempted: boolean;
@@ -475,3 +527,102 @@ export type Quiz = {
   endDate: string;
   createdAt: string;
 };
+
+export interface IMentorReportProps {
+  batchWise: Array<{
+    batchId: string;
+    batchName: string;
+    standard: string;
+    subjects: string[];
+    classStats: {
+      totalClasses: number;
+      completedClasses: number;
+      cancelledClasses: number;
+      rescheduledClasses: number;
+    };
+    syllabusCompletion: number;
+    status: string;
+  }>;
+  monthlyStats: Array<{
+    month: string;
+    year: number;
+    classesCompleted: number;
+    classesCancelled: number;
+    newStudents: number;
+  }>;
+  overall: {
+    averageRating: number;
+    cancelledClasses: number;
+    completedClasses: number;
+    rescheduledClasses: number;
+    totalClasses: number;
+    totalStudents: number;
+  };
+}
+
+export interface IClassProps {
+  _id: string;
+  acceptingResponses: boolean;
+  batch: IBatch;
+  classReport: {
+    totalLectures: number;
+    totalDuration: number; //in minutes
+    syllabusCompleted: number;
+    lastUpdated: string;
+  };
+  createdAt: string;
+  description: string | null;
+  topic: string | null;
+  date: string;
+  startTime: string;
+  endTime: string;
+  meetingLink: string | null;
+  notes: string | null;
+  recordingLink: string | null;
+  resources: Array<{
+    title: string;
+    fileUrl: string;
+    fileType: string;
+    uploadedAt: string;
+  }>;
+  shareCode: string;
+  shareLink: string;
+  subject: string;
+  teacher: string;
+  updatedAt: string;
+}
+
+export interface ILectureProps {
+  _id: string;
+  batch: { _id: string; name: string };
+  class: { _id: string; subject: string };
+  mentor: string;
+  chapters: Array<{ _id: string; name: string }>;
+  topics: Array<{ _id: string; name: string }>;
+  subtopics: Array<{ _id: string; name: string }>;
+  duration: number;
+  lectureDate: string;
+  resources: Array<{
+    title: string;
+    fileUrl: string;
+    fileType: string;
+    uploadedAt: string;
+  }>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type DaySchedule = {
+  day: string;
+  date: string;
+  classes: ILectureProps[];
+};
+
+export interface EventItem {
+  title: string;
+  subtitle: Array<{ _id: string; name: string }>;
+  time: string;
+  batchName: string;
+}
+
+export type EventsData = Record<string, EventItem[]>;

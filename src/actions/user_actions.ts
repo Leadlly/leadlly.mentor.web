@@ -1,17 +1,21 @@
 "use server";
 
-import {
-  ForgotPasswordProps,
-  ResetPasswordProps,
-  SignUpDataProps,
-  MentorPersonalInfoProps,
-} from "@/helpers/types";
-import { getCookie } from "./cookie_actions";
-import { revalidateTag } from "next/cache";
+import { revalidateTag, updateTag } from "next/cache";
+
+import { error } from "console";
+
 // import { Student } from "@/helpers/types";
 
 import apiClient from "@/apiClient/apiClient";
-import { error } from "console";
+import {
+  ForgotPasswordProps,
+  IMentorReportProps,
+  MentorPersonalInfoProps,
+  ResetPasswordProps,
+  SignUpDataProps,
+} from "@/helpers/types";
+
+import { getCookie } from "./cookie_actions";
 
 export const signUpUser = async (data: SignUpDataProps) => {
   try {
@@ -116,6 +120,7 @@ export const resetPassword = async (
 
 export const getUser = async () => {
   const token = await getCookie("token");
+
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/auth/user`,
@@ -126,14 +131,15 @@ export const getUser = async () => {
           Cookie: `token=${token}`,
         },
         credentials: "include",
-        // cache: "force-cache",
+        cache: "force-cache",
         next: {
           tags: ["userData"],
         },
       }
     );
 
-    const data = await res.json();
+    const data: { success: boolean; user: MentorPersonalInfoProps } =
+      await res.json();
 
     return data;
   } catch (error: unknown) {
@@ -149,7 +155,7 @@ export const getUser = async () => {
 
 export const mentorPersonalInfo = async (data: any) => {
   const token = await getCookie("token");
-  console.log(data, "here");
+
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/info/save`,
@@ -165,7 +171,7 @@ export const mentorPersonalInfo = async (data: any) => {
     );
 
     const responseData = await res.json();
-    revalidateTag("userData");
+    updateTag("userData");
 
     return responseData;
   } catch (error: unknown) {
@@ -214,6 +220,10 @@ export const getAllStudents = async () => {
 };
 
 export const Studentinfo = async (id: string) => {
+  if (!id || id === "undefined") {
+    throw new Error("Student ID is required");
+  }
+
   const token = await getCookie("token");
 
   try {
@@ -239,9 +249,6 @@ export const Studentinfo = async (id: string) => {
     }
 
     const responseData = await res.json();
-    revalidateTag('weeklyReport')
-    revalidateTag('monthlyReport')
-    revalidateTag('overallReport')
 
     return responseData;
   } catch (error) {
@@ -268,7 +275,6 @@ export const getplanner = async (id: any) => {
       // },
       credentials: "include",
     });
-
 
     const responseData = await res.json();
     return responseData;
@@ -305,6 +311,40 @@ export const getTracker = async (subject: string | string[], id: any) => {
       throw new Error(`Error in fetching user tracker: ${error.message}`);
     } else {
       throw new Error("An unknown error occurred while fetching user tracker!");
+    }
+  }
+};
+
+export const getTeacherReport = async () => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/report`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "force-cache",
+        next: {
+          tags: ["teacher-report"],
+          revalidate: 60 * 60 * 24,
+        },
+      }
+    );
+
+    const data: { success: boolean; data: IMentorReportProps } =
+      await res.json();
+
+    return data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error in fetching report: ${error.message}`);
+    } else {
+      throw new Error("An unknown error occurred while fetching report!");
     }
   }
 };
