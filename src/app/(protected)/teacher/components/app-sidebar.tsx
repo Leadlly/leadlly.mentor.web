@@ -22,18 +22,18 @@ import NavMain from "./nav-main";
 const navItems = [
   {
     title: "Dashboard",
-    href: "/teacher/:teacherId",
+    href: "/teacher",
     icon: LayoutDashboard,
   },
   {
-    title: "Classes",
-    href: "/teacher/:teacherId/classes",
+    title: "Batches",
+    href: "/teacher/batches",
     icon: Presentation,
   },
   {
-    title: "Add Classes",
-    href: "/teacher/:teacherId/add-classes",
-    icon: CalendarPlus,
+    title: "Classes",
+    href: "/teacher/classes",
+    icon: Presentation,
   },
 ];
 

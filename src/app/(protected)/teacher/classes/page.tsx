@@ -6,7 +6,7 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
-import { getBatches } from "@/actions/batch_actions";
+import { getAllClasses } from "@/actions/batch_actions";
 
 import ClassList from "./components/class-list";
 
@@ -14,8 +14,8 @@ const Page = async () => {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ["batches"],
-    queryFn: getBatches,
+    queryKey: ["all-classes"],
+    queryFn: getAllClasses,
   });
 
   return (

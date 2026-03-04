@@ -220,6 +220,10 @@ export const getAllStudents = async () => {
 };
 
 export const Studentinfo = async (id: string) => {
+  if (!id || id === "undefined") {
+    throw new Error("Student ID is required");
+  }
+
   const token = await getCookie("token");
 
   try {
@@ -245,9 +249,6 @@ export const Studentinfo = async (id: string) => {
     }
 
     const responseData = await res.json();
-    updateTag("weeklyReport");
-    updateTag("monthlyReport");
-    updateTag("overallReport");
 
     return responseData;
   } catch (error) {

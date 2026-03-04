@@ -326,6 +326,8 @@ export type SignUpDataProps = {
   name: string;
   email: string;
   password: string;
+  role: "teacher" | "mentor";
+  instituteCode?: string;
 };
 
 export type SignInDataProps = {

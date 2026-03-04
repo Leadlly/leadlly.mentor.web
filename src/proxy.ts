@@ -18,7 +18,7 @@ export async function proxy(request: NextRequest) {
     path.startsWith("/api/auth") ||
     path.startsWith("/api/google");
 
-  if (token && isPublicPath) {
+  if (token && isPublicPath && !path.startsWith("/api")) {
     return NextResponse.redirect(new URL("/", request.nextUrl));
   }
 
@@ -54,7 +54,7 @@ export async function proxy(request: NextRequest) {
 
     if (isTeacher && path === "/") {
       return NextResponse.redirect(
-        new URL(`/teacher/${userData.user?._id}`, request.nextUrl)
+        new URL("/teacher", request.nextUrl)
       );
     }
   }
@@ -78,7 +78,6 @@ export const config = {
     "/",
     "/Status",
     "/initial-info",
-    "/api/((?!auth).*)",
-    "/api/((?!google).*)",
+    "/api/((?!auth|google).*)",
   ],
 };

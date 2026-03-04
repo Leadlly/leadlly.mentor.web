@@ -14,10 +14,8 @@ import { Button } from "@/components/ui/button";
 import { DaySchedule } from "@/helpers/types";
 
 const WeekCalendar = ({ timeframe }: { timeframe: string }) => {
-  const { teacherId } = useParams();
-
   const { data } = useSuspenseQuery({
-    queryKey: ["weekly-lectures", timeframe, teacherId],
+    queryKey: ["weekly-lectures", timeframe],
     queryFn: () => getLectures(timeframe),
   });
 

@@ -13,20 +13,18 @@ import ClassesTaken from "./components/classes-taken";
 import SyllabusFinished from "./components/syllabus-finished";
 import WeekCalendar from "./components/week-calendar";
 
-const Page = async ({ params }: { params: Promise<{ teacherId: string }> }) => {
-  const { teacherId } = await params;
-
+const Page = async () => {
   const queryClient = new QueryClient();
 
   const timeframe = "weekly";
 
   await Promise.all([
     queryClient.prefetchQuery({
-      queryKey: ["teacher-report", teacherId],
+      queryKey: ["teacher-report"],
       queryFn: getTeacherReport,
     }),
     queryClient.prefetchQuery({
-      queryKey: ["weekly-lectures", timeframe, teacherId],
+      queryKey: ["weekly-lectures", timeframe],
       queryFn: () => getLectures(timeframe),
     }),
   ]);

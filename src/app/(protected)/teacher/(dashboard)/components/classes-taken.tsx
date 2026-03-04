@@ -10,10 +10,8 @@ import { getTeacherReport } from "@/actions/user_actions";
 import { cn } from "@/lib/utils";
 
 const ClassesTaken = () => {
-  const { teacherId } = useParams<{ teacherId: string }>();
-
   const { data: report } = useSuspenseQuery({
-    queryKey: ["teacher-report", teacherId],
+    queryKey: ["teacher-report"],
     queryFn: getTeacherReport,
   });
 

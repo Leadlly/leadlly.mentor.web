@@ -3,10 +3,11 @@ import Tracker from "./_components/Trackerpage";
 import React from "react";
 
 const page = async ({
-  params: { studentId },
+  params,
 }: {
-  params: { studentId: string };
+  params: Promise<{ studentId: string }>;
 }) => {
+  const { studentId } = await params;
   const studentInfo = await Studentinfo(studentId);
 
   return (

@@ -7,7 +7,9 @@ import { useRouter } from "next/navigation";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Key, Loader2, Mail, User } from "lucide-react";
+import { Eye, EyeOff, Key, Loader2, Mail, User, School } from "lucide-react";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 import { signUpUser } from "@/actions/user_actions";
@@ -30,7 +32,12 @@ const SignUpForm = () => {
 
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      role: "teacher",
+    },
   });
+
+  const selectedRole = form.watch("role");
 
   const onFormSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
@@ -120,6 +127,60 @@ const SignUpForm = () => {
             </FormItem>
           )}
         />
+
+        <FormField
+          control={form.control}
+          name="role"
+          render={({ field }) => (
+            <FormItem className="space-y-3">
+              <FormControl>
+                <RadioGroup
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                  className="flex gap-4"
+                >
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="teacher" />
+                    </FormControl>
+                    <Label className="font-normal text-lg cursor-pointer">
+                      Teacher
+                    </Label>
+                  </FormItem>
+                  <FormItem className="flex items-center space-x-2 space-y-0">
+                    <FormControl>
+                      <RadioGroupItem value="mentor" />
+                    </FormControl>
+                    <Label className="font-normal text-lg cursor-pointer">
+                      Mentor
+                    </Label>
+                  </FormItem>
+                </RadioGroup>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {selectedRole === "teacher" && (
+          <FormField
+            control={form.control}
+            name="instituteCode"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    placeholder="Enter Institute Code"
+                    icon1={<School className="w-5 h-5 opacity-70" />}
+                    className="focus-visible:ring-0 text-lg focus:ring-offset-0 uppercase"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <Button
           type="submit"

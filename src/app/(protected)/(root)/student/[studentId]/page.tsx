@@ -1,11 +1,14 @@
-import { Params } from "@/helpers/types";
 import CommunicationPanel from "./components/CommunicationPanel";
 import StudentDashboard from "./components/StudentDashboard";
 import { ReactElement } from "react";
-import { getMeetings } from "@/actions/meeting_actions";
 import { Studentinfo } from "@/actions/user_actions";
 
-export default async function StudentPage({ params: { studentId } }: Params) {
+export default async function StudentPage({
+  params,
+}: {
+  params: Promise<{ studentId: string }>;
+}) {
+  const { studentId } = await params;
   const studentData = Studentinfo(studentId);
 
   const [student] = await Promise.all([studentData]);
