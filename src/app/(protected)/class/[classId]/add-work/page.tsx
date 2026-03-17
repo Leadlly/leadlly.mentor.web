@@ -70,11 +70,11 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
   const totalCount = pagination?.total || allLectures.length;
 
   return (
-    <div className="w-full space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="w-full space-y-4 md:space-y-6">
+      <div className="flex items-start md:items-center justify-between gap-3 flex-col sm:flex-row">
         <div>
-          <h2 className="text-lg font-bold text-gray-900">Add Work</h2>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h2 className="text-base md:text-lg font-bold text-gray-900">Add Work</h2>
+          <p className="text-xs md:text-sm text-gray-500 mt-0.5">
             Record what was taught today and update student planners
           </p>
         </div>
@@ -88,18 +88,18 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
       </div>
 
       {totalCount > 0 && (
-        <div className="grid grid-cols-3 gap-4">
-          <div className="bg-purple-50 rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-purple-700">{totalCount}</p>
-            <p className="text-xs font-medium text-purple-600 mt-0.5">Total Lectures</p>
+        <div className="grid grid-cols-3 gap-2 md:gap-4">
+          <div className="bg-purple-50 rounded-xl p-3 md:p-4 text-center">
+            <p className="text-lg md:text-2xl font-bold text-purple-700">{totalCount}</p>
+            <p className="text-[10px] md:text-xs font-medium text-purple-600 mt-0.5">Total Lectures</p>
           </div>
-          <div className="bg-blue-50 rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-blue-700">{todaysLectures.length}</p>
-            <p className="text-xs font-medium text-blue-600 mt-0.5">Today</p>
+          <div className="bg-blue-50 rounded-xl p-3 md:p-4 text-center">
+            <p className="text-lg md:text-2xl font-bold text-blue-700">{todaysLectures.length}</p>
+            <p className="text-[10px] md:text-xs font-medium text-blue-600 mt-0.5">Today</p>
           </div>
-          <div className="bg-green-50 rounded-xl p-4 text-center">
-            <p className="text-2xl font-bold text-green-700">{pastLectures.length}</p>
-            <p className="text-xs font-medium text-green-600 mt-0.5">Past</p>
+          <div className="bg-green-50 rounded-xl p-3 md:p-4 text-center">
+            <p className="text-lg md:text-2xl font-bold text-green-700">{pastLectures.length}</p>
+            <p className="text-[10px] md:text-xs font-medium text-green-600 mt-0.5">Past</p>
           </div>
         </div>
       )}
@@ -171,17 +171,17 @@ const LectureCard = ({ lecture, isToday = false }: { lecture: any; isToday?: boo
   const subtopicNames = lecture.subtopics?.map((s: any) => s.name) || [];
 
   return (
-    <div className={isToday ? "bg-white border border-purple-200 rounded-xl p-4 shadow-sm" : "bg-gray-50/80 border border-gray-100 rounded-xl p-4"}>
-      <div className="flex items-start justify-between gap-4">
-        <div className="space-y-1.5 flex-1 min-w-0">
+    <div className={isToday ? "bg-white border border-purple-200 rounded-xl p-3 md:p-4 shadow-sm" : "bg-gray-50/80 border border-gray-100 rounded-xl p-3 md:p-4"}>
+      <div className="flex items-start justify-between gap-2 md:gap-4">
+        <div className="space-y-1 md:space-y-1.5 flex-1 min-w-0">
           <div className="flex items-center gap-2">
-            <BookOpen className={`size-4 shrink-0 ${isToday ? "text-purple-600" : "text-gray-400"}`} />
-            <span className="font-semibold text-gray-900 text-sm truncate">{chapters}</span>
+            <BookOpen className={`size-3.5 md:size-4 shrink-0 ${isToday ? "text-purple-600" : "text-gray-400"}`} />
+            <span className="font-semibold text-gray-900 text-xs md:text-sm truncate">{chapters}</span>
           </div>
           {topicNames.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 ml-6">
+            <div className="flex flex-wrap gap-1 md:gap-1.5 ml-5 md:ml-6">
               {topicNames.map((name: string, i: number) => (
-                <span key={i} className={`text-xs px-2 py-0.5 rounded-full font-medium ${isToday ? "bg-purple-50 text-purple-700" : "bg-gray-100 text-gray-600"}`}>{name}</span>
+                <span key={i} className={`text-[10px] md:text-xs px-1.5 md:px-2 py-0.5 rounded-full font-medium ${isToday ? "bg-purple-50 text-purple-700" : "bg-gray-100 text-gray-600"}`}>{name}</span>
               ))}
             </div>
           )}

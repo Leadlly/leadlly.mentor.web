@@ -11,25 +11,23 @@ import Notifications from "./notifications";
 
 const MainHeader = () => {
   const pathname = usePathname();
-
   const { user } = useAppSelector((state) => state.user);
 
   const getHeading = useCallback(() => {
-    if (pathname === `/teacher/${user?._id}`)
-      return `Hey ${user?.firstname} 👋`;
-    if (pathname === `/teacher/${user?._id}/classes`) return "Your Classes";
-    if (pathname === `/teacher/${user?._id}/add-classes`)
-      return "Manage Classes";
-  }, [pathname, user?._id]);
+    if (pathname === "/teacher") return `Hey ${user?.firstname ?? ""}`;
+    if (pathname.startsWith("/teacher/classes")) return "Classes";
+    if (pathname.startsWith("/teacher/batches")) return "Batches";
+    if (pathname.startsWith("/teacher/students")) return "Students";
+    if (pathname.startsWith("/class/")) return "Class";
+    return "";
+  }, [pathname, user?.firstname]);
 
   return (
-    <div className="flex items-center justify-between px-3 py-2">
+    <div className="flex items-center justify-between px-3 md:px-4 py-2.5 sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-50">
       <div className="flex items-center gap-3">
-        <SidebarTrigger />
-
-        <SidebarSeparator orientation="vertical" className="h-5 w-px" />
-
-        <p className="text-2xl font-semibold">{getHeading()}</p>
+        <SidebarTrigger className="hidden md:flex" />
+        <SidebarSeparator orientation="vertical" className="h-5 w-px hidden md:block" />
+        <p className="text-lg md:text-2xl font-bold text-gray-900">{getHeading()}</p>
       </div>
 
       <Notifications />

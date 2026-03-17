@@ -24,7 +24,7 @@ const Page = async () => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <section className="p-4 max-w-7xl mx-auto">
+      <section className="px-3 py-3 md:p-4 max-w-7xl mx-auto">
         <Suspense
           fallback={
             <div className="flex items-center justify-center min-h-[60vh] text-gray-400 animate-pulse">

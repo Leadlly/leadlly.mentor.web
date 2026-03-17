@@ -17,8 +17,8 @@ const BatchList = () => {
   });
 
   if (isLoading) {
-    return <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-pulse">
-        {[1,2,3].map(i => <div key={i} className="h-48 bg-gray-100 rounded-3xl"></div>)}
+    return <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6 animate-pulse">
+        {[1,2,3].map(i => <div key={i} className="h-36 md:h-48 bg-gray-100 rounded-2xl md:rounded-3xl"></div>)}
     </div>;
   }
 
@@ -32,7 +32,7 @@ const BatchList = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-6">
       {batches.map((batch: any) => (
         <BatchCard key={batch._id} batch={batch} />
       ))}

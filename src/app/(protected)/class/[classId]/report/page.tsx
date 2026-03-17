@@ -35,14 +35,14 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
 
   return (
     <div className="w-full h-full">
-      <div className="flex flex-col space-y-8 pb-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+      <div className="flex flex-col space-y-4 md:space-y-8 pb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
           {/* Left Column */}
-          <div className="space-y-6 lg:space-y-8">
+          <div className="space-y-4 md:space-y-6 lg:space-y-8">
             {/* Syllabus Section */}
-            <div className="space-y-3">
-              <h2 className="text-[18px] font-bold text-gray-900 tracking-tight">Syllabus</h2>
-              <div className="bg-white border border-[#F2E0FF] rounded-[20px] p-5 lg:p-6 space-y-5 shadow-sm">
+            <div className="space-y-2 md:space-y-3">
+              <h2 className="text-base md:text-[18px] font-bold text-gray-900 tracking-tight">Syllabus</h2>
+              <div className="bg-white border border-[#F2E0FF] rounded-2xl md:rounded-[20px] p-4 md:p-5 lg:p-6 space-y-4 md:space-y-5 shadow-sm">
                 
                 {/* Syllabus Completed */}
                 <div className="space-y-2">
@@ -80,19 +80,19 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
             </div>
 
             {/* Classes taken Section */}
-            <div className="space-y-3">
-              <h2 className="text-[18px] font-bold text-gray-900 tracking-tight">Classes taken</h2>
-              <div className="grid grid-cols-2 gap-4 lg:gap-5">
+            <div className="space-y-2 md:space-y-3">
+              <h2 className="text-base md:text-[18px] font-bold text-gray-900 tracking-tight">Classes taken</h2>
+              <div className="grid grid-cols-2 gap-3 md:gap-4 lg:gap-5">
                 
-                <div className="bg-[#FAF5FF] rounded-[20px] p-5 flex flex-col items-center justify-center gap-1.5 lg:gap-2 transition-transform hover:scale-[1.02]">
-                  <div className="text-gray-600 font-bold text-[13px]">Total Class</div>
-                  <div className="text-[#A855F7] text-3xl lg:text-4xl font-bold">{totalClasses}</div>
+                <div className="bg-[#FAF5FF] rounded-2xl md:rounded-[20px] p-3 md:p-5 flex flex-col items-center justify-center gap-1 md:gap-1.5 lg:gap-2 transition-transform hover:scale-[1.02]">
+                  <div className="text-gray-600 font-bold text-[11px] md:text-[13px]">Total Class</div>
+                  <div className="text-[#A855F7] text-2xl md:text-3xl lg:text-4xl font-bold">{totalClasses}</div>
                 </div>
 
-                <div className="bg-[#FAF5FF] rounded-[20px] p-5 flex flex-col items-center justify-center gap-1.5 lg:gap-2 transition-transform hover:scale-[1.02]">
-                  <div className="text-gray-600 font-bold text-[13px]">Total Time</div>
-                  <div className="text-[#A855F7] text-3xl lg:text-4xl font-bold flex items-baseline gap-1">
-                    {totalHours} <span className="text-lg lg:text-xl font-bold">hr</span>
+                <div className="bg-[#FAF5FF] rounded-2xl md:rounded-[20px] p-3 md:p-5 flex flex-col items-center justify-center gap-1 md:gap-1.5 lg:gap-2 transition-transform hover:scale-[1.02]">
+                  <div className="text-gray-600 font-bold text-[11px] md:text-[13px]">Total Time</div>
+                  <div className="text-[#A855F7] text-2xl md:text-3xl lg:text-4xl font-bold flex items-baseline gap-1">
+                    {totalHours} <span className="text-base md:text-lg lg:text-xl font-bold">hr</span>
                   </div>
                 </div>
 
@@ -101,10 +101,10 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
           </div>
 
           {/* Right Column */}
-          <div className="space-y-3 lg:space-y-4">
+          <div className="space-y-2 md:space-y-3 lg:space-y-4">
             <h2 className="text-[18px] font-bold text-transparent select-none hidden lg:block">Spacer</h2>
             {/* Syllabus Report Box */}
-            <div className="bg-white border border-[#F2E0FF] rounded-[20px] p-5 lg:p-6 h-full shadow-sm max-h-[350px] overflow-hidden flex flex-col">
+            <div className="bg-white border border-[#F2E0FF] rounded-2xl md:rounded-[20px] p-4 md:p-5 lg:p-6 h-full shadow-sm max-h-[350px] overflow-hidden flex flex-col">
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className="bg-[#FAF5FF] p-2 rounded-xl">

@@ -32,7 +32,7 @@ const ClassTab = () => {
   ];
 
   return (
-    <div className="flex border-b border-gray-100 mb-8 gap-8 bg-white">
+    <div className="flex border-b border-gray-100 mb-4 md:mb-8 gap-3 md:gap-8 bg-white overflow-x-auto scrollbar-hide">
       {tabs.map((tab) => {
         const isActive = pathname === tab.href;
         return (
@@ -42,7 +42,7 @@ const ClassTab = () => {
               pathname: tab.href,
               query: searchParams.toString(),
             }}
-            className={`pb-4 text-[15px] font-bold transition-all relative ${
+            className={`pb-3 md:pb-4 text-xs md:text-[15px] font-bold transition-all relative whitespace-nowrap shrink-0 ${
               isActive
                 ? "text-[#A855F7]"
                 : "text-gray-500 hover:text-gray-700"

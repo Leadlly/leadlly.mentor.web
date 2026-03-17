@@ -132,22 +132,22 @@ const AttendancePage = () => {
   return (
     <div className="w-full min-h-screen bg-[#FAFAFA] flex flex-col">
       {/* Header outside */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-4 px-8 py-6 mb-2">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-4 px-4 md:px-8 py-4 md:py-6 mb-1 md:mb-2">
         <div className="flex items-center gap-3">
           <div className="bg-blue-100 p-2 rounded-xl text-blue-600">
-            <Users className="size-6" />
+            <Users className="size-5 md:size-6" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+            <h1 className="text-lg md:text-2xl font-bold text-gray-900 tracking-tight">
               {selectedBatchId ? "Class Attendance" : "All Students"}
             </h1>
-            <p className="text-xs text-gray-500 font-medium">
+            <p className="text-[10px] md:text-xs text-gray-500 font-medium">
               {selectedBatchId ? "Marking attendance for selected class" : "Listing all students from your batches"}
             </p>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
+        <div className="flex flex-wrap items-center gap-2 md:gap-4 w-full md:w-auto">
           <Select value={selectedBatchId} onValueChange={(val) => {
             setSelectedBatchId(val === "all" ? "" : val);
             setSelectedClassId("");
@@ -179,7 +179,7 @@ const AttendancePage = () => {
         </div>
       </div>
 
-      <div className="flex-1 w-full bg-white rounded-t-[40px] shadow-[0_-4px_20px_rgba(0,0,0,0.02)] px-8 py-8 border-t border-gray-100 flex flex-col">
+      <div className="flex-1 w-full bg-white rounded-t-[24px] md:rounded-t-[40px] shadow-[0_-4px_20px_rgba(0,0,0,0.02)] px-4 md:px-8 py-5 md:py-8 border-t border-gray-100 flex flex-col">
         {isLoadingStudents ? (
           <div className="space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
@@ -187,23 +187,23 @@ const AttendancePage = () => {
             ))}
           </div>
         ) : (
-          <div className="space-y-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <h2 className="text-xl font-bold text-gray-900 tracking-tight">
+          <div className="space-y-4 md:space-y-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+                <h2 className="text-base md:text-xl font-bold text-gray-900 tracking-tight">
                   {selectedBatchId ? "Batch Students" : "Your Students"}
                 </h2>
-                <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 bg-purple-50 text-[#A855F7] rounded-full text-[11px] font-bold border border-purple-100">
+                <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+                  <span className="px-2 py-0.5 bg-purple-50 text-[#A855F7] rounded-full text-[10px] md:text-[11px] font-bold border border-purple-100">
                     {displayedStudents?.length || 0} Total
                   </span>
                   {selectedClassId && (
                     <>
-                      <span className="px-2 py-0.5 bg-green-50 text-green-600 rounded-full text-[11px] font-bold border border-green-100 flex items-center gap-1">
+                      <span className="px-2 py-0.5 bg-green-50 text-green-600 rounded-full text-[10px] md:text-[11px] font-bold border border-green-100 flex items-center gap-1">
                         <Check className="size-3" />
                         {presentCount} Present
                       </span>
-                      <span className="px-2 py-0.5 bg-red-50 text-red-600 rounded-full text-[11px] font-bold border border-red-100 flex items-center gap-1">
+                      <span className="px-2 py-0.5 bg-red-50 text-red-600 rounded-full text-[10px] md:text-[11px] font-bold border border-red-100 flex items-center gap-1">
                         <X className="size-3" />
                         {absentCount} Absent
                       </span>
@@ -213,12 +213,12 @@ const AttendancePage = () => {
               </div>
               
               {selectedClassId && (
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 md:gap-3">
                   <Button 
                     variant="outline" 
                     size="sm" 
                     onClick={() => markAll("present")}
-                    className="rounded-full font-bold text-green-600 hover:text-green-700 hover:bg-green-50 border-green-100 h-9 px-4"
+                    className="rounded-full font-bold text-green-600 hover:text-green-700 hover:bg-green-50 border-green-100 h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm"
                   >
                     Mark All Present
                   </Button>
@@ -226,7 +226,7 @@ const AttendancePage = () => {
                     variant="outline" 
                     size="sm" 
                     onClick={() => markAll("absent")}
-                    className="rounded-full font-bold text-red-600 hover:text-red-700 hover:bg-red-50 border-red-100 h-9 px-4"
+                    className="rounded-full font-bold text-red-600 hover:text-red-700 hover:bg-red-50 border-red-100 h-8 md:h-9 px-3 md:px-4 text-xs md:text-sm"
                   >
                     Mark All Absent
                   </Button>
@@ -234,19 +234,19 @@ const AttendancePage = () => {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 pb-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 md:gap-4 pb-10">
               {displayedStudents?.map((student: any) => (
                 <div 
                   key={student._id} 
-                  className="bg-white border border-gray-200 p-4 rounded-[24px] transition-all flex items-center justify-between group h-auto min-h-[90px] hover:border-purple-300 hover:bg-purple-50/5"
+                  className="bg-white border border-gray-200 p-3 md:p-4 rounded-2xl md:rounded-[24px] transition-all flex items-center justify-between group h-auto min-h-[80px] md:min-h-[90px] hover:border-purple-300 hover:bg-purple-50/5"
                 >
-                  <div className="flex items-center gap-4 min-w-0 flex-1">
-                    <div className="size-12 rounded-xl bg-gradient-to-br from-gray-50 to-white text-gray-500 flex items-center justify-center font-bold text-lg border border-gray-100 uppercase shadow-sm shrink-0 group-hover:text-[#A855F7] group-hover:border-purple-100 transition-all">
+                  <div className="flex items-center gap-3 md:gap-4 min-w-0 flex-1">
+                    <div className="size-10 md:size-12 rounded-lg md:rounded-xl bg-gradient-to-br from-gray-50 to-white text-gray-500 flex items-center justify-center font-bold text-sm md:text-lg border border-gray-100 uppercase shadow-sm shrink-0 group-hover:text-[#A855F7] group-hover:border-purple-100 transition-all">
                       {student.firstname[0]}{student.lastname?.[0]}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-bold text-[18px] text-gray-900 group-hover:text-[#A855F7] transition-colors truncate">
+                      <div className="flex items-center gap-1.5 md:gap-2 mb-0.5 md:mb-1 flex-wrap">
+                        <h3 className="font-bold text-sm md:text-[18px] text-gray-900 group-hover:text-[#A855F7] transition-colors truncate">
                           {student.firstname} {student.lastname}
                         </h3>
                         <span className="px-2 py-0.5 bg-purple-50 text-[#A855F7] rounded-md text-[9px] font-black uppercase tracking-tighter border border-purple-100 shrink-0">
@@ -259,10 +259,10 @@ const AttendancePage = () => {
                         )}
                       </div>
                       
-                      <div className="flex flex-wrap items-center gap-y-1 gap-x-4">
-                        <div className="flex items-center gap-1.5 text-gray-400">
+                      <div className="flex flex-wrap items-center gap-y-1 gap-x-2 md:gap-x-4">
+                        <div className="hidden sm:flex items-center gap-1.5 text-gray-400">
                           <Mail className="size-3" />
-                          <span className="text-[12px] font-medium truncate max-w-[150px]">{student.email}</span>
+                          <span className="text-[11px] md:text-[12px] font-medium truncate max-w-[120px] md:max-w-[150px]">{student.email}</span>
                         </div>
                         
                         <div className="flex items-center gap-3">
@@ -283,12 +283,12 @@ const AttendancePage = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 shrink-0 ms-4">
-                    <div className="flex bg-gray-50/80 border border-gray-200 p-1 rounded-2xl">
+                  <div className="flex items-center gap-2 md:gap-4 shrink-0 ms-2 md:ms-4">
+                    <div className="flex bg-gray-50/80 border border-gray-200 p-0.5 md:p-1 rounded-xl md:rounded-2xl">
                       <button
                         disabled={!selectedClassId}
                         onClick={() => handleStatusChange(student._id, "present")}
-                        className={`size-11 rounded-xl flex items-center justify-center transition-all font-bold cursor-pointer ${
+                        className={`size-9 md:size-11 rounded-lg md:rounded-xl flex items-center justify-center transition-all font-bold cursor-pointer text-sm md:text-base ${
                           attendanceData[student._id] === "present"
                             ? "bg-green-500 text-white shadow-lg shadow-green-100 scale-105"
                             : "text-gray-400 hover:text-gray-600 hover:bg-white"
@@ -300,7 +300,7 @@ const AttendancePage = () => {
                       <button
                         disabled={!selectedClassId}
                         onClick={() => handleStatusChange(student._id, "absent")}
-                        className={`size-11 rounded-xl flex items-center justify-center transition-all font-bold cursor-pointer ${
+                        className={`size-9 md:size-11 rounded-lg md:rounded-xl flex items-center justify-center transition-all font-bold cursor-pointer text-sm md:text-base ${
                           attendanceData[student._id] === "absent"
                             ? "bg-red-500 text-white shadow-lg shadow-red-100 scale-105"
                             : "text-gray-400 hover:text-gray-600 hover:bg-white"
@@ -312,8 +312,8 @@ const AttendancePage = () => {
                     </div>
 
                     <Link href={`/student/${student._id}`}>
-                      <Button variant="ghost" size="icon" className="rounded-full size-11 bg-white border border-gray-200 hover:border-purple-200 hover:bg-purple-50 hover:text-[#A855F7] transition-all cursor-pointer" title="View Report">
-                        <Eye className="size-5" />
+                      <Button variant="ghost" size="icon" className="rounded-full size-9 md:size-11 bg-white border border-gray-200 hover:border-purple-200 hover:bg-purple-50 hover:text-[#A855F7] transition-all cursor-pointer" title="View Report">
+                        <Eye className="size-4 md:size-5" />
                       </Button>
                     </Link>
                   </div>

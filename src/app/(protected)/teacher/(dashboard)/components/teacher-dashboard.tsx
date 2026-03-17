@@ -187,20 +187,20 @@ const TeacherDashboard = () => {
   ) || [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 md:space-y-6">
       {/* Overview Cards */}
       <div>
-        <h2 className="text-lg font-bold text-gray-800 mb-3">Overview</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <h2 className="text-base md:text-lg font-bold text-gray-800 mb-2 md:mb-3">Overview</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
           {cards.map((card, i) => (
-            <div key={i} className={`${card.bg} rounded-2xl p-4 flex items-start gap-3 border border-transparent`}>
-              <div className={`${card.iconBg} rounded-xl p-2`}>
-                <card.icon className={`size-5 ${card.iconColor}`} />
+            <div key={i} className={`${card.bg} rounded-xl md:rounded-2xl p-3 md:p-4 flex items-start gap-2 md:gap-3 border border-transparent`}>
+              <div className={`${card.iconBg} rounded-lg md:rounded-xl p-1.5 md:p-2`}>
+                <card.icon className={`size-4 md:size-5 ${card.iconColor}`} />
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-medium text-gray-500 truncate">{card.label}</p>
-                <p className={`text-2xl font-bold ${card.valueColor}`}>{card.value}</p>
-                {card.sub && <p className="text-[11px] text-gray-400 font-medium truncate">{card.sub}</p>}
+                <p className="text-[10px] md:text-xs font-medium text-gray-500 truncate">{card.label}</p>
+                <p className={`text-lg md:text-2xl font-bold ${card.valueColor}`}>{card.value}</p>
+                {card.sub && <p className="text-[9px] md:text-[11px] text-gray-400 font-medium truncate">{card.sub}</p>}
               </div>
             </div>
           ))}
@@ -208,8 +208,8 @@ const TeacherDashboard = () => {
       </div>
 
       {/* Today's Schedule + Class Status */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <div className="md:col-span-3 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4">
+        <div className="md:col-span-3 bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-gray-800">Today&apos;s Schedule</h3>
             <span className="text-xs font-medium text-gray-400">{dayjs().format("dddd, MMM DD")}</span>
@@ -236,7 +236,7 @@ const TeacherDashboard = () => {
           )}
         </div>
 
-        <div className="md:col-span-2 bg-white border border-gray-100 rounded-2xl p-5 shadow-sm flex flex-col items-center justify-center">
+        <div className="md:col-span-2 bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm flex flex-col items-center justify-center">
           <h3 className="font-bold text-gray-800 self-start mb-4">Class Status</h3>
           {classStatusTotal > 0 ? (
             <Chart
@@ -283,14 +283,14 @@ const TeacherDashboard = () => {
       </div>
 
       {/* Calendar */}
-      <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-gray-800">Calendar</h3>
+      <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
+        <div className="flex items-center justify-between mb-3 md:mb-4">
+          <h3 className="font-bold text-gray-800 text-sm md:text-base">Calendar</h3>
           <a href="/lecture-calendar" className="text-xs text-purple-600 font-semibold hover:underline">View All &rsaquo;</a>
         </div>
         <div className="flex overflow-x-auto">
           {weekData.map((item, i) => (
-            <div key={i} className={`shrink-0 flex-1 min-w-[100px] min-h-[110px] border-r border-gray-50 p-2 flex flex-col gap-2 last:border-r-0 ${item.isToday ? "bg-purple-50/40 rounded-xl" : ""}`}>
+            <div key={i} className={`shrink-0 flex-1 min-w-[80px] md:min-w-[100px] min-h-[90px] md:min-h-[110px] border-r border-gray-50 p-1.5 md:p-2 flex flex-col gap-1.5 md:gap-2 last:border-r-0 ${item.isToday ? "bg-purple-50/40 rounded-xl" : ""}`}>
               <div className="flex flex-col items-center border-b border-gray-50 pb-2 mb-1">
                 <span className="font-semibold text-gray-400 text-xs">{item.day}</span>
                 <span className={`font-bold text-sm ${item.isToday ? "text-purple-600" : "text-gray-600"}`}>{item.date}</span>
@@ -312,11 +312,11 @@ const TeacherDashboard = () => {
 
       {/* Monthly Trend */}
       {monthlyTrend.length > 0 && (
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-          <h3 className="font-bold text-gray-800 mb-4">Monthly Trend</h3>
+        <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
+          <h3 className="font-bold text-gray-800 mb-3 md:mb-4 text-sm md:text-base">Monthly Trend</h3>
           <Chart
             type="area"
-            height={250}
+            height={200}
             series={[
               { name: "Completed", data: monthlyTrend.map((m: any) => m.completed) },
               { name: "Cancelled", data: monthlyTrend.map((m: any) => m.cancelled) },
@@ -357,9 +357,9 @@ const TeacherDashboard = () => {
 
       {/* Batch Performance */}
       {dashboard.batchPerformance?.length > 0 && (
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-          <h3 className="font-bold text-gray-800 mb-4">Batch Performance</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
+          <h3 className="font-bold text-gray-800 mb-3 md:mb-4 text-sm md:text-base">Batch Performance</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
             {dashboard.batchPerformance.map((batch: any, i: number) => {
               const color = BATCH_COLORS[i % BATCH_COLORS.length];
               const trimmedName = batch.batchName?.length > 40 ? batch.batchName.slice(0, 40) + "..." : batch.batchName;
@@ -423,9 +423,9 @@ const TeacherDashboard = () => {
       )}
 
       {/* Subject Distribution + Attendance Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-          <h3 className="font-bold text-gray-800 mb-4">Subject Distribution</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+        <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
+          <h3 className="font-bold text-gray-800 mb-3 md:mb-4 text-sm md:text-base">Subject Distribution</h3>
           {subjectDist.length > 0 ? (
             <div className="flex gap-6">
               <div className="shrink-0">
@@ -483,8 +483,8 @@ const TeacherDashboard = () => {
           )}
         </div>
 
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-          <h3 className="font-bold text-gray-800 mb-4">Attendance Overview</h3>
+        <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
+          <h3 className="font-bold text-gray-800 mb-3 md:mb-4 text-sm md:text-base">Attendance Overview</h3>
           <div className="flex items-center gap-8">
             <div className="relative shrink-0">
               <Chart
@@ -544,9 +544,9 @@ const TeacherDashboard = () => {
       </div>
 
       {/* Recent Activity + Upcoming Classes */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-          <h3 className="font-bold text-gray-800 mb-4">Recent Activity</h3>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+        <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
+          <h3 className="font-bold text-gray-800 mb-3 md:mb-4 text-sm md:text-base">Recent Activity</h3>
           {dashboard.recentLectures?.length > 0 ? (
             <div className="space-y-1">
               {dashboard.recentLectures.map((lec: any) => (
@@ -588,8 +588,8 @@ const TeacherDashboard = () => {
           )}
         </div>
 
-        <div className="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-          <h3 className="font-bold text-gray-800 mb-4">Upcoming Classes</h3>
+        <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
+          <h3 className="font-bold text-gray-800 mb-3 md:mb-4 text-sm md:text-base">Upcoming Classes</h3>
           {dashboard.upcomingClasses?.length > 0 ? (
             <div className="space-y-3">
               {dashboard.upcomingClasses.map((cls: any) => (
