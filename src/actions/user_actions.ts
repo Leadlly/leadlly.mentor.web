@@ -219,6 +219,29 @@ export const getAllStudents = async () => {
   }
 };
 
+export const getInstituteStudents = async (instituteId: string) => {
+  const token = await getCookie("token");
+
+  try {
+    const endpoint = `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/institute/${instituteId}/students`;
+
+    const res = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${token}`,
+      },
+      credentials: "include",
+    });
+
+    const responseData = await res.json();
+    return responseData;
+  } catch (error) {
+    console.error("Error in fetching institute students:", (error as Error).message);
+    return { success: false, students: [] };
+  }
+};
+
 export const Studentinfo = async (id: string) => {
   if (!id || id === "undefined") {
     throw new Error("Student ID is required");
@@ -346,5 +369,37 @@ export const getTeacherReport = async () => {
     } else {
       throw new Error("An unknown error occurred while fetching report!");
     }
+  }
+};
+
+export const getTeacherDashboard = async () => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/dashboard`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.message || "Failed to fetch dashboard");
+    }
+
+    return data.data;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(`Error fetching dashboard: ${error.message}`);
+    }
+    throw new Error("An unknown error occurred while fetching dashboard!");
   }
 };
