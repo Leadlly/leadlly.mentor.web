@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { Share2, Plus, Calculator, FlaskConical, BookOpen, Dna, Monitor, Globe, Hourglass, Presentation } from "lucide-react";
+import { Share2, Plus, Calculator, FlaskConical, BookOpen, Dna, Monitor, Globe, Hourglass, Presentation, Megaphone } from "lucide-react";
 
 const getSubjectIcon = (subject: string = "") => {
   const s = subject.toLowerCase();
@@ -22,8 +22,12 @@ import { getAllClasses } from "@/actions/batch_actions";
 import { IClassProps } from "@/helpers/types";
 import { Button } from "@/components/ui/button";
 import { AddClassModal } from "./add-class-modal";
+import AnnouncementModal from "@/components/shared/AnnouncementModal";
 
 const ClassList = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
+  
   const { data } = useSuspenseQuery({
     queryKey: ["all-classes"],
     queryFn: getAllClasses,
@@ -39,56 +43,60 @@ const ClassList = () => {
       {data && data.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
           {data.map((item: IClassProps | any) => (
-            <div
-              key={item._id}
-              className="bg-white rounded-[24px] p-6 shadow-sm border border-gray-100 flex flex-col h-full relative hover:shadow-md transition-shadow"
-            >
-              <div className="flex justify-between items-start gap-3 w-full">
-                <div className="flex gap-3 items-center flex-1 min-w-0">
-                  <div className="bg-blue-600 rounded-full shrink-0 flex items-center justify-center size-[48px] shadow-sm">
-                    {React.createElement(getSubjectIcon(item.subject), { className: "text-white size-6" })}
+            <Link key={item._id} href={`/class/${item._id}`} className="block h-full group">
+              <div className="bg-white rounded-3xl p-6 border border-gray-200 flex flex-col h-full relative group-hover:border-purple-300 transition-colors cursor-pointer">
+                <div className="flex justify-between items-start gap-3 w-full">
+                  <div className="flex gap-4 items-center flex-1 min-w-0">
+                    <div className="bg-blue-600 rounded-2xl shrink-0 flex items-center justify-center size-12">
+                      {React.createElement(getSubjectIcon(item.subject), { className: "text-white size-6" })}
+                    </div>
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <h3 className="text-[17px] sm:text-lg font-semibold text-gray-900 truncate w-full capitalize group-hover:text-purple-700 transition-colors" title={item.subject}>
+                        {item.subject || "Unknown Class"}
+                      </h3>
+                      <p className="text-[13px] text-gray-500 font-medium truncate w-full mt-0.5 capitalize">
+                        {item.batch?.name || "No Batch"} • Std {item.batch?.standard || "N/A"}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex flex-col flex-1 min-w-0">
-                    <h3 className="text-[18px] lg:text-[19px] font-bold text-gray-900 truncate w-full capitalize" title={item.subject}>
-                      {item.subject || "Unknown Class"}
-                    </h3>
-                    <p className="text-[13px] text-gray-500 font-semibold truncate w-full mt-0.5 capitalize">
-                      {item.batch?.name || "No Batch"} • Std {item.batch?.standard || "N/A"}
-                    </p>
+                  <div className="bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-xs font-semibold shrink-0">
+                    {item.batch?.students?.length || 480} students
                   </div>
                 </div>
-                <div className="bg-purple-100 text-purple-600 px-3 py-1.5 rounded-full text-[12px] font-bold shrink-0 shadow-sm border border-purple-200">
-                  {item.batch?.students?.length || 480} students
-                </div>
-              </div>
 
-              <div className="flex items-center gap-3 mt-auto pt-8 w-full">
-                <Link
-                  href={`/class/${item._id}`}
-                  className="flex-1 min-w-0"
-                >
+                <div className="flex items-center gap-3 mt-auto pt-6 w-full justify-end">
                   <Button 
-                    variant="outline" 
-                    className="w-full rounded-xl border border-purple-200 text-purple-600 hover:bg-purple-50 h-[44px] text-sm font-bold transition-all px-2 shadow-sm"
+                    className="rounded-lg bg-gray-50 hover:bg-purple-50 text-gray-700 hover:text-purple-700 h-9 text-xs font-semibold transition-all px-3"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setSelectedClassId(item._id);
+                      setIsModalOpen(true);
+                    }}
                   >
-                    View Class
+                    <Megaphone className="size-3.5 mr-1.5 shrink-0" />
+                    <span className="truncate">Add Announcement</span>
                   </Button>
-                </Link>
-
-                <Button 
-                  className="flex-1 min-w-0 rounded-xl bg-purple-600 hover:bg-purple-700 text-white h-[44px] text-sm font-bold transition-all px-2 shadow-sm pointer-events-none"
-                >
-                  <Plus className="size-4 mr-1 shrink-0" />
-                  <span className="truncate">Add Work</span>
-                </Button>
+                </div>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       ) : (
         <div className="min-h-[400px] flex items-center justify-center text-center text-gray-500 font-medium text-lg bg-gray-50 rounded-[24px] mx-4 border border-dashed border-gray-200">
           No classes found. Create one to get started!
         </div>
+      )}
+
+      {selectedClassId && (
+        <AnnouncementModal 
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedClassId(null);
+          }}
+          classId={selectedClassId}
+        />
       )}
     </>
   );

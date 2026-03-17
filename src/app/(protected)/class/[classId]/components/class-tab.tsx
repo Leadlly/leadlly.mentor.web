@@ -26,47 +26,35 @@ const ClassTab = () => {
 
   const tabs = [
     { name: "Report", href: `/class/${classId}/report` },
-    { name: "Students", href: `/class/${classId}/students` },
+    { name: "Announcements", href: `/class/${classId}/announcements` },
+    { name: "Add Notes/DPP", href: `/class/${classId}/add-notes` },
     { name: "Add Work", href: `/class/${classId}/add-work` },
   ];
 
   return (
-    <div className="w-full flex flex-col gap-y-4 bg-white sticky top-0 z-10">
-      <div className="flex flex-row items-center gap-x-4">
-        <Button size={"icon"} variant={"ghost"} onClick={() => router.back()}>
-          <ChevronLeft className="w-6 h-6 text-gray-600" />
-        </Button>
-        <h1 className="text-2xl font-bold text-gray-900 capitalize">
-          {className}
-        </h1>
-      </div>
-
-      <div className="flex flex-row items-center w-full border-b border-gray-200">
-        {tabs.map((tab) => {
-          const isActive = pathname === tab.href;
-          return (
-            <Link
-              key={tab.name}
-              href={{
-                pathname: tab.href,
-                query: searchParams.toString(), // Preserve query params
-              }}
-              className="flex-1"
-            >
-              <div
-                className={clsx(
-                  "flex items-center justify-center py-3 border-b-2 transition-colors duration-200",
-                  isActive
-                    ? "border-primary text-primary"
-                    : "border-transparent text-gray-500 hover:text-gray-700"
-                )}
-              >
-                <span className="text-sm font-medium">{tab.name}</span>
-              </div>
-            </Link>
-          );
-        })}
-      </div>
+    <div className="flex border-b border-gray-100 mb-8 gap-8 bg-white">
+      {tabs.map((tab) => {
+        const isActive = pathname === tab.href;
+        return (
+          <Link
+            key={tab.name}
+            href={{
+              pathname: tab.href,
+              query: searchParams.toString(),
+            }}
+            className={`pb-4 text-[15px] font-bold transition-all relative ${
+              isActive
+                ? "text-[#A855F7]"
+                : "text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            {tab.name}
+            {isActive && (
+              <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#A855F7] rounded-t-full" />
+            )}
+          </Link>
+        );
+      })}
     </div>
   );
 };

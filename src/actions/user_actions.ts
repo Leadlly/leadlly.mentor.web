@@ -219,6 +219,29 @@ export const getAllStudents = async () => {
   }
 };
 
+export const getInstituteStudents = async (instituteId: string) => {
+  const token = await getCookie("token");
+
+  try {
+    const endpoint = `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/institute/${instituteId}/students`;
+
+    const res = await fetch(endpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `token=${token}`,
+      },
+      credentials: "include",
+    });
+
+    const responseData = await res.json();
+    return responseData;
+  } catch (error) {
+    console.error("Error in fetching institute students:", (error as Error).message);
+    return { success: false, students: [] };
+  }
+};
+
 export const Studentinfo = async (id: string) => {
   if (!id || id === "undefined") {
     throw new Error("Student ID is required");

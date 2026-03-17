@@ -62,6 +62,36 @@ export const getBatchClasses = async (batchId: string) => {
   }
 };
 
+export const getBatchStudents = async (batchId: string) => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/batch/${batchId}/students`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+       if (res.status === 404) return [];
+       throw new Error(`Failed to fetch batch students: ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error: unknown) {
+    console.error("Error fetching batch students:", error);
+    return null;
+  }
+};
+
 export const getBatchDetails = async (id: string) => {
   const token = await getCookie("token");
 

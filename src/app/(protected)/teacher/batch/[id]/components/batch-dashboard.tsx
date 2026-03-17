@@ -3,14 +3,19 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getBatchDetails, getBatchClasses } from "@/actions/batch_actions";
-import { ChevronLeft, FileText, ChevronRight } from "lucide-react";
+import { ChevronLeft, FileText, ChevronRight, Megaphone, Plus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
+import AnnouncementList from "@/components/shared/AnnouncementList";
+import AnnouncementModal from "@/components/shared/AnnouncementModal";
+import { Button } from "@/components/ui/button";
 
 const BatchDashboard = ({ batchId }: { batchId: string }) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("report");
+  const [isAnnouncementModalOpen, setIsAnnouncementModalOpen] = useState(false);
+  const [announcementRefreshKey, setAnnouncementRefreshKey] = useState(0);
 
   const { data: batch, isLoading: isBatchLoading } = useQuery({
     queryKey: ["batch-details", batchId],
@@ -20,6 +25,12 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
   const { data: classes, isLoading: isClassesLoading } = useQuery({
     queryKey: ["batch-classes", batchId],
     queryFn: () => getBatchClasses(batchId),
+  });
+
+  const { data: studentsData, isLoading: isStudentsLoading } = useQuery({
+    queryKey: ["batch-students", batchId],
+    queryFn: () => import("@/actions/batch_actions").then((m) => m.getBatchStudents(batchId)),
+    enabled: activeTab === "students",
   });
 
   if (isBatchLoading || isClassesLoading) {
@@ -32,16 +43,21 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
 
   const tabs = [
     { id: "report", label: "Report" },
+    { id: "announcements", label: "Announcements" },
     { id: "students", label: "Students" },
     { id: "add_work", label: "Add Work" },
   ];
 
-  const syllabusProgress = batch.batchReport?.syllabusProgress || 10;
-  const chapterProgress = 5; // Placeholder per screenshot
-
+  const syllabusProgress = batch.batchReport?.syllabusProgress || 0;
   const totalClass = batch.batchReport?.totalClasses || 0;
+  const completedClasses = batch.batchReport?.completedClasses || 0;
+  const classProgress = totalClass > 0 ? Math.round((completedClasses / totalClass) * 100) : 0;
+
   const totalMinutes = batch.batchReport?.totalDuration || 0;
   const totalHours = Math.floor(totalMinutes / 60);
+
+  const pendingClasses = batch.batchReport?.pendingClasses || 0;
+  const totalStudents = studentsData?.students?.length || batch.batchReport?.totalStudents || 0;
 
   return (
     <div className="w-full min-h-screen bg-[#FAFAFA] flex flex-col">
@@ -75,64 +91,74 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
         </div>
 
         {activeTab === "report" && (
-          <div className="flex flex-col space-y-12">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+          <div className="flex flex-col space-y-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
               {/* Left Column */}
-              <div className="space-y-8 lg:space-y-10">
+              <div className="space-y-6 lg:space-y-8">
                 {/* Syllabus Section */}
-                <div className="space-y-5">
-                  <h2 className="text-[22px] font-bold text-gray-900 tracking-tight">Syllabus</h2>
-                  <div className="bg-white border border-[#F2E0FF] rounded-[24px] p-6 lg:p-8 space-y-7 shadow-sm">
+                <div className="space-y-3">
+                  <h2 className="text-[18px] font-bold text-gray-900 tracking-tight">Progress Overview</h2>
+                  <div className="bg-white border border-[#F2E0FF] rounded-[20px] p-5 lg:p-6 space-y-5 shadow-sm">
                     
                     {/* Syllabus Completed */}
-                    <div className="space-y-3">
-                      <div className="font-bold text-gray-800 text-[15px]">Syllabus Completed</div>
-                      <div className="flex items-center gap-4">
-                        <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-[#A855F7] rounded-full transition-all duration-500" 
-                            style={{ width: `${syllabusProgress}%` }}
-                          />
-                        </div>
-                        <span className="text-gray-900 font-bold w-12 text-right text-base">
-                          {syllabusProgress}%
-                        </span>
-                      </div>
+                    <div className="space-y-2">
+                       <div className="font-bold text-gray-800 text-[13px]">Syllabus Completed</div>
+                       <div className="flex items-center gap-3">
+                         <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                           <div 
+                             className="h-full bg-[#A855F7] rounded-full transition-all duration-500" 
+                             style={{ width: `${syllabusProgress}%` }}
+                           />
+                         </div>
+                         <span className="text-gray-900 font-bold w-10 text-right text-sm">
+                           {syllabusProgress}%
+                         </span>
+                       </div>
                     </div>
 
-                    {/* Chapter Completed */}
-                    <div className="space-y-3">
-                      <div className="font-bold text-gray-800 text-[15px]">Chapter Completed</div>
-                      <div className="flex items-center gap-4">
-                        <div className="flex-1 h-3 bg-gray-100 rounded-full overflow-hidden">
-                          <div 
-                            className="h-full bg-[#2DD4BF] rounded-full transition-all duration-500" 
-                            style={{ width: `${chapterProgress}%` }}
-                          />
-                        </div>
-                        <span className="text-gray-900 font-bold w-12 text-right text-base">
-                          {chapterProgress}%
-                        </span>
-                      </div>
+                    {/* Class Progress */}
+                    <div className="space-y-2">
+                       <div className="font-bold text-gray-800 text-[13px]">Classes Completed</div>
+                       <div className="flex items-center gap-3">
+                         <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+                           <div 
+                             className="h-full bg-[#2DD4BF] rounded-full transition-all duration-500" 
+                             style={{ width: `${classProgress}%` }}
+                           />
+                         </div>
+                         <span className="text-gray-900 font-bold w-10 text-right text-sm">
+                           {classProgress}%
+                         </span>
+                       </div>
                     </div>
 
                   </div>
                 </div>
 
-                {/* Classes taken Section */}
-                <div className="space-y-5">
-                  <h2 className="text-[22px] font-bold text-gray-900 tracking-tight">Classes taken</h2>
-                  <div className="grid grid-cols-2 gap-4 lg:gap-6">
+                {/* Batch Metrics Section */}
+                <div className="space-y-3">
+                  <h2 className="text-[18px] font-bold text-gray-900 tracking-tight">Batch Metrics</h2>
+                  <div className="grid grid-cols-2 gap-4 lg:gap-5">
                     
-                    <div className="bg-[#FAF5FF] rounded-[24px] p-6 flex flex-col items-center justify-center gap-2 lg:gap-3 transition-transform hover:scale-[1.02]">
-                      <div className="text-gray-600 font-bold text-[15px]">Total Class</div>
-                      <div className="text-[#A855F7] text-4xl lg:text-5xl font-bold">{totalClass}</div>
+                    <div className="bg-[#FAF5FF] rounded-[20px] p-4 flex flex-col items-center justify-center gap-1.5 transition-transform hover:scale-[1.02]">
+                      <div className="text-gray-600 font-bold text-[12px] uppercase">Total Classes</div>
+                      <div className="text-[#A855F7] text-3xl font-bold">{totalClass}</div>
                     </div>
 
-                    <div className="bg-[#FAF5FF] rounded-[24px] p-6 flex flex-col items-center justify-center gap-2 lg:gap-3 transition-transform hover:scale-[1.02]">
-                      <div className="text-gray-600 font-bold text-[15px]">Total Time</div>
-                      <div className="text-[#A855F7] text-4xl lg:text-5xl font-bold flex items-baseline gap-1">
-                        {totalHours} <span className="text-xl lg:text-2xl font-bold">hr</span>
+                    <div className="bg-[#FAF5FF] rounded-[20px] p-4 flex flex-col items-center justify-center gap-1.5 transition-transform hover:scale-[1.02]">
+                      <div className="text-gray-600 font-bold text-[12px] uppercase">Total Hours</div>
+                      <div className="text-[#A855F7] text-3xl font-bold">{totalHours}</div>
+                    </div>
+
+                    <div className="bg-[#F0FDFA] rounded-[20px] p-4 flex flex-col items-center justify-center gap-1.5 transition-transform hover:scale-[1.02]">
+                      <div className="text-gray-600 font-bold text-[12px] uppercase">Pending Classes</div>
+                      <div className="text-[#0D9488] text-3xl font-bold">{pendingClasses}</div>
+                    </div>
+
+                    <div className="bg-[#FFFBEB] rounded-[20px] p-4 flex flex-col items-center justify-center gap-1.5 transition-transform hover:scale-[1.02]">
+                      <div className="text-gray-600 font-bold text-[12px] uppercase">Enrolled Students</div>
+                      <div className="text-[#D97706] text-3xl font-bold flex items-baseline gap-1">
+                        {totalStudents}
                       </div>
                     </div>
 
@@ -141,24 +167,24 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
               </div>
 
               {/* Right Column */}
-              <div className="space-y-5">
-                <h2 className="text-[22px] font-bold text-transparent select-none hidden lg:block">Spacer</h2>
+              <div className="space-y-3 lg:space-y-4">
+                <h2 className="text-[18px] font-bold text-transparent select-none hidden lg:block">Spacer</h2>
                 {/* Syllabus Report Box */}
-                <div className="bg-white border border-[#F2E0FF] rounded-[24px] p-6 lg:p-8 h-full shadow-sm">
-                  <div className="flex items-center justify-between mb-6">
+                <div className="bg-white border border-[#F2E0FF] rounded-[20px] p-5 lg:p-6 h-full shadow-sm max-h-[350px] overflow-hidden flex flex-col">
+                  <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="bg-[#FAF5FF] p-2 rounded-xl">
                         <FileText className="size-5 text-[#A855F7]" />
                       </div>
-                      <h3 className="text-[18px] font-bold text-gray-900">Syllabus Report</h3>
+                      <h3 className="text-[16px] font-bold text-gray-900">Syllabus Report</h3>
                     </div>
-                    <Link href={"#"} className="flex items-center text-[#A855F7] text-[14px] font-bold hover:underline underline-offset-4">
+                    <Link href={"#"} className="flex items-center text-[#A855F7] text-[13px] font-bold hover:underline underline-offset-4">
                       View All <ChevronRight className="size-4 ml-0.5" strokeWidth={3} />
                     </Link>
                   </div>
 
-                  <div className="mt-2 space-y-5">
-                    <div className="font-bold text-gray-900 text-[15px]">Today - Jan 10</div>
+                  <div className="mt-2 space-y-4 flex-1 overflow-y-auto pr-2">
+                    <div className="font-bold text-gray-900 text-[13px]">Today - Jan 10</div>
                     
                     {classes && classes.length > 0 ? (
                       <ul className="space-y-4">
@@ -228,9 +254,60 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
           </div>
         )}
 
+        {activeTab === "announcements" && (
+          <div className="flex flex-col space-y-6">
+            <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <div className="bg-purple-100 p-2 rounded-xl">
+                        <Megaphone className="size-5 text-[#A855F7]" />
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900 tracking-tight">Announcements</h2>
+                </div>
+                <Button 
+                    onClick={() => setIsAnnouncementModalOpen(true)}
+                    className="rounded-full bg-[#A855F7] hover:bg-[#9333EA] font-bold px-5 h-11 shadow-lg shadow-purple-100"
+                >
+                  <Plus className="mr-2 size-5" /> Add Announcement
+                </Button>
+            </div>
+            <AnnouncementList batchId={batchId} refreshKey={announcementRefreshKey} />
+          </div>
+        )}
+
         {activeTab === "students" && (
-          <div className="p-8 text-center text-gray-500 font-medium bg-gray-50 rounded-[24px] border border-dashed border-gray-200">
-            Students list will appear here.
+          <div className="flex-1 w-full relative">
+            {isStudentsLoading ? (
+              <div className="p-8 text-center text-gray-500 font-medium bg-gray-50 rounded-[24px] border border-dashed border-gray-200">
+                Loading students...
+              </div>
+            ) : studentsData && studentsData.students && studentsData.students.length > 0 ? (
+              <div className="grid lg:grid-cols-5 md:grid-cols-4 grid-cols-3 lg:gap-[30px] md:gap-[20px] gap-[10px]">
+                {studentsData.students.map((student: any) => (
+                   <Link href={`/student/${student._id}`} key={student._id}>
+                      <div className="bg-white border shadow-sm border-gray-200 rounded-2xl justify-center flex p-4 px-2 flex-col items-center hover:shadow-md transition-shadow">
+                        <div className="flex flex-col mt-[5px] items-center text-center">
+                          <div className="w-12 h-12 bg-[#F3E8FF] text-[#A855F7] rounded-full flex items-center justify-center font-bold text-lg mb-3">
+                            {student.firstname?.charAt(0) || "U"}
+                            {student.lastname?.charAt(0) || ""}
+                          </div>
+                          <div className="font-semibold text-sm line-clamp-1">{student.firstname} {student.lastname}</div>
+                          <div className="text-[#504F4F] text-xs font-medium mt-1">Class: {student.academic?.standard || "N/A"}</div>
+                          <div className="font-semibold text-[10px] text-[#464646] mt-1.5">
+                            Level-
+                            <span className="font-bold text-[#0075FF] ml-0.5 text-[11px]">
+                              {student.details?.level?.number || 0}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                   </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="p-8 text-center text-gray-500 font-medium bg-gray-50 rounded-[24px] border border-dashed border-gray-200">
+                No students are currently allocated.
+              </div>
+            )}
           </div>
         )}
 
@@ -240,6 +317,12 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
           </div>
         )}
       </div>
+      <AnnouncementModal 
+        isOpen={isAnnouncementModalOpen}
+        onClose={() => setIsAnnouncementModalOpen(false)}
+        batchId={batchId}
+        onSuccess={() => setAnnouncementRefreshKey(prev => prev + 1)}
+      />
     </div>
   );
 };
