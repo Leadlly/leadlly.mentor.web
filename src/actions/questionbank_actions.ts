@@ -1,0 +1,67 @@
+"use server";
+
+import { getCookie } from "./cookie_actions";
+
+export const getChapters = async (subjectName: string, standard: number | string) => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/questionbank/chapter?subjectName=${encodeURIComponent(subjectName)}&standard=${standard}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      if (res.status === 404) return { chapters: [] };
+      throw new Error("Failed to fetch chapters");
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error: unknown) {
+    console.error("Error fetching chapters:", error);
+    return { chapters: [] };
+  }
+};
+
+export const getTopicsWithSubtopics = async (
+  subjectName: string,
+  standard: number | string,
+  chapterId: string
+) => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/questionbank/topicwithsubtopic?subjectName=${encodeURIComponent(subjectName)}&standard=${standard}&chapterId=${chapterId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      if (res.status === 404) return { topics: [] };
+      throw new Error("Failed to fetch topics");
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error: unknown) {
+    console.error("Error fetching topics:", error);
+    return { topics: [] };
+  }
+};

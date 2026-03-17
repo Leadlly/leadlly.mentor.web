@@ -23,6 +23,7 @@ import { IClassProps } from "@/helpers/types";
 import { Button } from "@/components/ui/button";
 import { AddClassModal } from "./add-class-modal";
 import AnnouncementModal from "@/components/shared/AnnouncementModal";
+import AddTodaysWorkModal from "@/app/(protected)/class/[classId]/components/add-todays-work-modal";
 
 const ClassList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -65,8 +66,18 @@ const ClassList = () => {
                 </div>
 
                 <div className="flex items-center gap-3 mt-auto pt-6 w-full justify-end">
+                  <div onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                    <AddTodaysWorkModal
+                      classId={item._id}
+                      batchId={typeof item.batch === "object" ? item.batch._id : item.batch}
+                      subject={item.subject || ""}
+                      standard={typeof item.batch === "object" ? item.batch.standard || "12" : "12"}
+                      className={`${item.subject || ""}${item.batch?.name ? ` - ${item.batch.name}` : ""}`}
+                      compact
+                    />
+                  </div>
                   <Button 
-                    className="rounded-lg bg-gray-50 hover:bg-purple-50 text-gray-700 hover:text-purple-700 h-9 text-xs font-semibold transition-all px-3"
+                    className="rounded-lg bg-gray-50 hover:bg-purple-50 text-gray-700 hover:text-purple-700 h-9 text-xs font-semibold transition-all px-3 cursor-pointer"
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();

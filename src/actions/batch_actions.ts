@@ -239,3 +239,88 @@ export const createClassAction = async (classData: any) => {
     return { success: false, error: error.message };
   }
 };
+
+export const getTeacherBatches = async () => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/teacher-batch/my-batches`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      if (res.status === 404) return [];
+      throw new Error(`Failed to fetch teacher batches: ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    return data.data;
+  } catch (error: unknown) {
+    console.error("Error fetching teacher batches:", error);
+    return [];
+  }
+};
+
+export const getTeacherStudents = async () => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/teacher-batch/my-students`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    if (!res.ok) {
+      if (res.status === 404) return { students: [], count: 0 };
+      throw new Error(`Failed to fetch teacher students: ${res.statusText}`);
+    }
+
+    const data = await res.json();
+    return data;
+  } catch (error: unknown) {
+    console.error("Error fetching teacher students:", error);
+    return { students: [], count: 0 };
+  }
+};
+
+export const assignTeacherToBatch = async (batchId: string, instituteId: string) => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/teacher-batch/assign`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        body: JSON.stringify({ batchId, instituteId }),
+      }
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (error: unknown) {
+    console.error("Error assigning teacher to batch:", error);
+    return { success: false };
+  }
+};

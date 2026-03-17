@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getInstituteBatches, getBatchClasses, getBatchStudents } from "@/actions/batch_actions";
+import { getTeacherBatches, getBatchClasses, getBatchStudents, getTeacherStudents } from "@/actions/batch_actions";
 import { markAttendance, getAttendance } from "@/actions/attendance_actions";
-import { getUser, getInstituteStudents } from "@/actions/user_actions";
+import { getUser } from "@/actions/user_actions";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Users, Check, X, Eye, Loader2, Save, Filter, Flame, Trophy, Mail } from "lucide-react";
@@ -18,26 +18,23 @@ const AttendancePage = () => {
   const [selectedClassId, setSelectedClassId] = useState<string>("");
   const [attendanceData, setAttendanceData] = useState<Record<string, "present" | "absent">>({});
 
-  // Fetch current user to get instituteId
+  // Fetch current user
   const { data: userData } = useQuery({
     queryKey: ["current-user"],
     queryFn: getUser,
   });
 
-  const instituteId = userData?.user?.institute?._id;
-
-  // Fetch all batches for the institute
+  // Fetch teacher's assigned batches
   const { data: batches, isLoading: isBatchesLoading } = useQuery({
-    queryKey: ["institute-batches", instituteId],
-    queryFn: () => getInstituteBatches(instituteId as string),
-    enabled: !!instituteId,
+    queryKey: ["teacher-batches"],
+    queryFn: getTeacherBatches,
   });
 
-  // Fetch all students for the institute (default view)
-  const { data: instituteStudentsData, isLoading: isInstStudentsLoading } = useQuery({
-    queryKey: ["institute-students", instituteId],
-    queryFn: () => getInstituteStudents(instituteId as string),
-    enabled: !!instituteId && !selectedBatchId,
+  // Fetch all students from teacher's batches (default view)
+  const { data: teacherStudentsData, isLoading: isTeacherStudentsLoading } = useQuery({
+    queryKey: ["teacher-all-students"],
+    queryFn: getTeacherStudents,
+    enabled: !selectedBatchId,
   });
 
   // Fetch classes for selected batch
@@ -97,7 +94,7 @@ const AttendancePage = () => {
   };
 
   const markAll = (status: "present" | "absent") => {
-    const students = selectedBatchId ? batchStudentsData?.students : instituteStudentsData?.students;
+    const students = selectedBatchId ? batchStudentsData?.students : teacherStudentsData?.students;
     if (!students) return;
 
     const toastId = toast.loading(`Marking all as ${status}...`);
@@ -126,8 +123,8 @@ const AttendancePage = () => {
     });
   };
 
-  const displayedStudents = selectedBatchId ? batchStudentsData?.students : instituteStudentsData?.students;
-  const isLoadingStudents = selectedBatchId ? isBatchStudentsLoading : isInstStudentsLoading;
+  const displayedStudents = selectedBatchId ? batchStudentsData?.students : teacherStudentsData?.students;
+  const isLoadingStudents = selectedBatchId ? isBatchStudentsLoading : isTeacherStudentsLoading;
 
   const presentCount = Object.values(attendanceData).filter((status) => status === "present").length;
   const absentCount = Object.values(attendanceData).filter((status) => status === "absent").length;
@@ -145,7 +142,7 @@ const AttendancePage = () => {
               {selectedBatchId ? "Class Attendance" : "All Students"}
             </h1>
             <p className="text-xs text-gray-500 font-medium">
-              {selectedBatchId ? "Marking attendance for selected class" : "Listing all students of your institute"}
+              {selectedBatchId ? "Marking attendance for selected class" : "Listing all students from your batches"}
             </p>
           </div>
         </div>
@@ -194,7 +191,7 @@ const AttendancePage = () => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <h2 className="text-xl font-bold text-gray-900 tracking-tight">
-                  {selectedBatchId ? "Batch Students" : "Institute Students"}
+                  {selectedBatchId ? "Batch Students" : "Your Students"}
                 </h2>
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 bg-purple-50 text-[#A855F7] rounded-full text-[11px] font-bold border border-purple-100">
@@ -328,10 +325,10 @@ const AttendancePage = () => {
               <div className="flex flex-col items-center justify-center py-32 bg-gray-50/50 rounded-[30px] border border-dashed border-gray-200">
                 <Users className="size-16 text-gray-200 mb-4" />
                 <p className="text-gray-500 font-bold text-lg text-center px-4">
-                  {selectedBatchId ? "No students found in this batch" : "No students found in your institute"}
+                  {selectedBatchId ? "No students found in this batch" : "No students found in your batches"}
                 </p>
                 <p className="text-gray-400 text-sm mt-1 font-medium text-center px-4">
-                  Students will appear here once they are added to the institute
+                  Students will appear here once they are assigned to your batches
                 </p>
               </div>
             )}
