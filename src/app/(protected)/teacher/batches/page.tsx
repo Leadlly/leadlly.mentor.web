@@ -4,21 +4,16 @@ import {
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { getInstituteBatches } from "@/actions/batch_actions";
-import { getUser } from "@/actions/user_actions";
+import { getTeacherBatches } from "@/actions/batch_actions";
 import BatchList from "./components/batch-list";
 
 const Page = async () => {
   const queryClient = new QueryClient();
-  const userResponse = await getUser();
-  const instituteId = userResponse?.user?.institute?._id;
 
-  if (instituteId) {
-    await queryClient.prefetchQuery({
-      queryKey: ["institute-batches", instituteId],
-      queryFn: () => getInstituteBatches(instituteId),
-    });
-  }
+  await queryClient.prefetchQuery({
+    queryKey: ["teacher-batches"],
+    queryFn: () => getTeacherBatches(),
+  });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>

@@ -155,7 +155,7 @@ export const getAllClasses = async () => {
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/class/get`,
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/class/my-classes`,
       {
         method: "GET",
         headers: {
