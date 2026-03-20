@@ -17,7 +17,7 @@ const MainHeader = () => {
     if (pathname === "/teacher") return `Hey ${user?.firstname ?? ""}`;
     if (pathname.startsWith("/teacher/classes")) return "Classes";
     if (pathname.startsWith("/teacher/batches")) return "Batches";
-    if (pathname.startsWith("/teacher/students")) return "Students";
+    if (pathname.startsWith("/teacher/students")) return "Attendance";
     if (pathname.startsWith("/class/")) return "Class";
     return "";
   }, [pathname, user?.firstname]);

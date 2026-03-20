@@ -2,32 +2,24 @@
 
 import { getCookie } from "./cookie_actions";
 
-interface CreateQuizParams {
-  classId: string;
-  batchId: string;
-  instituteId?: string;
-  subject: string;
-  chapterId: string;
-  chapterName: string;
-  topicIds: string[];
-  questionsNumber: number;
-  endDate?: string;
-}
-
-export const createQuizForClass = async (params: CreateQuizParams) => {
+export const getPresignedUploadUrl = async (params: {
+  fileName: string;
+  fileType: string;
+  folder?: string;
+}) => {
   const token = await getCookie("token");
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/quiz/create`,
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/upload/presigned-url`,
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Cookie: `token=${token}`,
         },
-        credentials: "include",
         body: JSON.stringify(params),
+        credentials: "include",
         cache: "no-store",
       }
     );
@@ -35,19 +27,17 @@ export const createQuizForClass = async (params: CreateQuizParams) => {
     const data = await res.json();
 
     if (!res.ok) {
-      return {
-        success: false,
-        message: data.message || "Failed to create quiz",
-      };
+      return { success: false, message: data.message || "Failed to get upload URL" };
     }
 
     return {
       success: true,
-      message: data.message,
-      data: data.data,
+      putUrl: data.putUrl as string,
+      fileUrl: data.fileUrl as string,
+      key: data.key as string,
     };
   } catch (error: unknown) {
-    console.error("Error creating quiz:", error);
+    console.error("Error getting presigned URL:", error);
     return {
       success: false,
       message: error instanceof Error ? error.message : "Something went wrong",

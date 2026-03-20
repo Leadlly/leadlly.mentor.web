@@ -7,9 +7,9 @@ import { LayoutDashboard, Presentation, BookOpen, Users } from "lucide-react";
 
 const navItems = [
   { title: "Home", href: "/teacher", icon: LayoutDashboard },
-  { title: "Batches", href: "/teacher/batches", icon: Presentation },
+  // { title: "Batches", href: "/teacher/batches", icon: Presentation },
   { title: "Classes", href: "/teacher/classes", icon: BookOpen },
-  { title: "Students", href: "/teacher/students", icon: Users },
+  { title: "Attendance", href: "/teacher/students", icon: Users },
 ];
 
 const MobileBottomNav = () => {

@@ -6,29 +6,20 @@ import Link from "next/link";
 import {
   useParams,
   usePathname,
-  useRouter,
   useSearchParams,
 } from "next/navigation";
 
-import clsx from "clsx";
-import { ChevronLeft } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-
 const ClassTab = () => {
-  const router = useRouter();
   const params = useParams();
   const searchParams = useSearchParams();
   const pathname = usePathname();
 
   const classId = params.classId as string;
-  const className = searchParams.get("className") || "Class";
 
   const tabs = [
     { name: "Report", href: `/class/${classId}/report` },
-    { name: "Announcements", href: `/class/${classId}/announcements` },
-    { name: "Add Notes/DPP", href: `/class/${classId}/add-notes` },
-    { name: "Add Work", href: `/class/${classId}/add-work` },
+    { name: "Students", href: `/class/${classId}/students` },
+    { name: "Add work", href: `/class/${classId}/add-work` },
   ];
 
   return (

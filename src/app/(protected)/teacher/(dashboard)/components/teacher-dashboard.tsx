@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getTeacherDashboard } from "@/actions/user_actions";
 import { getLectures } from "@/actions/lecture_actions";
@@ -16,6 +16,7 @@ import {
   Calendar,
   FileText,
   Loader2,
+  ChevronRight,
 } from "lucide-react";
 import {
   addDays,
@@ -207,8 +208,8 @@ const TeacherDashboard = () => {
         </div>
       </div>
 
-      {/* Today's Schedule + Class Status */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4">
+      {/* Today's Schedule + Class Status - commented out, no data available yet */}
+      {/* <div className="grid grid-cols-1 md:grid-cols-5 gap-3 md:gap-4">
         <div className="md:col-span-3 bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <h3 className="font-bold text-gray-800">Today&apos;s Schedule</h3>
@@ -280,7 +281,14 @@ const TeacherDashboard = () => {
             </div>
           )}
         </div>
-      </div>
+      </div> */}
+
+      {/* Classes Taken */}
+      <ClassesTakenSection
+        totalClasses={ov.totalClasses}
+        totalTeachingHours={ov.totalTeachingHours}
+        batchPerformance={dashboard.batchPerformance || []}
+      />
 
       {/* Calendar */}
       <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
@@ -543,8 +551,8 @@ const TeacherDashboard = () => {
         </div>
       </div>
 
-      {/* Recent Activity + Upcoming Classes */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+      {/* Recent Activity */}
+      <div className="grid grid-cols-1 gap-3 md:gap-4">
         <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
           <h3 className="font-bold text-gray-800 mb-3 md:mb-4 text-sm md:text-base">Recent Activity</h3>
           {dashboard.recentLectures?.length > 0 ? (
@@ -588,7 +596,8 @@ const TeacherDashboard = () => {
           )}
         </div>
 
-        <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
+        {/* Upcoming Classes - commented out, no data available yet */}
+        {/* <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
           <h3 className="font-bold text-gray-800 mb-3 md:mb-4 text-sm md:text-base">Upcoming Classes</h3>
           {dashboard.upcomingClasses?.length > 0 ? (
             <div className="space-y-3">
@@ -615,7 +624,141 @@ const TeacherDashboard = () => {
               <p className="text-center text-xs text-gray-300 font-medium">No upcoming classes</p>
             </div>
           )}
+        </div> */}
+      </div>
+    </div>
+  );
+};
+
+const CLASSES_TAKEN_BG = [
+  "bg-amber-50",
+  "bg-blue-50",
+  "bg-green-50",
+  "bg-purple-50",
+  "bg-pink-50",
+  "bg-cyan-50",
+];
+
+const CLASSES_TAKEN_TEXT = [
+  "text-amber-600",
+  "text-blue-600",
+  "text-green-600",
+  "text-purple-600",
+  "text-pink-600",
+  "text-cyan-600",
+];
+
+const BATCH_DOTS = [
+  { border: "border-amber-300", bg: "bg-amber-100" },
+  { border: "border-blue-300", bg: "bg-blue-200" },
+  { border: "border-green-300", bg: "bg-green-100" },
+  { border: "border-purple-300", bg: "bg-purple-200" },
+];
+
+const ClassesTakenSection = ({
+  totalClasses,
+  totalTeachingHours,
+  batchPerformance,
+}: {
+  totalClasses: number;
+  totalTeachingHours: number;
+  batchPerformance: any[];
+}) => {
+  const [mode, setMode] = useState<"numbers" | "hours">("numbers");
+  const [showAll, setShowAll] = useState(false);
+
+  const displayedBatches = showAll ? batchPerformance : batchPerformance.slice(0, 3);
+
+  const totalHoursForBatch = (batch: any) => {
+    const lectures = batch.totalLectures || 0;
+    const totalPerClass = totalClasses > 0 ? totalTeachingHours / totalClasses : 0;
+    return Math.round(batch.totalClasses * totalPerClass * 10) / 10;
+  };
+
+  return (
+    <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
+      <h3 className="font-bold text-gray-900 text-base md:text-lg mb-4">Classes taken</h3>
+
+      {/* Tabs */}
+      <div className="flex border-b border-gray-100 mb-5">
+        <button
+          onClick={() => setMode("numbers")}
+          className={`pb-2.5 px-4 text-sm font-semibold transition-colors relative cursor-pointer ${
+            mode === "numbers" ? "text-purple-600" : "text-gray-400 hover:text-gray-600"
+          }`}
+        >
+          In numbers
+          {mode === "numbers" && (
+            <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-purple-500 rounded-full" />
+          )}
+        </button>
+        <button
+          onClick={() => setMode("hours")}
+          className={`pb-2.5 px-4 text-sm font-semibold transition-colors relative cursor-pointer ${
+            mode === "hours" ? "text-purple-600" : "text-gray-400 hover:text-gray-600"
+          }`}
+        >
+          In hours
+          {mode === "hours" && (
+            <span className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-purple-500 rounded-full" />
+          )}
+        </button>
+      </div>
+
+      {/* Total */}
+      <div className="flex items-center justify-between mb-5">
+        <div>
+          <p className="text-xs font-medium text-gray-500 mb-0.5">
+            Total {mode === "numbers" ? "Classes" : "Hours"}
+          </p>
+          <p className="text-3xl md:text-4xl font-bold text-purple-600">
+            {mode === "numbers" ? totalClasses : totalTeachingHours}
+          </p>
         </div>
+        <div className="flex items-center gap-1.5">
+          {batchPerformance.slice(0, 4).map((_, i) => (
+            <div
+              key={i}
+              className={`size-6 md:size-7 rounded-md border-2 ${BATCH_DOTS[i % BATCH_DOTS.length].border} ${BATCH_DOTS[i % BATCH_DOTS.length].bg}`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Batch wise */}
+      <div className="flex items-center justify-between mb-3">
+        <p className="text-sm font-bold text-gray-800">Batch wise</p>
+        {batchPerformance.length > 3 && (
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="text-xs font-semibold text-purple-600 hover:text-purple-700 flex items-center gap-0.5 cursor-pointer"
+          >
+            {showAll ? "Show less" : "Show all"}
+            <ChevronRight className="size-3.5" />
+          </button>
+        )}
+      </div>
+
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2.5 md:gap-3">
+        {displayedBatches.map((batch: any, i: number) => {
+          const bgClass = CLASSES_TAKEN_BG[i % CLASSES_TAKEN_BG.length];
+          const textClass = CLASSES_TAKEN_TEXT[i % CLASSES_TAKEN_TEXT.length];
+          const value = mode === "numbers" ? batch.totalClasses : totalHoursForBatch(batch);
+
+          return (
+            <div
+              key={batch.batchId}
+              className={`${bgClass} rounded-xl p-3 md:p-4 text-center`}
+            >
+              <p className="text-xs font-semibold text-gray-600 truncate mb-1" title={batch.batchName}>
+                {batch.batchName}
+              </p>
+              <p className={`text-xl md:text-2xl font-bold ${textClass}`}>
+                {value}
+              </p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
