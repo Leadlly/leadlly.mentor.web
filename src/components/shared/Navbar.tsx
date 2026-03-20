@@ -18,6 +18,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 const Navbar = () => {
   const user = useAppSelector((state) => state.user.user);
   const pathname = usePathname();
+
+  if (pathname.startsWith("/student/")) return null;
+
   return (
     <div className="w-full">
       <nav className="h-20 shadow-md hidden lg:flex w-full bg-box justify-between px-10 rounded-[60px] items-center">

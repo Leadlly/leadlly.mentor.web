@@ -14,11 +14,11 @@ export default async function StudentPage({
   const [student] = await Promise.all([studentData]);
   return (
     <>
-      <div className="mx-[1px] overflow-auto lg:flex hidden gap-5 h-[calc(100dvh-120px)]">
+      <div className="mx-px overflow-auto lg:flex hidden gap-5 h-[calc(100dvh-120px)]">
         <StudentDashboard studentId={studentId} studentData={student.student} />
-        <CommunicationPanel studentId={studentId} />
+        {/* <CommunicationPanel studentId={studentId} /> */}
       </div>
-      <div className="mx-[1px] overflow-auto flex h-[calc(100dvh-160px)] lg:hidden">
+      <div className="mx-px overflow-auto flex h-[calc(100dvh-160px)] lg:hidden">
         <StudentDashboard studentId={studentId} studentData={student.student} />
       </div>
     </>

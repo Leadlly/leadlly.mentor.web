@@ -27,7 +27,7 @@ import { userData } from "@/redux/slices";
 
 const InstituteCodeSchema = z.object({
   instituteCode: z
-    .string({ required_error: "Please enter your institute code!" })
+    .string({ message: "Please enter your institute code!" })
     .min(1, "Please enter your institute code!")
     .trim(),
 });

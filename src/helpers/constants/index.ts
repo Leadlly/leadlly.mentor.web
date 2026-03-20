@@ -34,21 +34,21 @@ export const userSidebarLinks: SidebarLink[] = [
     href: "/tracker",
     label: "Tracker",
   },
-  {
-    icon: ErrorBookIcon,
-    href: "/error-book",
-    label: "Error Book",
-  },
-  {
-    icon: GrowthMeterIcon,
-    href: "/growth-meter",
-    label: "Growth Meter",
-  },
-  {
-    icon: WorkshopIcon,
-    href: "/workshops",
-    label: "Workshops",
-  },
+  // {
+  //   icon: ErrorBookIcon,
+  //   href: "/error-book",
+  //   label: "Error Book",
+  // },
+  // {
+  //   icon: GrowthMeterIcon,
+  //   href: "/growth-meter",
+  //   label: "Growth Meter",
+  // },
+  // {
+  //   icon: WorkshopIcon,
+  //   href: "/workshops",
+  //   label: "Workshops",
+  // },
   {
     icon: QuizIcon,
     href: "/quizzes",
