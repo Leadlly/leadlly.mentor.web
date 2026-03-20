@@ -12,7 +12,7 @@ import {
   getTodaysLecture,
   updateTodaysWork,
 } from "@/actions/lecture_actions";
-import { Calendar, ChevronDown, Check, Loader2, Plus, ArrowRight, Paperclip, X, FileQuestion, CheckCircle2, Upload, FileText } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronDown, Check, Loader2, Plus, ArrowRight, Paperclip, X, FileQuestion, CheckCircle2, Upload, FileText, Trash2, Megaphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -28,15 +28,17 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import dayjs from "dayjs";
+import { format } from "date-fns";
 import Link from "next/link";
-import { createAnnouncement } from "@/actions/announcement_actions";
-import { createQuizForClass } from "@/actions/quiz_actions";
+import { createAnnouncement, getAnnouncements, deleteAnnouncement } from "@/actions/announcement_actions";
+import { createQuizForClass, getClassQuizzes, deleteQuiz } from "@/actions/quiz_actions";
 import { getAttendance } from "@/actions/attendance_actions";
 import { useFileUpload } from "@/hooks/use-file-upload";
-import { createNote, createDPP } from "@/actions/classwork_actions";
+import { createNote, createDPP, getNotes, getDPPs, deleteNote, deleteDPP } from "@/actions/classwork_actions";
 
 interface ChapterItem {
   _id: string;
@@ -71,9 +73,14 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
     typeof classData?.batch === "object" ? classData?.batch.standard : "12";
   const subject = classData?.subject || "";
 
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [calendarOpen, setCalendarOpen] = useState(false);
+  const dateStr = format(selectedDate, "yyyy-MM-dd");
+  const isToday = format(selectedDate, "yyyy-MM-dd") === format(new Date(), "yyyy-MM-dd");
+
   const { data: todayAttendance } = useQuery({
-    queryKey: ["today-attendance-check", batchId, classId],
-    queryFn: () => getAttendance({ batchId: batchId!, classId }),
+    queryKey: ["today-attendance-check", batchId, classId, dateStr],
+    queryFn: () => getAttendance({ batchId: batchId!, classId, date: dateStr }),
     enabled: !!batchId && !!classId,
   });
 
@@ -126,7 +133,7 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
     if (!classId) return;
     const fetchExisting = async () => {
       try {
-        const lecture = await getTodaysLecture(classId);
+        const lecture = await getTodaysLecture(classId, dateStr);
         if (lecture) {
           setExistingLecture(lecture);
           const durationHrs = Math.round((lecture.duration || 60) / 60);
@@ -136,13 +143,21 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
             setCustomHours(durationHrs || 1);
             setShowCustomInput(true);
           }
+        } else {
+          setExistingLecture(null);
+          setSelectedHours(null);
+          setCustomHours(null);
+          setShowCustomInput(false);
+          setSelectedChapter(null);
+          setSelectedTopics(new Map());
+          prefillDoneRef.current = false;
         }
       } catch {
         setExistingLecture(null);
       }
     };
     fetchExisting();
-  }, [classId]);
+  }, [classId, dateStr]);
 
   useEffect(() => {
     if (prefillDoneRef.current || !existingLecture || chapters.length === 0) return;
@@ -271,16 +286,50 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
 
   return (
     <div className="w-full max-w-lg mx-auto space-y-4 md:space-y-5">
+      {/* Date Picker */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-base md:text-lg font-bold text-gray-900">Manage Class</h2>
+        <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "h-9 px-3 rounded-lg border-gray-200 bg-white text-sm font-semibold gap-2",
+                !isToday && "border-purple-300 text-purple-700"
+              )}
+            >
+              <CalendarIcon className="size-4" />
+              {isToday ? "Today" : format(selectedDate, "dd MMM yyyy")}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="end" sideOffset={8}>
+            <Calendar
+              mode="single"
+              selected={selectedDate}
+              onSelect={(date) => {
+                if (date) {
+                  setSelectedDate(date);
+                  setCalendarOpen(false);
+                  prefillDoneRef.current = false;
+                }
+              }}
+              disabled={(date) => date > new Date()}
+              className="rounded-xl"
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+
       {/* Attendance Quick Link */}
       {attendanceMarkedToday ? (
         <Link
-          href={`/teacher/students?batchId=${batchId || ""}&classId=${classId}`}
+          href={`/teacher/students?batchId=${batchId || ""}&classId=${classId}&date=${dateStr}`}
           className="flex items-center justify-between bg-green-50 border border-green-200 rounded-xl px-4 py-3 hover:bg-green-100/60 transition-colors group"
         >
           <div className="flex items-center gap-2">
             <CheckCircle2 className="size-4 text-green-600" />
             <span className="text-sm font-semibold text-green-700">
-              Attendance marked for today
+              Attendance marked{isToday ? " for today" : ` for ${format(selectedDate, "dd MMM")}`}
             </span>
           </div>
           <Button
@@ -293,11 +342,11 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
         </Link>
       ) : (
         <Link
-          href={`/teacher/students?batchId=${batchId || ""}&classId=${classId}`}
+          href={`/teacher/students?batchId=${batchId || ""}&classId=${classId}&date=${dateStr}`}
           className="flex items-center justify-between bg-linear-to-r from-purple-50 to-purple-100/80 border border-purple-200 rounded-xl px-4 py-3.5 hover:from-purple-100 hover:to-purple-150/80 hover:border-purple-300 transition-all group shadow-sm shadow-purple-100"
         >
           <span className="text-sm font-bold text-purple-700 group-hover:text-purple-800">
-            Add Today&apos;s Attendance
+            {isToday ? "Add Today's Attendance" : `Add Attendance for ${format(selectedDate, "dd MMM")}`}
           </span>
           <ArrowRight className="size-4 text-purple-400 group-hover:text-purple-600 group-hover:translate-x-0.5 transition-all" />
         </Link>
@@ -305,15 +354,9 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
 
       {/* Add Work Card */}
       <div className="bg-purple-50/60 rounded-2xl p-4 md:p-6 space-y-5">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base md:text-lg font-bold text-gray-900">
-            Add Work for Students
-          </h2>
-          <div className="flex items-center gap-1.5 bg-white rounded-lg px-2.5 py-1.5 text-xs font-semibold text-purple-700 border border-purple-200">
-            <Calendar className="size-3.5" />
-            {dayjs().format("DD-MMM-YYYY")}
-          </div>
-        </div>
+        <h2 className="text-base md:text-lg font-bold text-gray-900">
+          Add Work for Students
+        </h2>
 
         {/* Class Hours */}
         <div className="space-y-2.5">
@@ -558,13 +601,17 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
             classId={classId}
             batchId={batchId || ""}
             subject={subject}
+            dateStr={dateStr}
           />
           <DPPUploadButton
             classId={classId}
             batchId={batchId || ""}
             subject={subject}
+            dateStr={dateStr}
           />
         </div>
+
+        <ExistingNotesDPPList classId={classId} dateStr={dateStr} />
       </div>
 
       {/* Create Quiz */}
@@ -576,10 +623,11 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
         batchStandard={batchStandard}
         chapters={chapters}
         chaptersLoading={chaptersLoading}
+        dateStr={dateStr}
       />
 
       {/* Announcement */}
-      <AnnouncementSection classId={classId} />
+      <AnnouncementSection classId={classId} dateStr={dateStr} />
     </div>
   );
 };
@@ -592,6 +640,7 @@ const QuizSection = ({
   batchStandard,
   chapters,
   chaptersLoading,
+  dateStr,
 }: {
   classId: string;
   batchId: string;
@@ -600,7 +649,9 @@ const QuizSection = ({
   batchStandard: string | number;
   chapters: ChapterItem[];
   chaptersLoading: boolean;
+  dateStr: string;
 }) => {
+  const queryClient = useQueryClient();
   const [quizChapter, setQuizChapter] = useState<ChapterItem | null>(null);
   const [quizChapterPopoverOpen, setQuizChapterPopoverOpen] = useState(false);
 
@@ -676,6 +727,7 @@ const QuizSection = ({
         setQuizChapter(null);
         setQuizSelectedTopicIds(new Set());
         setQuestionsNumber(10);
+        queryClient.invalidateQueries({ queryKey: ["existing-quizzes", classId, dateStr] });
       } else {
         toast.error(res.message || "Failed to create quiz");
       }
@@ -855,14 +907,17 @@ const QuizSection = ({
           )}
         </Button>
       </div>
+
+      <ExistingQuizzesList classId={classId} dateStr={dateStr} />
     </div>
   );
 };
 
-const NotesUploadButton = ({ classId, batchId, subject }: { classId: string; batchId: string; subject: string }) => {
+const NotesUploadButton = ({ classId, batchId, subject, dateStr }: { classId: string; batchId: string; subject: string; dateStr: string }) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
 
   const {
     uploadedFile,
@@ -907,6 +962,7 @@ const NotesUploadButton = ({ classId, batchId, subject }: { classId: string; bat
         setTitle("");
         removeFile();
         setOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["existing-notes", classId, dateStr] });
       } else {
         toast.error(res.message || "Failed to add note");
       }
@@ -1007,11 +1063,12 @@ const NotesUploadButton = ({ classId, batchId, subject }: { classId: string; bat
   );
 };
 
-const DPPUploadButton = ({ classId, batchId, subject }: { classId: string; batchId: string; subject: string }) => {
+const DPPUploadButton = ({ classId, batchId, subject, dateStr }: { classId: string; batchId: string; subject: string; dateStr: string }) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
 
   const {
     uploadedFile,
@@ -1063,6 +1120,7 @@ const DPPUploadButton = ({ classId, batchId, subject }: { classId: string; batch
         setDescription("");
         removeFile();
         setOpen(false);
+        queryClient.invalidateQueries({ queryKey: ["existing-dpps", classId, dateStr] });
       } else {
         toast.error(res.message || "Failed to create DPP");
       }
@@ -1170,9 +1228,10 @@ const DPPUploadButton = ({ classId, batchId, subject }: { classId: string; batch
   );
 };
 
-const AnnouncementSection = ({ classId }: { classId: string }) => {
+const AnnouncementSection = ({ classId, dateStr }: { classId: string; dateStr: string }) => {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
 
   const {
     uploadedFile: attachment,
@@ -1217,6 +1276,7 @@ const AnnouncementSection = ({ classId }: { classId: string }) => {
         toast.success("Announcement posted successfully");
         setContent("");
         removeFile();
+        queryClient.invalidateQueries({ queryKey: ["existing-announcements", classId, dateStr] });
       } else {
         toast.error(res.message || "Failed to post announcement");
       }
@@ -1329,6 +1389,206 @@ const AnnouncementSection = ({ classId }: { classId: string }) => {
           )}
         </Button>
       </div>
+
+      <ExistingAnnouncementsList classId={classId} dateStr={dateStr} />
+    </div>
+  );
+};
+
+const ExistingNotesDPPList = ({ classId, dateStr }: { classId: string; dateStr: string }) => {
+  const queryClient = useQueryClient();
+
+  const { data: notesData, isLoading: notesLoading } = useQuery({
+    queryKey: ["existing-notes", classId, dateStr],
+    queryFn: () => getNotes({ classId, date: dateStr }),
+    enabled: !!classId,
+  });
+
+  const { data: dppsData, isLoading: dppsLoading } = useQuery({
+    queryKey: ["existing-dpps", classId, dateStr],
+    queryFn: () => getDPPs({ classId, date: dateStr }),
+    enabled: !!classId,
+  });
+
+  const deleteNoteMutation = useMutation({
+    mutationFn: deleteNote,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["existing-notes", classId, dateStr] });
+      toast.success("Note deleted");
+    },
+    onError: () => toast.error("Failed to delete note"),
+  });
+
+  const deleteDPPMutation = useMutation({
+    mutationFn: deleteDPP,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["existing-dpps", classId, dateStr] });
+      toast.success("DPP deleted");
+    },
+    onError: () => toast.error("Failed to delete DPP"),
+  });
+
+  const notes = notesData?.notes || [];
+  const dpps = dppsData?.dpps || dppsData?.assignments || [];
+
+  if (notesLoading || dppsLoading) {
+    return (
+      <div className="flex items-center gap-2 py-2 text-sm text-gray-400">
+        <Loader2 className="size-3.5 animate-spin" /> Loading...
+      </div>
+    );
+  }
+
+  if (notes.length === 0 && dpps.length === 0) return null;
+
+  return (
+    <div className="space-y-2 pt-1">
+      {notes.length > 0 && (
+        <div className="space-y-1.5">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Notes</p>
+          {notes.map((note: any) => (
+            <div key={note._id} className="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <FileText className="size-3.5 text-purple-500 shrink-0" />
+                <span className="text-sm text-gray-700 truncate">{note.title}</span>
+              </div>
+              <button
+                onClick={() => deleteNoteMutation.mutate(note._id)}
+                disabled={deleteNoteMutation.isPending}
+                className="p-1 hover:bg-red-50 rounded-full transition-colors shrink-0"
+              >
+                <Trash2 className="size-3.5 text-red-400 hover:text-red-600" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+      {dpps.length > 0 && (
+        <div className="space-y-1.5">
+          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">DPP</p>
+          {dpps.map((dpp: any) => (
+            <div key={dpp._id} className="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <FileText className="size-3.5 text-blue-500 shrink-0" />
+                <span className="text-sm text-gray-700 truncate">{dpp.title}</span>
+              </div>
+              <button
+                onClick={() => deleteDPPMutation.mutate(dpp._id)}
+                disabled={deleteDPPMutation.isPending}
+                className="p-1 hover:bg-red-50 rounded-full transition-colors shrink-0"
+              >
+                <Trash2 className="size-3.5 text-red-400 hover:text-red-600" />
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ExistingQuizzesList = ({ classId, dateStr }: { classId: string; dateStr: string }) => {
+  const queryClient = useQueryClient();
+
+  const { data: quizzesData, isLoading } = useQuery({
+    queryKey: ["existing-quizzes", classId, dateStr],
+    queryFn: () => getClassQuizzes({ classId, date: dateStr }),
+    enabled: !!classId,
+  });
+
+  const deleteQuizMutation = useMutation({
+    mutationFn: deleteQuiz,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["existing-quizzes", classId, dateStr] });
+      toast.success("Quiz deleted");
+    },
+    onError: () => toast.error("Failed to delete quiz"),
+  });
+
+  const quizzes = quizzesData?.quizzes || [];
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-2 py-2 text-sm text-gray-400">
+        <Loader2 className="size-3.5 animate-spin" /> Loading...
+      </div>
+    );
+  }
+
+  if (quizzes.length === 0) return null;
+
+  return (
+    <div className="space-y-1.5 pt-1">
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Quizzes for this day</p>
+      {quizzes.map((quiz: any) => (
+        <div key={quiz.quizId || quiz._id} className="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <FileQuestion className="size-3.5 text-purple-500 shrink-0" />
+            <span className="text-sm text-gray-700 truncate">
+              {quiz.questionsCount || quiz.questions?.length || 0} questions &middot; {quiz.studentsCount || 0} students
+            </span>
+          </div>
+          <button
+            onClick={() => deleteQuizMutation.mutate(quiz.quizId || quiz._id)}
+            disabled={deleteQuizMutation.isPending}
+            className="p-1 hover:bg-red-50 rounded-full transition-colors shrink-0"
+          >
+            <Trash2 className="size-3.5 text-red-400 hover:text-red-600" />
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+const ExistingAnnouncementsList = ({ classId, dateStr }: { classId: string; dateStr: string }) => {
+  const queryClient = useQueryClient();
+
+  const { data: announcementsData, isLoading } = useQuery({
+    queryKey: ["existing-announcements", classId, dateStr],
+    queryFn: () => getAnnouncements({ classId, date: dateStr }),
+    enabled: !!classId,
+  });
+
+  const deleteAnnouncementMutation = useMutation({
+    mutationFn: deleteAnnouncement,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["existing-announcements", classId, dateStr] });
+      toast.success("Announcement deleted");
+    },
+    onError: () => toast.error("Failed to delete announcement"),
+  });
+
+  const announcements = announcementsData?.announcements || [];
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-2 py-2 text-sm text-gray-400">
+        <Loader2 className="size-3.5 animate-spin" /> Loading...
+      </div>
+    );
+  }
+
+  if (announcements.length === 0) return null;
+
+  return (
+    <div className="space-y-1.5 pt-1">
+      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Announcements for this day</p>
+      {announcements.map((a: any) => (
+        <div key={a._id} className="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <Megaphone className="size-3.5 text-orange-500 shrink-0" />
+            <span className="text-sm text-gray-700 truncate">{a.content?.slice(0, 60)}{a.content?.length > 60 ? "..." : ""}</span>
+          </div>
+          <button
+            onClick={() => deleteAnnouncementMutation.mutate(a._id)}
+            disabled={deleteAnnouncementMutation.isPending}
+            className="p-1 hover:bg-red-50 rounded-full transition-colors shrink-0"
+          >
+            <Trash2 className="size-3.5 text-red-400 hover:text-red-600" />
+          </button>
+        </div>
+      ))}
     </div>
   );
 };

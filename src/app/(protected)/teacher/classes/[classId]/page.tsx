@@ -6,8 +6,6 @@ import {
 } from "@tanstack/react-query";
 import { getClassDetails } from "@/actions/batch_actions";
 import ClassReport from "./components/class-report";
-import { ChevronLeft } from "lucide-react";
-import Link from "next/link";
 
 const Page = async ({ params }: { params: Promise<{ classId: string }> }) => {
   const { classId } = await params;
@@ -20,14 +18,7 @@ const Page = async ({ params }: { params: Promise<{ classId: string }> }) => {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <section className="p-6 max-w-7xl mx-auto space-y-8">
-        <div className="flex items-center gap-4">
-          <Link href="/teacher/classes" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-            <ChevronLeft className="size-6 text-gray-600" />
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-900">Class Report</h1>
-        </div>
-
+      <section className="p-3 md:p-6 max-w-7xl mx-auto space-y-4 md:space-y-8">
         <Suspense fallback={<div>Loading Class Report...</div>}>
           <ClassReport classId={classId} />
         </Suspense>

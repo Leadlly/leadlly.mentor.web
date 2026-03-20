@@ -39,11 +39,12 @@ export const createNote = async (params: {
   }
 };
 
-export const getNotes = async (query: { classId?: string; batchId?: string }) => {
+export const getNotes = async (query: { classId?: string; batchId?: string; date?: string }) => {
   const token = await getCookie("token");
   const searchParams = new URLSearchParams();
   if (query.classId) searchParams.append("classId", query.classId);
   if (query.batchId) searchParams.append("batchId", query.batchId);
+  if (query.date) searchParams.append("date", query.date);
 
   try {
     const res = await fetch(
@@ -64,6 +65,31 @@ export const getNotes = async (query: { classId?: string; batchId?: string }) =>
   } catch (error: unknown) {
     console.error("Error fetching notes:", error);
     return { success: false, notes: [] };
+  }
+};
+
+export const deleteNote = async (id: string) => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/class-work/notes/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (error: unknown) {
+    console.error("Error deleting note:", error);
+    return { success: false, message: error instanceof Error ? error.message : "Something went wrong" };
   }
 };
 
@@ -104,11 +130,12 @@ export const createDPP = async (params: {
   }
 };
 
-export const getDPPs = async (query: { classId?: string; batchId?: string }) => {
+export const getDPPs = async (query: { classId?: string; batchId?: string; date?: string }) => {
   const token = await getCookie("token");
   const searchParams = new URLSearchParams();
   if (query.classId) searchParams.append("classId", query.classId);
   if (query.batchId) searchParams.append("batchId", query.batchId);
+  if (query.date) searchParams.append("date", query.date);
 
   try {
     const res = await fetch(
@@ -129,5 +156,30 @@ export const getDPPs = async (query: { classId?: string; batchId?: string }) => 
   } catch (error: unknown) {
     console.error("Error fetching DPPs:", error);
     return { success: false, dpps: [] };
+  }
+};
+
+export const deleteDPP = async (id: string) => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/class-work/dpp/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (error: unknown) {
+    console.error("Error deleting DPP:", error);
+    return { success: false, message: error instanceof Error ? error.message : "Something went wrong" };
   }
 };

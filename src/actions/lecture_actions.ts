@@ -123,12 +123,13 @@ export const createTodaysWork = async (payload: {
   }
 };
 
-export const getTodaysLecture = async (classId: string) => {
+export const getTodaysLecture = async (classId: string, date?: string) => {
   const token = await getCookie("token");
+  const dateParam = date ? `?date=${date}` : "";
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/lecture/todays-work/${classId}`,
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/lecture/todays-work/${classId}${dateParam}`,
       {
         method: "GET",
         headers: {

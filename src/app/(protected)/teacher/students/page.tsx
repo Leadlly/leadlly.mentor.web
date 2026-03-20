@@ -8,9 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Users, Check, X, Eye, CalendarIcon } from "lucide-react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { Users, Check, X, CalendarIcon, Loader2, UserCheck, UserX } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -18,6 +17,7 @@ import { format } from "date-fns";
 const AttendancePage = () => {
   const queryClient = useQueryClient();
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const urlBatchId = searchParams.get("batchId") || "";
   const urlClassId = searchParams.get("classId") || "";
@@ -98,6 +98,24 @@ const AttendancePage = () => {
     });
   };
 
+  const handleMarkAll = (status: "present" | "absent") => {
+    if (!displayedStudents?.length || !selectedClassId) return;
+    const allAttendance: Record<string, "present" | "absent"> = {};
+    const attendancePayload: { studentId: string; status: "present" | "absent" }[] = [];
+    displayedStudents.forEach((student: any) => {
+      allAttendance[student._id] = status;
+      attendancePayload.push({ studentId: student._id, status });
+    });
+    setAttendanceData(allAttendance);
+    mutation.mutate({
+      batchId: selectedBatchId,
+      classId: selectedClassId,
+      attendance: attendancePayload,
+      date: dateStr,
+    });
+    toast.success(`Marked all students as ${status}`);
+  };
+
   const displayedStudents = selectedBatchId ? batchStudentsData?.students : teacherStudentsData?.students;
   const isLoadingStudents = selectedBatchId ? isBatchStudentsLoading : isTeacherStudentsLoading;
 
@@ -147,7 +165,6 @@ const AttendancePage = () => {
             </Select>
           )}
 
-          {/* Date Picker */}
           <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -157,11 +174,11 @@ const AttendancePage = () => {
                   !isToday && "border-purple-300 text-purple-700"
                 )}
               >
-                <CalendarIcon className="size-4 text-gray-500" />
+                <CalendarIcon className="size-4" />
                 {isToday ? "Today" : format(selectedDate, "dd MMM yyyy")}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
+            <PopoverContent className="w-auto p-0" align="start" sideOffset={8}>
               <Calendar
                 mode="single"
                 selected={selectedDate}
@@ -172,7 +189,7 @@ const AttendancePage = () => {
                   }
                 }}
                 disabled={(date) => date > new Date()}
-                initialFocus
+                className="rounded-xl"
               />
             </PopoverContent>
           </Popover>
@@ -189,7 +206,7 @@ const AttendancePage = () => {
         ) : (
           <div className="space-y-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-sm md:text-base font-bold text-gray-900">
                   Your Students
                 </h2>
@@ -207,9 +224,41 @@ const AttendancePage = () => {
                   </>
                 )}
               </div>
+
+              {selectedClassId && displayedStudents?.length > 0 && (
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 rounded-lg border-green-200 text-green-700 hover:bg-green-50 hover:text-green-800 text-xs font-semibold gap-1.5 cursor-pointer"
+                    onClick={() => handleMarkAll("present")}
+                    disabled={mutation.isPending}
+                  >
+                    {mutation.isPending ? (
+                      <Loader2 className="size-3 animate-spin" />
+                    ) : (
+                      <UserCheck className="size-3.5" />
+                    )}
+                    Mark All Present
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 rounded-lg border-red-200 text-red-600 hover:bg-red-50 hover:text-red-700 text-xs font-semibold gap-1.5 cursor-pointer"
+                    onClick={() => handleMarkAll("absent")}
+                    disabled={mutation.isPending}
+                  >
+                    {mutation.isPending ? (
+                      <Loader2 className="size-3 animate-spin" />
+                    ) : (
+                      <UserX className="size-3.5" />
+                    )}
+                    Mark All Absent
+                  </Button>
+                </div>
+              )}
             </div>
 
-            {/* Student List */}
             <div className="space-y-0 border border-gray-100 rounded-xl overflow-hidden">
               {displayedStudents?.map((student: any, index: number) => {
                 const standard =
@@ -224,7 +273,10 @@ const AttendancePage = () => {
                       index !== 0 ? "border-t border-gray-100" : ""
                     } hover:bg-gray-50/50 transition-colors`}
                   >
-                    <div className="flex items-center gap-3 md:gap-4 min-w-0 flex-1">
+                    <div
+                      className="flex items-center gap-3 md:gap-4 min-w-0 flex-1 cursor-pointer"
+                      onClick={() => router.push(`/student/${student._id}`)}
+                    >
                       <div className="size-9 md:size-10 rounded-lg bg-gray-100 text-gray-500 flex items-center justify-center font-semibold text-sm uppercase shrink-0">
                         {student.firstname?.[0]}
                         {student.lastname?.[0]}
@@ -269,15 +321,6 @@ const AttendancePage = () => {
                           A
                         </button>
                       </div>
-                      <Link href={`/student/${student._id}`}>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="rounded-lg size-8 text-gray-400 hover:text-purple-600 hover:bg-purple-50 cursor-pointer"
-                        >
-                          <Eye className="size-4" />
-                        </Button>
-                      </Link>
                     </div>
                   </div>
                 );

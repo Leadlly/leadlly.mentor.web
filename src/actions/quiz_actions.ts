@@ -54,3 +54,56 @@ export const createQuizForClass = async (params: CreateQuizParams) => {
     };
   }
 };
+
+export const getClassQuizzes = async (query: { classId: string; date?: string }) => {
+  const token = await getCookie("token");
+  const searchParams = new URLSearchParams();
+  searchParams.append("classId", query.classId);
+  if (query.date) searchParams.append("date", query.date);
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/quiz/list?${searchParams.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (error: unknown) {
+    console.error("Error fetching quizzes:", error);
+    return { success: false, quizzes: [] };
+  }
+};
+
+export const deleteQuiz = async (id: string) => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/quiz/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+        cache: "no-store",
+      }
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (error: unknown) {
+    console.error("Error deleting quiz:", error);
+    return { success: false, message: error instanceof Error ? error.message : "Something went wrong" };
+  }
+};
