@@ -19,29 +19,30 @@ const StudentsPage = ({ params }: { params: Promise<{ classId: string }> }) => {
   const { data: classData, isLoading: classLoading } = useQuery({
     queryKey: ["class-details", classId],
     queryFn: () => getClassDetails(classId),
+    staleTime: 0,
   });
 
   const batchId = useMemo(() => {
-    if (!classData?.batch) return null;
-    if (typeof classData.batch === "object" && classData.batch._id) {
-      return String(classData.batch._id);
-    }
-    if (typeof classData.batch === "string") {
-      return classData.batch;
-    }
-    return String(classData.batch);
-  }, [classData?.batch]);
+    if (!classData) return null;
+    const batch = classData.batch;
+    if (!batch) return null;
+    if (typeof batch === "string") return batch;
+    if (typeof batch === "object" && batch._id) return String(batch._id);
+    return null;
+  }, [classData]);
 
-  const { data: studentsData, isLoading: studentsLoading } = useQuery({
+  const { data: studentsData, isLoading: studentsLoading, isFetched: studentsFetched } = useQuery({
     queryKey: ["batch-students", batchId],
     queryFn: () => getBatchStudents(batchId!),
     enabled: !!batchId,
+    staleTime: 0,
+    refetchOnMount: "always",
   });
 
   const students = useMemo(() => {
     if (!studentsData) return [];
-    if (Array.isArray(studentsData)) return studentsData;
     if (studentsData.students && Array.isArray(studentsData.students)) return studentsData.students;
+    if (Array.isArray(studentsData)) return studentsData;
     return [];
   }, [studentsData]);
 
@@ -55,10 +56,20 @@ const StudentsPage = ({ params }: { params: Promise<{ classId: string }> }) => {
     );
   }, [students, searchQuery]);
 
-  if (classLoading || studentsLoading) {
+  const isLoading = classLoading || (!classLoading && !!batchId && (studentsLoading || !studentsFetched));
+
+  if (isLoading) {
     return (
       <div className="p-8 text-center text-gray-500 animate-pulse">
         Loading students...
+      </div>
+    );
+  }
+
+  if (!batchId) {
+    return (
+      <div className="p-8 text-center text-gray-500 font-medium bg-gray-50 rounded-[24px] border border-dashed border-gray-200">
+        Could not find the batch for this class.
       </div>
     );
   }

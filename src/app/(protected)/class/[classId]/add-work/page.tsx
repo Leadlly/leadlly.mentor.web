@@ -1521,15 +1521,15 @@ const ExistingQuizzesList = ({ classId, dateStr }: { classId: string; dateStr: s
     <div className="space-y-1.5 pt-1">
       <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Quizzes for this day</p>
       {quizzes.map((quiz: any) => (
-        <div key={quiz.quizId || quiz._id} className="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2">
+        <div key={quiz._id} className="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2">
           <div className="flex items-center gap-2 min-w-0">
             <FileQuestion className="size-3.5 text-purple-500 shrink-0" />
             <span className="text-sm text-gray-700 truncate">
-              {quiz.questionsCount || quiz.questions?.length || 0} questions &middot; {quiz.studentsCount || 0} students
+              {quiz.totalQuestions || 0} questions{quiz.chapterName ? ` · ${quiz.chapterName}` : ""}
             </span>
           </div>
           <button
-            onClick={() => deleteQuizMutation.mutate(quiz.quizId || quiz._id)}
+            onClick={() => deleteQuizMutation.mutate(quiz._id)}
             disabled={deleteQuizMutation.isPending}
             className="p-1 hover:bg-red-50 rounded-full transition-colors shrink-0"
           >
