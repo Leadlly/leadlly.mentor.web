@@ -25,18 +25,18 @@ const navItems = [
     href: "/teacher",
     icon: LayoutDashboard,
   },
-  {
-    title: "Batches",
-    href: "/teacher/batches",
-    icon: Presentation,
-  },
+  // {
+  //   title: "Batches",
+  //   href: "/teacher/batches",
+  //   icon: Presentation,
+  // },
   {
     title: "Classes",
     href: "/teacher/classes",
     icon: Presentation,
   },
   {
-    title: "Students",
+    title: "Attendance",
     href: "/teacher/students",
     icon: Users,
   },

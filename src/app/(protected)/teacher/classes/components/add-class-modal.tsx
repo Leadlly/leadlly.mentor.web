@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { getInstituteBatches, createClassAction } from "@/actions/batch_actions";
+import { getTeacherBatches, createClassAction } from "@/actions/batch_actions";
 import { useAppSelector } from "@/redux/hooks";
 import { toast } from "sonner";
 
@@ -17,13 +17,11 @@ export const AddClassModal = () => {
   const queryClient = useQueryClient();
   const { user } = useAppSelector((state) => state.user);
   
-  const instituteId = user?.institute?._id;
   const teacherId = user?._id;
 
   const { data: batches, isLoading: isBatchesLoading } = useQuery({
-    queryKey: ["institute-batches", instituteId],
-    queryFn: () => getInstituteBatches(instituteId!),
-    enabled: !!instituteId,
+    queryKey: ["teacher-batches"],
+    queryFn: () => getTeacherBatches(),
   });
 
   const [formData, setFormData] = useState({

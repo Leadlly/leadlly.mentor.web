@@ -2,18 +2,13 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getInstituteBatches } from "@/actions/batch_actions";
+import { getTeacherBatches } from "@/actions/batch_actions";
 import BatchCard from "./batch-card";
-import { useAppSelector } from "@/redux/hooks";
 
 const BatchList = () => {
-  const { user } = useAppSelector((state) => state.user);
-  const instituteId = user?.institute?._id;
-
   const { data: batches, isLoading } = useQuery({
-    queryKey: ["institute-batches", instituteId],
-    queryFn: () => getInstituteBatches(instituteId!),
-    enabled: !!instituteId,
+    queryKey: ["teacher-batches"],
+    queryFn: () => getTeacherBatches(),
   });
 
   if (isLoading) {
@@ -26,7 +21,7 @@ const BatchList = () => {
     return (
       <div className="text-center py-20">
         <h3 className="text-xl font-semibold text-gray-600">No batches found</h3>
-        <p className="text-gray-400">Create a batch to get started</p>
+        <p className="text-gray-400">You haven&apos;t been assigned to any batch yet</p>
       </div>
     );
   }

@@ -80,7 +80,7 @@ export const getBatchStudents = async (batchId: string) => {
     );
 
     if (!res.ok) {
-       if (res.status === 404) return [];
+       if (res.status === 404) return { students: [] };
        throw new Error(`Failed to fetch batch students: ${res.statusText}`);
     }
 
@@ -88,7 +88,7 @@ export const getBatchStudents = async (batchId: string) => {
     return data;
   } catch (error: unknown) {
     console.error("Error fetching batch students:", error);
-    return null;
+    return { students: [] };
   }
 };
 
@@ -155,7 +155,7 @@ export const getAllClasses = async () => {
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/class/get`,
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/class/my-classes`,
       {
         method: "GET",
         headers: {

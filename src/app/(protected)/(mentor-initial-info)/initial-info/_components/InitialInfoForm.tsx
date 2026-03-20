@@ -8,10 +8,10 @@ import { useRouter } from "next/navigation";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader } from "lucide-react";
+import { Building2, Loader } from "lucide-react";
 import { toast } from "sonner";
 
-import { mentorPersonalInfo } from "@/actions/user_actions";
+import { joinInstitute } from "@/actions/user_actions";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -21,38 +21,35 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { MultiSelect } from "@/components/ui/multi-select";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Input } from "@/components/ui/input";
 import { useAppDispatch } from "@/redux/hooks";
 import { userData } from "@/redux/slices";
 
-const InitialInfoSchema = z.object({
-  class: z.array(z.string({ error: "Please select your class!" })).nonempty(),
-  gender: z.string({ error: "Please select your gender!" }),
-  competitiveExams: z
-    .array(z.string({ error: "Please select your competitive exams!" }))
-    .nonempty(),
+const InstituteCodeSchema = z.object({
+  instituteCode: z
+    .string({ message: "Please enter your institute code!" })
+    .min(1, "Please enter your institute code!")
+    .trim(),
 });
 
-const StudentInitialInfoForm = () => {
+const InitialInfoForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const form = useForm<z.infer<typeof InitialInfoSchema>>({
-    resolver: zodResolver(InitialInfoSchema),
+  const form = useForm<z.infer<typeof InstituteCodeSchema>>({
+    resolver: zodResolver(InstituteCodeSchema),
+    defaultValues: {
+      instituteCode: "",
+    },
   });
 
-  const onFormSubmit = async (data: z.infer<typeof InitialInfoSchema>) => {
+  const onFormSubmit = async (data: z.infer<typeof InstituteCodeSchema>) => {
     setIsSubmitting(true);
 
-    const formattedData = {
-      class: data.class,
-      competitiveExams: data.competitiveExams,
-    };
     try {
-      const res = await mentorPersonalInfo({ ...data, ...formattedData });
+      const res = await joinInstitute(data.instituteCode);
       dispatch(userData(res.user));
 
       toast.success(res.message);
@@ -64,17 +61,6 @@ const StudentInitialInfoForm = () => {
     }
   };
 
-  const classOptions = [
-    { _id: "11", name: "11" },
-    { _id: "12", name: "12" },
-    { _id: "13", name: "13" },
-  ];
-  const competitiveExamOptions = [
-    { _id: "jee", name: "JEE" },
-    { _id: "neet", name: "NEET" },
-    { _id: "boards", name: "Boards" },
-  ];
-
   return (
     <section className="flex flex-col gap-y-5 items-center justify-center h-full w-full px-3">
       <div className="max-w-lg w-full">
@@ -85,31 +71,39 @@ const StudentInitialInfoForm = () => {
           height={60}
         />
       </div>
-      <div className="max-w-lg w-full rounded-xl shadow-2xl py-10 px-5 space-y-4">
-        <h3 className="text-xl md:text-3xl font-semibold text-center capitalize">
-          Let us know about you
-        </h3>
+      <div className="max-w-lg w-full rounded-xl shadow-2xl py-10 px-5 space-y-6">
+        <div className="text-center space-y-2">
+          <div className="flex justify-center">
+            <Building2 className="w-10 h-10 text-primary" />
+          </div>
+          <h3 className="text-xl md:text-3xl font-semibold capitalize">
+            Join Your Institute
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            Enter the institute code provided by your admin to get started
+          </p>
+        </div>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onFormSubmit)}
-            className="space-y-2"
+            className="space-y-4"
           >
             <FormField
               control={form.control}
-              name="class"
+              name="instituteCode"
               render={({ field }) => (
-                <FormItem className="space-y-1">
+                <FormItem className="space-y-2">
                   <FormLabel className="text-base lg:text-lg font-medium">
-                    Select your class preference:
+                    Institute Code
                   </FormLabel>
                   <FormControl>
-                    <MultiSelect
-                      options={classOptions}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      variant={"inverted"}
-                      animation={2}
-                      placeholder="Select your class preference"
+                    <Input
+                      placeholder="Enter your institute code"
+                      className="h-12 text-base uppercase tracking-widest font-mono"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(e.target.value.toUpperCase())
+                      }
                     />
                   </FormControl>
                   <FormMessage />
@@ -117,87 +111,7 @@ const StudentInitialInfoForm = () => {
               )}
             />
 
-            <FormField
-              control={form.control}
-              name="competitiveExams"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel className="text-base lg:text-lg font-medium">
-                    Select your competitive exams preference:
-                  </FormLabel>
-                  <FormControl>
-                    <MultiSelect
-                      options={competitiveExamOptions}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      variant={"inverted"}
-                      animation={2}
-                      placeholder="Select your competitive exams preference"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="gender"
-              render={({ field }) => (
-                <FormItem className="space-y-1">
-                  <FormLabel className="text-base lg:text-lg font-medium">
-                    Gender:
-                  </FormLabel>
-                  <FormControl>
-                    <RadioGroup
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      className="flex items-center gap-x-5"
-                    >
-                      <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                        <FormControl>
-                          <RadioGroupItem
-                            value="male"
-                            className="lg:w-5 lg:h-5"
-                            circleClassName="lg:w-3 lg:h-3"
-                          />
-                        </FormControl>
-                        <FormLabel className="text-base lg:text-lg font-medium">
-                          Male
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                        <FormControl>
-                          <RadioGroupItem
-                            value="female"
-                            className="lg:w-5 lg:h-5"
-                            circleClassName="lg:w-3 lg:h-3"
-                          />
-                        </FormControl>
-                        <FormLabel className="text-base lg:text-lg font-medium">
-                          Female
-                        </FormLabel>
-                      </FormItem>
-                      <FormItem className="space-y-0 mt-1 flex items-center gap-2">
-                        <FormControl>
-                          <RadioGroupItem
-                            value="other"
-                            className="lg:w-5 lg:h-5"
-                            circleClassName="lg:w-3 lg:h-3"
-                          />
-                        </FormControl>
-                        <FormLabel className="text-base lg:text-lg font-medium">
-                          Other
-                        </FormLabel>
-                      </FormItem>
-                    </RadioGroup>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="flex items-center justify-center w-full">
+            <div className="flex items-center justify-center w-full pt-2">
               <Button
                 type="submit"
                 className="w-full text-base md:text-lg"
@@ -206,10 +120,10 @@ const StudentInitialInfoForm = () => {
                 {isSubmitting ? (
                   <span className="flex items-center">
                     <Loader className="mr-2 w-5 h-5 animate-spin" />
-                    Submitting
+                    Joining...
                   </span>
                 ) : (
-                  "Submit"
+                  "Join Institute"
                 )}
               </Button>
             </div>
@@ -220,4 +134,4 @@ const StudentInitialInfoForm = () => {
   );
 };
 
-export default StudentInitialInfoForm;
+export default InitialInfoForm;

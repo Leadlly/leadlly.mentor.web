@@ -31,7 +31,7 @@ const Sidebar = ({ id }: { id: string }) => {
     <>
       <aside className="md:rounded-xl rounded-l h-full bg-[#ffffff] shadow-custom-inset md:mr-[6%] mr-[15px] px-[4px] max-w-32">
         <ul className="flex flex-col justify-start items-start h-full no-scrollbar overflow-y-auto pt-5">
-          <div className="relative px-4 py-2 rounded-xl md:rounded-full xl:rounded-xl w-full flex items-center justify-start md:justify-center xl:justify-start bg-white shadow-custom-inset">
+          {/* <div className="relative px-4 py-2 rounded-xl md:rounded-full xl:rounded-xl w-full flex items-center justify-start md:justify-center xl:justify-start bg-white shadow-custom-inset">
             <Link href="#" onClick={handleListClick}>
               <li
                 className={cn(
@@ -46,7 +46,7 @@ const Sidebar = ({ id }: { id: string }) => {
                 />
               </li>
             </Link>
-          </div>
+          </div> */}
           {userSidebarLinks.map((item) => (
             <Link
               href={`/student/${id}${item.href}`}

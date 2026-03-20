@@ -183,6 +183,41 @@ export const mentorPersonalInfo = async (data: any) => {
   }
 };
 
+export const joinInstitute = async (instituteCode: string) => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/join-institute`,
+      {
+        method: "POST",
+        body: JSON.stringify({ instituteCode }),
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+      }
+    );
+
+    const responseData = await res.json();
+
+    if (!res.ok) {
+      throw new Error(responseData.message || "Failed to join institute");
+    }
+
+    updateTag("userData");
+
+    return responseData;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    } else {
+      throw new Error("An unknown error occurred while joining institute");
+    }
+  }
+};
+
 export const getAllStudents = async () => {
   const token = await getCookie("token");
 

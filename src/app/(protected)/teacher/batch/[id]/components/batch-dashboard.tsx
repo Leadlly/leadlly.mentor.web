@@ -3,16 +3,14 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getBatchDetails, getBatchClasses } from "@/actions/batch_actions";
-import { ChevronLeft, FileText, ChevronRight, Megaphone, Plus } from "lucide-react";
+import { FileText, ChevronRight, Megaphone, Plus } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import AnnouncementList from "@/components/shared/AnnouncementList";
 import AnnouncementModal from "@/components/shared/AnnouncementModal";
 import { Button } from "@/components/ui/button";
 
 const BatchDashboard = ({ batchId }: { batchId: string }) => {
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState("report");
   const [isAnnouncementModalOpen, setIsAnnouncementModalOpen] = useState(false);
   const [announcementRefreshKey, setAnnouncementRefreshKey] = useState(0);
@@ -61,15 +59,7 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
 
   return (
     <div className="w-full min-h-screen bg-[#FAFAFA] flex flex-col">
-      {/* Header outside */}
-      <div className="flex items-center gap-2 md:gap-4 px-3 md:px-8 py-3 md:py-6 mb-1 md:mb-2">
-        <button onClick={() => router.push("/teacher/batches")} className="p-1.5 md:p-2 hover:bg-gray-200 rounded-full transition-colors flex items-center justify-center shrink-0">
-          <ChevronLeft className="size-4 md:size-5 text-gray-800" strokeWidth={2.5} />
-        </button>
-        <h1 className="text-lg md:text-2xl font-bold text-gray-900 capitalize tracking-tight truncate">{batch.name}</h1>
-      </div>
-
-      <div className="flex-1 w-full bg-white rounded-t-[24px] md:rounded-t-[40px] shadow-[0_-4px_20px_rgba(0,0,0,0.02)] px-3 md:px-8 py-4 md:py-6 border-t border-gray-100 flex flex-col pb-20 md:pb-6">
+      <div className="flex-1 w-full bg-white rounded-t-[24px] md:rounded-t-[40px] shadow-[0_-4px_20px_rgba(0,0,0,0.02)] px-3 md:px-8 py-4 md:py-6 border-t border-gray-100 flex flex-col pb-20 md:pb-6 mt-2">
         {/* Tabs */}
         <div className="flex border-b border-gray-100 mb-4 md:mb-8 gap-3 md:gap-8 overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => (
