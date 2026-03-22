@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Mada as FontSans } from "next/font/google";
-
+import { Analytics } from "@vercel/analytics/next"
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "sonner";
 
@@ -34,6 +34,7 @@ export default async function RootLayout({
         >
           <main className="">{children}</main>
           <Toaster richColors position="top-center" />
+          <Analytics />
         </GoogleOAuthProvider>
       </body>
     </html>
