@@ -27,9 +27,12 @@ export const AddClassModal = () => {
   const [formData, setFormData] = useState({
     batchId: "",
     subjectName: "",
+    className: "",
     topic: "",
     date: "",
   });
+
+  const SUBJECT_OPTIONS = ["Physics", "Chemistry", "Maths"] as const;
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
@@ -44,6 +47,7 @@ export const AddClassModal = () => {
       setFormData({
         batchId: "",
         subjectName: "",
+        className: "",
         topic: "",
         date: "",
       });
@@ -57,7 +61,7 @@ export const AddClassModal = () => {
     e.preventDefault();
     
     if (!formData.batchId || !formData.subjectName) {
-      toast.error("Please fill all required fields");
+      toast.error("Please select a batch and subject");
       return;
     }
 
@@ -100,13 +104,31 @@ export const AddClassModal = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="subject" className="font-semibold text-gray-700">Subject Name *</Label>
-              <Input 
-                id="subject"
-                placeholder="e.g. Physics" 
+              <Label htmlFor="subject" className="font-semibold text-gray-700">Subject *</Label>
+              <Select
                 value={formData.subjectName}
-                onChange={(e) => setFormData(prev => ({ ...prev, subjectName: e.target.value }))}
-                required
+                onValueChange={(val) => setFormData(prev => ({ ...prev, subjectName: val }))}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a subject" />
+                </SelectTrigger>
+                <SelectContent>
+                  {SUBJECT_OPTIONS.map((subject) => (
+                    <SelectItem key={subject} value={subject}>
+                      {subject}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="className" className="font-semibold text-gray-700">Class Name (Optional)</Label>
+              <Input 
+                id="className"
+                placeholder="e.g. Morning Batch Physics" 
+                value={formData.className}
+                onChange={(e) => setFormData(prev => ({ ...prev, className: e.target.value }))}
               />
             </div>
 
