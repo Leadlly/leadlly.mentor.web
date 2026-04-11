@@ -11,5 +11,9 @@ export default function InitialInfoLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="h-main-height">{children}</div>;
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      {children}
+    </div>
+  );
 }

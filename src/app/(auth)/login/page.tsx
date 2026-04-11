@@ -4,7 +4,7 @@ import LoginForm from "./components/LoginForm";
 
 const Login = () => {
   return (
-    <div className="h-main-height text-black relative">
+    <div className="min-h-screen text-black relative flex flex-col">
       <div className="flex items-center justify-center xl:justify-normal py-2 lg:mx-24">
         <Image
           src="/assets/images/leadlly_logo.svg"
@@ -14,7 +14,7 @@ const Login = () => {
         />
       </div>
 
-      <div className="h-[calc(100%-56px)] flex items-center px-4 lg:mx-20">
+      <div className="flex-1 flex items-center px-4 lg:mx-20">
         <div className="flex flex-col xl:flex-row items-center justify-between lg:gap-6 w-full">
           <LoginForm />
 

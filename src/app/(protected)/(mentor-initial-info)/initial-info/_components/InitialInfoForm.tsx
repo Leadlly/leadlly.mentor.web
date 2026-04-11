@@ -62,7 +62,7 @@ const InitialInfoForm = () => {
   };
 
   return (
-    <section className="flex flex-col gap-y-5 items-center justify-center h-full w-full px-3">
+    <section className="flex flex-col gap-y-5 items-center justify-center min-h-screen w-full px-3 py-10">
       <div className="max-w-lg w-full">
         <Image
           src="/assets/images/leadlly_logo.svg"

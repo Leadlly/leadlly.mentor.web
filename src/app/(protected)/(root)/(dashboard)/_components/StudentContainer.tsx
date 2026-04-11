@@ -15,7 +15,7 @@ const StudentContainer = ({ students }: { students: Studentinformation[] }) => {
   const [studentIds, setStudentIds] = useState<string[]>([]);
   const [scheduleMeeting, setScheduleMeeting] = useState(false);
 
-  const allStudentIds = students.map((student) => student._id);
+  const allStudentIds = (students ?? []).map((student) => student._id);
 
   const handleSelectAllStudents = () => {
     setStudentIds([...allStudentIds]);
@@ -86,7 +86,7 @@ const StudentContainer = ({ students }: { students: Studentinformation[] }) => {
         )}
       </div>
       <Students
-        students={students}
+        students={students ?? []}
         setStudentIds={setStudentIds}
         studentIds={studentIds}
         canSelectStudents={canSelectStudents}

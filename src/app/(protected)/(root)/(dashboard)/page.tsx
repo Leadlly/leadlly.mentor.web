@@ -12,7 +12,7 @@ const page = async () => {
         <div className="md:hidden">
           <SearchBar />
         </div>
-        <StudentContainer students={allAllottedStudents.students} />
+        <StudentContainer students={allAllottedStudents?.students ?? []} />
       </div>
     </div>
   );

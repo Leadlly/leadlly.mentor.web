@@ -5,7 +5,7 @@ import SignUpForm from "./components/SignUpForm";
 
 const SignUp = () => {
   return (
-    <div className="h-main-height text-black">
+    <div className="min-h-screen text-black flex flex-col">
       <div className="flex items-center justify-center xl:justify-normal py-2 lg:mx-20">
         <Image
           src="/assets/images/leadlly_logo.svg"
@@ -15,7 +15,7 @@ const SignUp = () => {
         />
       </div>
 
-      <div className="lg:h-[calc(100%-56px)] flex items-center px-4 lg:mx-20">
+      <div className="flex-1 flex items-center px-4 lg:mx-20">
         <div className="flex flex-col-reverse xl:flex-row items-center justify-between lg:gap-6 w-full">
           <div className="relative w-[250px] h-[250px] lg:w-[500px] lg:h-[500px]">
             <Image
