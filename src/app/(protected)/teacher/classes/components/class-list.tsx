@@ -55,7 +55,7 @@ const ClassList = () => {
                     </div>
                   </div>
                   <div className="bg-purple-50 text-purple-700 px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-semibold shrink-0">
-                    {item.batch?.students?.length || 0} students
+                    {item.batch?.studentCount ?? 0} students
                   </div>
                 </div>
 

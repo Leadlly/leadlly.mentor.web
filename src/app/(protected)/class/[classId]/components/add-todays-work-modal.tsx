@@ -272,6 +272,13 @@ const AddTodaysWorkModal = ({
   const selectedCount = selectedTopics.size;
   const totalSubtopicsSelected = Array.from(selectedTopics.values()).reduce((sum, entry) => sum + entry.selectedSubtopics.size, 0);
 
+  const isUnchanged = isUpdateMode && !!existingLecture && !!selectedChapter && (
+    existingLecture.chapters?.[0]?._id === selectedChapter._id &&
+    existingLecture.duration === duration &&
+    existingLecture.topics?.length === selectedTopics.size &&
+    (existingLecture.topics?.every((t) => selectedTopics.has(t._id)) ?? false)
+  );
+
   return (
     <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) resetForm(); }}>
       <DialogTrigger asChild>
@@ -419,7 +426,7 @@ const AddTodaysWorkModal = ({
               <Button variant="outline" onClick={() => { setOpen(false); resetForm(); }}>Cancel</Button>
               <Button
                 className="bg-purple-600 hover:bg-purple-700 px-6 cursor-pointer"
-                disabled={mutation.isPending || !selectedChapter || selectedTopics.size === 0}
+                disabled={mutation.isPending || !selectedChapter || selectedTopics.size === 0 || isUnchanged}
                 onClick={() => mutation.mutate()}
               >
                 {mutation.isPending ? (

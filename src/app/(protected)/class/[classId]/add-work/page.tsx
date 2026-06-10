@@ -226,6 +226,13 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
     return 60;
   };
 
+  const isUnchanged = isUpdateMode && !!existingLecture && !!selectedChapter && (
+    existingLecture.chapters?.[0]?._id === selectedChapter._id &&
+    existingLecture.duration === getDurationMinutes() &&
+    existingLecture.topics?.length === selectedTopics.size &&
+    (existingLecture.topics?.every((t: any) => selectedTopics.has(t._id)) ?? false)
+  );
+
   const mutation = useMutation({
     mutationFn: async () => {
       if (!selectedChapter) throw new Error("Please select a chapter");
@@ -568,6 +575,7 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
             className="bg-purple-600 hover:bg-purple-700 text-white font-bold px-8 py-2.5 rounded-full cursor-pointer"
             disabled={
               mutation.isPending ||
+              isUnchanged ||
               (!nothingDoneToday && (!selectedChapter || selectedTopics.size === 0))
             }
             onClick={() => mutation.mutate()}
