@@ -12,7 +12,7 @@ import {
   getTodaysLecture,
   updateTodaysWork,
 } from "@/actions/lecture_actions";
-import { Calendar as CalendarIcon, ChevronDown, Check, Loader2, Plus, ArrowRight, Paperclip, X, FileQuestion, CheckCircle2, Upload, FileText, Trash2, Megaphone } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronDown, ChevronRight, Check, Loader2, Plus, ArrowRight, Paperclip, X, FileQuestion, CheckCircle2, Upload, FileText, Trash2, Megaphone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -103,8 +103,10 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
 
   const [topics, setTopics] = useState<TopicItem[]>([]);
   const [topicsLoading, setTopicsLoading] = useState(false);
+  // topicSelected=true means the topic row itself is checked;
+  // entry exists in map if topicSelected OR at least one subtopic is selected
   const [selectedTopics, setSelectedTopics] = useState<
-    Map<string, { topic: TopicItem; selectedSubtopics: Set<string> }>
+    Map<string, { topic: TopicItem; topicSelected: boolean; selectedSubtopics: Set<string> }>
   >(new Map());
 
   const [homework, setHomework] = useState("");
@@ -190,32 +192,79 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
   useEffect(() => {
     if (prefillDoneRef.current || !existingLecture || topics.length === 0) return;
     const existingTopicIds = new Set(existingLecture.topics?.map((t: any) => t._id) || []);
-    const existingSubtopicIds = new Set(existingLecture.subtopics?.map((s: any) => s._id) || []);
-    const prefilled = new Map<string, { topic: TopicItem; selectedSubtopics: Set<string> }>();
+    // subtopics may be stored at top-level or nested in topics[].subtopics
+    const existingSubtopicIds = new Set([
+      ...(existingLecture.subtopics?.map((s: any) => s._id) || []),
+      ...(existingLecture.topics?.flatMap((t: any) => (t.subtopics || []).map((s: any) => s._id)) || []),
+    ]);
+    const prefilled = new Map<string, { topic: TopicItem; topicSelected: boolean; selectedSubtopics: Set<string> }>();
     for (const topic of topics) {
-      if (existingTopicIds.has(topic._id)) {
-        const subs = new Set<string>();
-        for (const sub of topic.subtopics) {
-          if (existingSubtopicIds.has(sub._id)) subs.add(sub._id);
-        }
-        prefilled.set(topic._id, { topic, selectedSubtopics: subs });
+      const topicSelected = existingTopicIds.has(topic._id);
+      const subs = new Set<string>();
+      for (const sub of topic.subtopics) {
+        if (existingSubtopicIds.has(sub._id)) subs.add(sub._id);
+      }
+      if (topicSelected || subs.size > 0) {
+        prefilled.set(topic._id, { topic, topicSelected, selectedSubtopics: subs });
       }
     }
     if (prefilled.size > 0) setSelectedTopics(prefilled);
     prefillDoneRef.current = true;
   }, [existingLecture, topics]);
 
+  const [expandedTopics, setExpandedTopics] = useState<Set<string>>(new Set());
+
   const toggleTopic = useCallback((topic: TopicItem) => {
     setSelectedTopics((prev) => {
       const next = new Map(prev);
-      if (next.has(topic._id)) {
-        next.delete(topic._id);
+      const entry = next.get(topic._id);
+      if (entry?.topicSelected) {
+        // deselect topic — keep entry only if subtopics still selected
+        const remaining = { ...entry, topicSelected: false };
+        if (remaining.selectedSubtopics.size > 0) {
+          next.set(topic._id, remaining);
+        } else {
+          next.delete(topic._id);
+        }
       } else {
         next.set(topic._id, {
           topic,
-          selectedSubtopics: new Set(topic.subtopics.map((s) => s._id)),
+          topicSelected: true,
+          selectedSubtopics: entry?.selectedSubtopics ?? new Set(),
         });
+        setExpandedTopics((e) => new Set(e).add(topic._id));
       }
+      return next;
+    });
+  }, []);
+
+  const toggleSubtopic = useCallback((topic: TopicItem, subtopicId: string) => {
+    setSelectedTopics((prev) => {
+      const next = new Map(prev);
+      const entry = next.get(topic._id);
+      const subs = new Set(entry?.selectedSubtopics ?? new Set<string>());
+      if (subs.has(subtopicId)) {
+        subs.delete(subtopicId);
+      } else {
+        subs.add(subtopicId);
+      }
+      const topicSelected = entry?.topicSelected ?? false;
+      if (!topicSelected && subs.size === 0) {
+        next.delete(topic._id);
+      } else {
+        next.set(topic._id, { topic, topicSelected, selectedSubtopics: subs });
+      }
+      return next;
+    });
+    // auto-expand when a subtopic is selected
+    setExpandedTopics((e) => new Set(e).add(topic._id));
+  }, []);
+
+  const toggleTopicExpand = useCallback((topicId: string) => {
+    setExpandedTopics((prev) => {
+      const next = new Set(prev);
+      if (next.has(topicId)) next.delete(topicId);
+      else next.add(topicId);
       return next;
     });
   }, []);
@@ -229,28 +278,33 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
   const isUnchanged = isUpdateMode && !!existingLecture && !!selectedChapter && (
     existingLecture.chapters?.[0]?._id === selectedChapter._id &&
     existingLecture.duration === getDurationMinutes() &&
-    existingLecture.topics?.length === selectedTopics.size &&
-    (existingLecture.topics?.every((t: any) => selectedTopics.has(t._id)) ?? false)
+    existingLecture.topics?.length === Array.from(selectedTopics.values()).filter(e => e.topicSelected).length &&
+    (existingLecture.topics?.every((t: any) => selectedTopics.get(t._id)?.topicSelected) ?? false)
   );
 
   const mutation = useMutation({
     mutationFn: async () => {
       if (!selectedChapter) throw new Error("Please select a chapter");
-      if (selectedTopics.size === 0 && !nothingDoneToday) throw new Error("Please select at least one topic");
+      if (selectedTopics.size === 0 && !nothingDoneToday) throw new Error("Please select at least one topic or subtopic");
 
+      // Build topics payload: include a topic entry for every topic that is
+      // selected OR has subtopics selected (student API requires parent topic present)
       const topicsPayload = Array.from(selectedTopics.values()).map(({ topic, selectedSubtopics }) => ({
         _id: topic._id,
         name: topic.name,
-        subItems: topic.subtopics
+        subtopics: topic.subtopics
           .filter((s) => selectedSubtopics.has(s._id))
           .map((s) => ({ _id: s._id, name: s.name })),
       }));
       const allSubtopics = topicsPayload.flatMap((t) =>
-        t.subItems.map((s) => ({ _id: s._id, name: s.name }))
+        t.subtopics.map((s) => ({ _id: s._id, name: s.name }))
       );
+      // For the stored topics list, only include topics whose row was explicitly checked
+      const topicsForLecture = topicsPayload.map(({ subtopics: _, ...rest }) => rest);
 
       const payload = {
         chapter: [{ _id: selectedChapter._id, name: selectedChapter.name }],
+        // topicsPayload has subtopics nested — student API reads topic.subtopics
         topics: topicsPayload,
         subtopics: allSubtopics,
         duration: getDurationMinutes(),
@@ -287,8 +341,11 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
     );
   }
 
-  const selectedTopicNames = Array.from(selectedTopics.values()).map(
-    ({ topic }) => topic.name
+  const selectedTopicNames = Array.from(selectedTopics.values())
+    .filter(({ topicSelected }) => topicSelected)
+    .map(({ topic }) => topic.name);
+  const totalSelectedSubtopics = Array.from(selectedTopics.values()).reduce(
+    (acc, { selectedSubtopics }) => acc + selectedSubtopics.size, 0
   );
 
   return (
@@ -486,7 +543,16 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
 
         {/* Select Topics */}
         <div className="space-y-2">
-          <label className="text-sm font-bold text-gray-800">Select Topics</label>
+          <label className="text-sm font-bold text-gray-800">
+            Select Topics &amp; Subtopics
+            {selectedTopics.size > 0 && (
+              <span className="ml-1.5 text-xs font-normal text-purple-600">
+                ({selectedTopicNames.length > 0 ? `${selectedTopicNames.length} topic${selectedTopicNames.length > 1 ? "s" : ""}` : ""}
+                {selectedTopicNames.length > 0 && totalSelectedSubtopics > 0 ? ", " : ""}
+                {totalSelectedSubtopics > 0 ? `${totalSelectedSubtopics} subtopic${totalSelectedSubtopics > 1 ? "s" : ""}` : ""})
+              </span>
+            )}
+          </label>
           <Popover open={topicPopoverOpen} onOpenChange={setTopicPopoverOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -494,16 +560,18 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
                 role="combobox"
                 disabled={!selectedChapter || nothingDoneToday}
                 className={cn(
-                  "w-full justify-between text-left h-11 rounded-lg bg-white",
+                  "w-full justify-between text-left h-auto min-h-11 rounded-lg bg-white py-2",
                   selectedTopics.size === 0 && "text-muted-foreground"
                 )}
               >
-                <span className="flex-1 truncate">
+                <span className="flex-1 truncate text-sm">
                   {selectedTopics.size > 0
-                    ? selectedTopicNames.join(", ")
+                    ? selectedTopicNames.length > 0
+                      ? selectedTopicNames.join(", ") + (totalSelectedSubtopics > 0 ? ` + ${totalSelectedSubtopics} subtopic${totalSelectedSubtopics > 1 ? "s" : ""}` : "")
+                      : `${totalSelectedSubtopics} subtopic${totalSelectedSubtopics > 1 ? "s" : ""} selected`
                     : topicsLoading
                     ? "Loading topics..."
-                    : "Choose the Topics"}
+                    : "Choose topics or subtopics"}
                 </span>
                 <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
               </Button>
@@ -519,20 +587,63 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
                   No topics found
                 </div>
               ) : (
-                <div className="max-h-[250px] overflow-y-auto divide-y">
+                <div className="max-h-[300px] overflow-y-auto divide-y">
                   {topics.map((topic) => {
-                    const isSelected = selectedTopics.has(topic._id);
+                    const entry = selectedTopics.get(topic._id);
+                    const isTopicChecked = entry?.topicSelected ?? false;
+                    const isExpanded = expandedTopics.has(topic._id);
+                    const hasSubtopics = topic.subtopics.length > 0;
+                    const selectedSubCount = entry?.selectedSubtopics.size ?? 0;
                     return (
-                      <div key={topic._id} className="px-3 py-2">
-                        <div
-                          className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded p-1 -m-1"
-                          onClick={() => toggleTopic(topic)}
-                        >
-                          <Checkbox checked={isSelected} />
-                          <span className="text-sm font-medium text-gray-800">
-                            {topic.name}
-                          </span>
+                      <div key={topic._id} className="divide-y">
+                        <div className="px-3 py-2.5 flex items-center gap-2">
+                          <div
+                            className="flex items-center gap-2 flex-1 cursor-pointer hover:bg-gray-50 rounded p-1 -m-1"
+                            onClick={() => toggleTopic(topic)}
+                          >
+                            <Checkbox checked={isTopicChecked} />
+                            <span className="text-sm font-medium text-gray-800 flex-1">
+                              {topic.name}
+                            </span>
+                            {selectedSubCount > 0 && (
+                              <span className="text-xs text-purple-500 font-medium shrink-0">
+                                {selectedSubCount}/{topic.subtopics.length}
+                              </span>
+                            )}
+                          </div>
+                          {hasSubtopics && (
+                            <button
+                              onClick={() => toggleTopicExpand(topic._id)}
+                              className="p-1 rounded hover:bg-gray-100 text-gray-400 shrink-0"
+                            >
+                              {isExpanded ? (
+                                <ChevronDown className="size-3.5" />
+                              ) : (
+                                <ChevronRight className="size-3.5" />
+                              )}
+                            </button>
+                          )}
                         </div>
+                        {isExpanded && hasSubtopics && (
+                          <div className="bg-purple-50/40 divide-y divide-purple-100/50">
+                            {topic.subtopics.map((sub) => {
+                              const isSubSelected = entry?.selectedSubtopics.has(sub._id) ?? false;
+                              return (
+                                <div
+                                  key={sub._id}
+                                  className="flex items-center gap-2 pl-8 pr-3 py-2 cursor-pointer hover:bg-purple-50"
+                                  onClick={() => toggleSubtopic(topic, sub._id)}
+                                >
+                                  <Checkbox
+                                    checked={isSubSelected}
+                                    className="size-3.5"
+                                  />
+                                  <span className="text-xs text-gray-600">{sub.name}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
