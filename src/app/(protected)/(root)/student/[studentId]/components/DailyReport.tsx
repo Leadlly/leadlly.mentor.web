@@ -2,13 +2,13 @@
 import RadialBarChart from "@/components/charts/RadialBarChart";
 import { formatDate } from "@/helpers/utils";
 
-const DailyReport = ({dailyreportquiz,dailyreportsession}:any) => {
+const DailyReport = ({ dailyreportquiz, dailyreportsession }: any) => {
   return (
-    <div className="px-3 bg-[#FBFAFC] rounded-2xl border-[1px] border-[#D8D5D5] shadow-custom-black py-2">
+    <div className="px-3 bg-[#FBFAFC] rounded-2xl border border-[#D8D5D5] shadow-custom-black py-2">
       <h4 className="text-xs md:text-sm font-bold">Daily Report</h4>
       <div className="flex items-center justify-center">
         <RadialBarChart
-          series={[dailyreportquiz,dailyreportsession]}
+          series={[dailyreportquiz, dailyreportsession]}
           colors={["#9654F4", "#72EFDD"]}
           labels={["Sessions", "Quizzes"]}
           dataLabel="overall"

@@ -1,17 +1,22 @@
 "use client";
+import { useEffect, useState } from "react";
+
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
+
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+
+import { getTracker } from "@/actions/user_actions";
 import Header from "@/components/shared/Header";
-import { useState, useEffect } from "react";
+import Loader from "@/components/shared/Loader";
+import { trackerTabs } from "@/helpers/constants";
 import { ISubject, TTrackerProps } from "@/helpers/types";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import { trackerTabs } from "@/helpers/constants";
 import { useAppSelector } from "@/redux/hooks";
-import { useSearchParams } from "next/navigation";
-import { getTracker } from "@/actions/user_actions";
-import { toast } from "sonner";
+
 import TrackerComponent from "./TrackerComponent";
-import { usePathname } from "next/navigation";
-import Loader from "@/components/shared/Loader";
 
 const Tracker = ({
   studentId,
@@ -20,35 +25,23 @@ const Tracker = ({
   studentId: string;
   studentSubjects: ISubject[];
 }) => {
-  const [trackerData, setTrackerData] = useState<TTrackerProps[] | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const searchParams = useSearchParams();
 
   const activeSubject =
     searchParams.get("subject") ?? studentSubjects?.[0].name;
 
-  useEffect(() => {
-    const geTrackerData = async () => {
-      setIsLoading(true);
-      try {
-        const data = await getTracker(activeSubject!, studentId);
-        setTrackerData(data.data);
-      } catch (error: any) {
-        toast.error(error.message);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    geTrackerData();
-  }, [activeSubject]);
+  const { data: trackerData, isLoading } = useQuery({
+    queryKey: ["tracker", studentId, activeSubject],
+    queryFn: async () => await getTracker(activeSubject, studentId),
+    enabled: !!studentId && !!activeSubject,
+  });
 
   if (isLoading) {
     return <Loader />;
   }
 
   return (
-    <div className="h-[calc(100dvh-120px)] flex flex-col gap-y-4">
+    <div className="h-[calc(100dvh-80px)] flex flex-col gap-y-4">
       <Header
         title="Tracker"
         titleClassName="text-2xl md:text-3xl lg:text-page-title"
@@ -80,7 +73,7 @@ const Tracker = ({
         {activeSubject && (
           <TrackerComponent
             activeSubject={activeSubject}
-            trackerData={trackerData!}
+            trackerData={trackerData?.data!}
             userSubjects={studentSubjects}
           />
         )}

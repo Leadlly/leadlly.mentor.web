@@ -9,7 +9,7 @@ import ResetPasswordForm from "./_components/ResetPasswordForm";
 
 const ResetPasswordPage = () => {
   return (
-    <section className="w-full h-full flex items-center justify-center">
+    <section className="w-full min-h-screen flex items-center justify-center">
       <div className="max-w-lg w-full rounded-xl shadow-2xl flex flex-col items-center justify-center gap-y-2 p-10">
         <Image
           src="/assets/images/leadlly_logo.svg"

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 
 import { usePathname } from "next/navigation";
 
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 import {
@@ -33,59 +34,26 @@ const progressAnalyticsMenus = [
   },
 ];
 
-const ProgressAnalytics: React.FC = () => {
+const ProgressAnalytics = ({ studentId }: { studentId: string }) => {
   const [activeTab, setActiveTab] = useState("weekly");
-  const [reportweekly, setReportweekly] = useState<weeklyReport | null>(null);
-  const [reportmonthly, setreportmonthly] = useState<monthlyReport | null>(
-    null
-  );
-  const [reportoverall, setreportoverall] = useState<any[] | null>(null);
-  const pathname = usePathname();
-  const segments = pathname.split("/");
-  const studentId = segments[segments.length - 1];
 
-  useEffect(() => {
-    const getReportweekly = async () => {
-      try {
-        const data = await getWeeklyReport(studentId);
-        const weekly = data.weeklyReport;
-        setReportweekly(weekly);
-      } catch (error: any) {
-        toast.error(error.message);
-      }
-    };
+  const { data: weeklyReport } = useQuery({
+    queryKey: ["weeklyReport", studentId],
+    queryFn: () => getWeeklyReport(studentId),
+    enabled: !!studentId,
+  });
 
-    getReportweekly();
-  }, [studentId]);
+  const { data: monthlyReport } = useQuery({
+    queryKey: ["monthlyReport", studentId],
+    queryFn: () => getMonthlyReport(studentId),
+    enabled: !!studentId,
+  });
 
-  useEffect(() => {
-    const getreportmonthly = async () => {
-      try {
-        const data = await getMonthlyReport(studentId);
-        const monthly = data.monthlyReport;
-        setreportmonthly(monthly);
-      } catch (error: any) {
-        toast.error(error.message);
-      }
-    };
-
-    getreportmonthly();
-  }, [studentId]);
-
-  useEffect(() => {
-    const getreportoverall = async () => {
-      try {
-        const data = await getOverallReport(studentId);
-        const overall = data.overallReport;
-        console.log(data);
-        setreportoverall(overall);
-      } catch (error: any) {
-        toast.error(error.message);
-      }
-    };
-
-    getreportoverall();
-  }, [studentId]);
+  const { data: overallReport } = useQuery({
+    queryKey: ["overallReport", studentId],
+    queryFn: () => getOverallReport(studentId),
+    enabled: !!studentId,
+  });
 
   return (
     <div className="px-3 flex-1 pt-2 bg-[#FBFAFC] rounded-2xl border border-[#D8D5D5] shadow-custom-black">
@@ -109,17 +77,17 @@ const ProgressAnalytics: React.FC = () => {
       <div className="w-full h-full overflow-hidden">
         <TabContent id="weekly" activeTab={activeTab}>
           <div className="flex items-center gap-3">
-            <BarChart weekly={reportweekly?.days} />
+            <BarChart weekly={weeklyReport?.weeklyReport?.days} />
           </div>
         </TabContent>
         <TabContent id="monthly" activeTab={activeTab}>
           <div className="flex items-center gap-3">
-            <AreaChart monthly={reportmonthly?.days} />
+            <AreaChart monthly={monthlyReport?.monthlyReport?.days} />
           </div>
         </TabContent>
         <TabContent id="overall" activeTab={activeTab}>
           <div className="flex items-center gap-3">
-            <AreaChartOver progress={reportoverall} />
+            <AreaChartOver progress={overallReport?.overallReport} />
           </div>
         </TabContent>
       </div>

@@ -1,8 +1,11 @@
 "use client";
-import { cn } from "@/lib/utils";
 import dynamic from "next/dynamic";
-import RadialBarChartSkeleton from "./_skeletons/RadialBarChartSkeleton";
+
 import { ISubject } from "@/helpers/types";
+import { cn } from "@/lib/utils";
+
+import RadialBarChartSkeleton from "./_skeletons/RadialBarChartSkeleton";
+
 const Charts = dynamic(() => import("react-apexcharts"), {
   ssr: false,
   loading: () => <RadialBarChartSkeleton />,
@@ -86,8 +89,7 @@ const RadialBarChart = ({
 
       <div
         className={cn(
-          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2",
-          dataLabel === "questions" ? "-mt-3" : ""
+          "absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         )}
       >
         {labels.includes("No. of Questions Solved") && (
@@ -99,9 +101,8 @@ const RadialBarChart = ({
         )}
         <p
           className={cn(
-            "text-sm leading-none font-medium mt-2 capitalize",
-            dataLabel === "overall" ? "text-[10px] text-[#a9a9a9] -mt-1" : "",
-            dataLabel === "questions" ? "-mt-[1px]" : ""
+            "text-sm leading-none font-medium mt-5 capitalize",
+            dataLabel === "overall" ? "text-[10px] text-[#a9a9a9]" : ""
           )}
         >
           {dataLabel}

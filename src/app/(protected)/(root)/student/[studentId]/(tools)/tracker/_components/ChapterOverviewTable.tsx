@@ -1,12 +1,9 @@
 "use client";
+import { useState } from "react";
+
 import DonutChart from "@/components/charts/DonutChart";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { capitalizeFirstLetter, convertDateString } from "@/helpers/utils";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
-import ChapterRevisionDateTable from "./ChapterRevisionDateTable";
-import { chapterOverviewProps, TTrackerProps } from "@/helpers/types";
 import {
   Table,
   TableBody,
@@ -14,6 +11,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { chapterOverviewProps, TTrackerProps } from "@/helpers/types";
+import { capitalizeFirstLetter, convertDateString } from "@/helpers/utils";
+import { cn } from "@/lib/utils";
+
+import ChapterRevisionDateTable from "./ChapterRevisionDateTable";
 
 const ChapterOverviewTable = ({
   chapterData,
@@ -54,7 +56,7 @@ const ChapterOverviewTable = ({
 
                 <TableBody>
                   {chapterData && chapterData.topics.length ? (
-                    chapterData.topics.map((item:any) => (
+                    chapterData.topics.map((item: any) => (
                       <TableRow key={item.name} className="border-none">
                         <TableHead className="text-xs md:text-base">
                           {capitalizeFirstLetter(item.name)}
@@ -103,7 +105,7 @@ const ChapterOverviewTable = ({
 
             <div className="hidden lg:block w-full text-center">
               <Button
-                className="h-10 bg-primary/[0.12] hover:bg-primary/[0.16] text-primary text-xl leading-none font-semibold"
+                className="h-10 bg-primary/12 hover:bg-primary/16 text-primary text-xl leading-none font-semibold"
                 onClick={onViewMoreButtonClickHandler}
               >
                 View More
@@ -122,7 +124,7 @@ const ChapterOverviewTable = ({
 
               <div className="flex flex-col gap-y-2 lg:-mt-5">
                 <div className="flex items-center gap-2">
-                  <span className="w-[9px] h-[9px] rounded-full bg-primary"></span>
+                  <span className="size-[9px] rounded-full bg-primary"></span>
                   <span className="text-[9px] font-medium leading-none">
                     Revision Completion -{" "}
                     <span className="font-bold">
@@ -131,7 +133,7 @@ const ChapterOverviewTable = ({
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-[9px] h-[9px] rounded-full bg-[#72EFDD]"></span>
+                  <span className="size-[9px] rounded-full bg-[#72EFDD]"></span>
                   <span className="text-[9px] font-medium leading-none">
                     Total Efficiency -{" "}
                     <span className="font-bold">
@@ -140,7 +142,7 @@ const ChapterOverviewTable = ({
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="w-[9px] h-[9px] rounded-full bg-[#FFDA57]"></span>
+                  <span className="size-[9px] rounded-full bg-[#FFDA57]"></span>
                   <span className="text-[9px] font-medium leading-none">
                     No. of Questions Solved -{" "}
                     <span className="font-bold">70%</span>
@@ -156,7 +158,7 @@ const ChapterOverviewTable = ({
             </p>
 
             <Button
-              className="h-6 bg-primary/[0.12] hover:bg-primary/[0.16] text-primary text-xs leading-none font-semibold"
+              className="h-6 bg-primary/12 hover:bg-primary/16 text-primary text-xs leading-none font-semibold"
               onClick={onViewMoreButtonClickHandler}
             >
               View More

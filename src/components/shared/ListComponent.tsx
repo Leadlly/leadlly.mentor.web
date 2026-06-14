@@ -35,7 +35,7 @@ const Popup: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   return (
     <>
       <div className="absolute text-black top-[50%] md:left-[15%] lg:left-[8%] transform -translate-y-1/2 w-[30%] xl:w-[415px] bg-white border border-gray-200 shadow-lg rounded-lg z-40 overflow-auto custom__scrollbar">
-        <div className="pt-5 w-full h-[calc(100dvh-120px)] text-center">
+        <div className="pt-5 w-full h-[calc(100dvh-80px)] text-center">
           <div className="w-full text-left px-4 flex flex-col mb-[12px] items-center">
             <SearchBar className="rounded-[12px] text-[16px] w-full bg-white" />
           </div>

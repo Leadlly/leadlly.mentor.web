@@ -8,16 +8,16 @@ import Popup from "@/components/shared/ListComponent";
 import { userSidebarLinks } from "@/helpers/constants";
 import { cn } from "@/lib/utils";
 
-import ListIcon from "../icons/ListIcon";
+// import ListIcon from "../icons/ListIcon";
 
 const Sidebar = ({ id }: { id: string }) => {
   const pathname = usePathname();
   const [isPopupOpen, setIsPopupOpen] = useState(false);
 
-  const handleListClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
-    setIsPopupOpen(!isPopupOpen); // Toggle popup
-  };
+  // const handleListClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  //   event.preventDefault();
+  //   setIsPopupOpen(!isPopupOpen); // Toggle popup
+  // };
 
   const handleTabClick = () => {
     setIsPopupOpen(false); // Close popup when a tab is clicked

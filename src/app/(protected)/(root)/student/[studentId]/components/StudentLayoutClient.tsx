@@ -1,28 +1,7 @@
-"use client";
-
-import React from "react";
-import { useParams, useRouter } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
-import Sidebar from "@/components/shared/Sidebar";
 import MobileMenu from "@/components/shared/MobileMenu";
+import Sidebar from "@/components/shared/Sidebar";
 
-const StudentHeader = () => {
-  const router = useRouter();
-
-  return (
-    <div className="flex items-center justify-between px-3 md:px-4 py-2.5 sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-50">
-      <div className="flex items-center gap-2">
-        <button
-          onClick={() => router.back()}
-          className="p-1 hover:bg-gray-100 rounded-full transition-colors flex items-center justify-center shrink-0"
-        >
-          <ChevronLeft className="size-5 text-gray-800" strokeWidth={2.5} />
-        </button>
-        <p className="text-lg md:text-2xl font-bold text-gray-900">Student</p>
-      </div>
-    </div>
-  );
-};
+import StudentHeader from "./StudentHeader";
 
 export default function StudentLayoutClient({
   children,

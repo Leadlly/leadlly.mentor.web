@@ -1,8 +1,8 @@
 import LevelPoints from "./LevelPoints";
 
-const PointsBox = ({points,level,streak}:any) => {
+const PointsBox = ({ points, level, streak }: any) => {
   return (
-    <div className="grid grid-cols-3 gap-[8px] md:gap-6 xl:gap-6">
+    <div className="grid grid-cols-3 gap-[8px] md:gap-6 xl:gap-6 place-items-center">
       <LevelPoints
         cardBgColor="bg-[#00B2FF]/[0.03]"
         iconImageSrc={"/assets/images/trophy_cup.png"}
