@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getTeacherDashboard } from "@/actions/user_actions";
 import { getLectures } from "@/actions/lecture_actions";
+import Image from "next/image";
 import {
   Layers,
   ClipboardList,
@@ -124,6 +125,17 @@ const TeacherDashboard = () => {
 
   const ov = dashboard.overview;
   const cards = overviewCards(ov);
+  const teachingStreak = dashboard.teachingStreak || {
+    currentStreak: 0,
+    recentDays: [],
+  };
+  const streakCount = teachingStreak.currentStreak ?? 0;
+  const streakMessage =
+    streakCount >= 7
+      ? "Amazing consistency! Keep it up."
+      : streakCount > 0
+        ? "Great work! Teach today to keep your streak."
+        : "Start teaching today to begin your streak.";
 
   const monthlyTrend = dashboard.monthlyTrend || [];
 
@@ -159,6 +171,72 @@ const TeacherDashboard = () => {
       {/* Overview Cards */}
       <div>
         <h2 className="text-base md:text-lg font-bold text-gray-800 mb-2 md:mb-3">Overview</h2>
+
+        <div className="mb-2 md:mb-3 rounded-xl md:rounded-2xl border border-fuchsia-100 bg-gradient-to-r from-fuchsia-50 via-pink-50 to-orange-50 p-3 md:p-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="rounded-xl bg-white/80 p-2 md:p-2.5 shadow-sm shrink-0">
+                <Image
+                  src="/assets/images/fire_flame.png"
+                  alt="Teaching streak"
+                  width={28}
+                  height={28}
+                  className="size-6 md:size-7"
+                />
+              </div>
+              <div className="min-w-0">
+                <p className="text-[10px] md:text-xs font-medium text-fuchsia-600 uppercase tracking-wide">
+                  Teaching Streak
+                </p>
+                <p className="text-xl md:text-3xl font-bold text-fuchsia-700 leading-tight">
+                  {streakCount} Day{streakCount === 1 ? "" : "s"}
+                </p>
+                <p className="text-[10px] md:text-xs text-gray-500 truncate">
+                  {streakMessage}
+                </p>
+              </div>
+            </div>
+
+            {teachingStreak.recentDays?.length > 0 && (
+              <div className="hidden sm:flex items-end gap-1.5 md:gap-2 shrink-0">
+                {teachingStreak.recentDays.map((day: any) => (
+                  <div key={day.date} className="flex flex-col items-center gap-1">
+                    <div
+                      className={`size-2.5 md:size-3 rounded-full ${
+                        day.taught
+                          ? "bg-gradient-to-b from-orange-400 to-fuchsia-500"
+                          : "bg-gray-200"
+                      } ${day.isToday ? "ring-2 ring-fuchsia-300 ring-offset-1" : ""}`}
+                    />
+                    <span className="text-[9px] md:text-[10px] font-medium text-gray-400">
+                      {day.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {teachingStreak.recentDays?.length > 0 && (
+            <div className="mt-3 flex sm:hidden items-center justify-between gap-1">
+              {teachingStreak.recentDays.map((day: any) => (
+                <div key={day.date} className="flex flex-col items-center gap-1 flex-1">
+                  <div
+                    className={`size-2.5 rounded-full ${
+                      day.taught
+                        ? "bg-gradient-to-b from-orange-400 to-fuchsia-500"
+                        : "bg-gray-200"
+                    } ${day.isToday ? "ring-2 ring-fuchsia-300" : ""}`}
+                  />
+                  <span className="text-[8px] font-medium text-gray-400">
+                    {day.label?.[0]}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
           {cards.map((card, i) => (
             <div key={i} className={`${card.bg} rounded-xl md:rounded-2xl p-3 md:p-4 flex items-start gap-2 md:gap-3 border border-transparent`}>
