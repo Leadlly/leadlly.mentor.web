@@ -10,6 +10,7 @@ import AnnouncementList from "@/components/shared/AnnouncementList";
 import AnnouncementModal from "@/components/shared/AnnouncementModal";
 import { Button } from "@/components/ui/button";
 import { formatClassLabel } from "@/helpers/constants/academic";
+import ReportDetailBanner from "@/app/(protected)/class/[classId]/components/report-detail-banner";
 
 const BatchDashboard = ({ batchId }: { batchId: string }) => {
   const [activeTab, setActiveTab] = useState("report");
@@ -62,6 +63,13 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
   return (
     <div className="w-full min-h-screen bg-[#FAFAFA] flex flex-col">
       <div className="flex-1 w-full bg-white rounded-t-[24px] md:rounded-t-[40px] shadow-[0_-4px_20px_rgba(0,0,0,0.02)] px-3 md:px-8 py-4 md:py-6 border-t border-gray-100 flex flex-col pb-20 md:pb-6 mt-2">
+        <ReportDetailBanner
+          batchName={batch.name}
+          subject={batch.subjects?.join(", ")}
+          standard={batch.standard}
+          competitiveExam={batch.competitiveExam}
+        />
+
         {/* Tabs */}
         <div className="flex border-b border-gray-100 mb-4 md:mb-8 gap-3 md:gap-8 overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => (
