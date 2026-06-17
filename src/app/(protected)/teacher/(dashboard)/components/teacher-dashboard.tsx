@@ -18,6 +18,11 @@ import {
 } from "lucide-react";
 import { formatStandardLabel } from "@/helpers/constants/academic";
 import {
+  BATCH_CHART_COLORS,
+  buildBatchColorMapFromPerformance,
+  getBatchStyle,
+} from "@/helpers/constants/batch-colors";
+import {
   addDays,
   addMonths,
   eachDayOfInterval,
@@ -67,15 +72,6 @@ const overviewCards = (data: any) => [
     valueColor: "text-orange-700",
   },
   {
-    label: "Teaching Hours",
-    value: data.totalTeachingHours,
-    icon: Clock,
-    bg: "bg-teal-50",
-    iconBg: "bg-teal-100",
-    iconColor: "text-teal-600",
-    valueColor: "text-teal-700",
-  },
-  {
     label: "Total Students",
     value: data.totalStudents,
     icon: Users,
@@ -86,40 +82,7 @@ const overviewCards = (data: any) => [
   },
 ];
 
-const BATCH_COLORS = ["#f59e0b", "#3b82f6", "#10b981", "#a855f7", "#ef4444", "#06b6d4"];
-
-const BATCH_BADGE_STYLES = [
-  { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200", accent: "#f59e0b" },
-  { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200", accent: "#3b82f6" },
-  { bg: "bg-green-50", text: "text-green-700", border: "border-green-200", accent: "#10b981" },
-  { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200", accent: "#a855f7" },
-  { bg: "bg-rose-50", text: "text-rose-700", border: "border-rose-200", accent: "#ef4444" },
-  { bg: "bg-cyan-50", text: "text-cyan-700", border: "border-cyan-200", accent: "#06b6d4" },
-];
-
-const buildBatchColorMap = (batchPerformance: any[] = []) => {
-  const map = new Map<string, (typeof BATCH_BADGE_STYLES)[number]>();
-  batchPerformance.forEach((batch, index) => {
-    const style = BATCH_BADGE_STYLES[index % BATCH_BADGE_STYLES.length];
-    if (batch.batchId) map.set(String(batch.batchId), style);
-    if (batch.batchName) map.set(String(batch.batchName), style);
-  });
-  return map;
-};
-
-const getBatchStyle = (
-  batchColorMap: Map<string, (typeof BATCH_BADGE_STYLES)[number]>,
-  lecture: any,
-  fallbackIndex = 0
-) => {
-  const batchId = lecture?.batch?._id || lecture?.batchId;
-  const batchName = lecture?.batch?.name || lecture?.batchName;
-  return (
-    (batchId && batchColorMap.get(String(batchId))) ||
-    (batchName && batchColorMap.get(String(batchName))) ||
-    BATCH_BADGE_STYLES[fallbackIndex % BATCH_BADGE_STYLES.length]
-  );
-};
+const BATCH_COLORS = BATCH_CHART_COLORS;
 
 const TeacherDashboard = () => {
   const [isMonthCalendarOpen, setIsMonthCalendarOpen] = useState(false);
@@ -188,7 +151,7 @@ const TeacherDashboard = () => {
         : "Start teaching today to begin your streak.";
 
   const monthlyTrend = dashboard.monthlyTrend || [];
-  const batchColorMap = buildBatchColorMap(dashboard.batchPerformance || []);
+  const batchColorMap = buildBatchColorMapFromPerformance(dashboard.batchPerformance || []);
   const calendarLectures =
     allLectures?.lectures?.length
       ? allLectures.lectures
