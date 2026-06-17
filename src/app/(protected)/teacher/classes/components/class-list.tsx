@@ -47,11 +47,11 @@ const ClassList = () => {
                       {React.createElement(getSubjectIcon(item.subject), { className: "text-white size-5 md:size-6" })}
                     </div>
                     <div className="flex flex-col flex-1 min-w-0">
-                      <h3 className="text-[15px] md:text-lg font-semibold text-gray-900 truncate w-full capitalize" title={item.subject}>
-                        {item.subject || "Unknown Class"}
+                      <h3 className="text-[15px] md:text-lg font-semibold text-gray-900 truncate w-full capitalize" title={item.batch?.name}>
+                        {item.batch?.name || "No Batch"}
                       </h3>
                       <p className="text-xs md:text-[13px] text-gray-500 font-medium truncate w-full mt-0.5 capitalize">
-                        {item.batch?.name || "No Batch"} • {formatStdLabel(item.batch?.standard)}
+                        {item.subject || "Unknown Subject"} • {formatStdLabel(item.batch?.standard)}
                       </p>
                     </div>
                   </div>
