@@ -1072,8 +1072,13 @@ const NotesUploadButton = ({ classId, batchId, subject, dateStr }: { classId: st
         batchId,
         classId,
         subject,
-        fileUrl: uploadedFile.fileUrl,
-        fileType: uploadedFile.fileType,
+        attachments: [
+          {
+            fileName: uploadedFile.title,
+            fileUrl: uploadedFile.fileUrl,
+            fileType: uploadedFile.fileType,
+          },
+        ],
       });
 
       if (res.success) {
