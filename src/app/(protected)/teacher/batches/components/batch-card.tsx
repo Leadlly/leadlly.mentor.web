@@ -5,13 +5,14 @@ import { Share2, Plus, Megaphone } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import AnnouncementModal from "@/components/shared/AnnouncementModal";
-import { formatStdLabel } from "@/helpers/constants/academic";
+import { formatBatchMetaLabel } from "@/helpers/constants/academic";
 
 interface BatchCardProps {
   batch: {
     _id: string;
     name: string;
     standard: string;
+    competitiveExam?: string;
     subjects: string[];
     batchReport?: {
       totalStudents?: number;
@@ -36,7 +37,8 @@ const BatchCard = ({ batch }: BatchCardProps) => {
                   {batch.name}
                 </h3>
                 <p className="text-xs md:text-[13px] text-gray-500 font-medium truncate w-full mt-0.5">
-                  {formatStdLabel(batch.standard)} - {batch.subjects?.join(", ")}
+                  {formatBatchMetaLabel(batch.standard, batch.competitiveExam)}
+                  {batch.subjects?.length ? ` - ${batch.subjects.join(", ")}` : ""}
                 </p>
               </div>
             </div>
