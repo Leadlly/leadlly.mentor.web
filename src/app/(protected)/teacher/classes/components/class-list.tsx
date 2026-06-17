@@ -51,20 +51,22 @@ const ClassList = () => {
             return (
               <div
                 key={item._id}
-                className={`bg-white rounded-2xl md:rounded-3xl p-4 md:p-6 border flex flex-col h-full relative transition-colors ${batchStyle.border}`}
-                style={{ borderLeftWidth: 4, borderLeftColor: batchStyle.accent }}
+                className={`${batchStyle.bg} rounded-2xl md:rounded-3xl p-4 md:p-6 border flex flex-col h-full relative transition-all shadow-sm hover:shadow-md ${batchStyle.border}`}
               >
                 <div className="flex justify-between items-start gap-2 md:gap-3 w-full">
                   <div className="flex gap-3 md:gap-4 items-center flex-1 min-w-0">
                     <div
-                      className="rounded-xl md:rounded-2xl shrink-0 flex items-center justify-center size-10 md:size-12"
-                      style={{ backgroundColor: batchStyle.accent }}
+                      className="rounded-xl md:rounded-2xl shrink-0 flex items-center justify-center size-10 md:size-12 bg-white/80 border shadow-sm"
+                      style={{
+                        borderColor: batchStyle.accent,
+                        color: batchStyle.accent,
+                      }}
                     >
-                      <SubjectIcon className="text-white size-5 md:size-6" />
+                      <SubjectIcon className="size-5 md:size-6" />
                     </div>
                     <div className="flex flex-col flex-1 min-w-0">
                       <h3
-                        className={`text-[15px] md:text-lg font-semibold truncate w-full capitalize ${batchStyle.text}`}
+                        className="text-[15px] md:text-lg font-semibold text-gray-900 truncate w-full capitalize"
                         title={item.batch?.name}
                       >
                         {item.batch?.name || "No Batch"}
@@ -75,7 +77,7 @@ const ClassList = () => {
                     </div>
                   </div>
                   <div
-                    className={`px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-semibold shrink-0 border ${batchStyle.bg} ${batchStyle.text} ${batchStyle.border}`}
+                    className={`bg-white/75 px-2 md:px-3 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-semibold shrink-0 border ${batchStyle.text} ${batchStyle.border}`}
                   >
                     {item.batch?.studentCount ?? 0} students
                   </div>
@@ -85,7 +87,7 @@ const ClassList = () => {
                   <Link href={`/class/${item._id}?className=${encodeURIComponent(className)}`} className="flex-1">
                     <Button
                       variant="outline"
-                      className="w-full rounded-full h-10 text-sm font-semibold cursor-pointer hover:bg-opacity-80"
+                      className="w-full rounded-full h-10 text-sm font-semibold cursor-pointer bg-white/80 hover:bg-white"
                       style={{
                         borderColor: batchStyle.accent,
                         color: batchStyle.accent,
@@ -96,8 +98,12 @@ const ClassList = () => {
                   </Link>
                   <Link href={`/class/${item._id}/add-work?className=${encodeURIComponent(className)}`} className="flex-1">
                     <Button
-                      className="w-full rounded-full text-white h-10 text-sm font-semibold cursor-pointer hover:opacity-90"
-                      style={{ backgroundColor: batchStyle.accent }}
+                      variant="outline"
+                      className="w-full rounded-full h-10 text-sm font-semibold cursor-pointer border-transparent hover:bg-white/80"
+                      style={{
+                        backgroundColor: `${batchStyle.accent}18`,
+                        color: batchStyle.accent,
+                      }}
                     >
                       <Plus className="size-4 mr-1.5" />
                       Add Work

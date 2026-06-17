@@ -129,7 +129,7 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
 
             {/* Material Section */}
             <div className="space-y-2 md:space-y-3">
-              <h2 className="text-base md:text-[18px] font-bold text-gray-900 tracking-tight">Material</h2>
+              <h2 className="text-base md:text-[18px] font-bold text-gray-900 tracking-tight">Material Given</h2>
               <div className="bg-white border border-[#F2E0FF] rounded-2xl md:rounded-[20px] p-4 md:p-5 lg:p-6 shadow-sm space-y-4">
                 {materialLoading ? (
                   <div className="text-sm text-gray-400 font-medium animate-pulse">Loading material...</div>
