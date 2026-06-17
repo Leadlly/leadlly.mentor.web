@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getTeacherDashboard } from "@/actions/user_actions";
 import { getLectures } from "@/actions/lecture_actions";
@@ -124,6 +124,7 @@ const getBatchStyle = (
 const TeacherDashboard = () => {
   const [isMonthCalendarOpen, setIsMonthCalendarOpen] = useState(false);
   const [visibleMonth, setVisibleMonth] = useState(new Date());
+  const weekScrollRef = useRef<HTMLDivElement>(null);
 
   const { data: dashboard, isLoading } = useQuery({
     queryKey: ["teacher-dashboard"],
@@ -139,6 +140,22 @@ const TeacherDashboard = () => {
     queryKey: ["lectures", "all"],
     queryFn: () => getLectures("all"),
   });
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    const today = new Date();
+    const start = startOfWeek(today, { weekStartsOn: 1 });
+    const todayIndex = Array.from({ length: 7 }, (_, index) =>
+      isSameDay(addDays(start, index), today)
+    ).findIndex(Boolean);
+
+    const container = weekScrollRef.current;
+    if (!container || todayIndex < 0) return;
+
+    const todayCard = container.children[todayIndex] as HTMLElement | undefined;
+    todayCard?.scrollIntoView({ behavior: "auto", inline: "center", block: "nearest" });
+  }, [isLoading, allLectures, weeklyLectures]);
 
   if (isLoading) {
     return (
@@ -202,6 +219,7 @@ const TeacherDashboard = () => {
   const monthEnd = endOfWeek(endOfMonth(visibleMonth), { weekStartsOn: 1 });
   const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
   const monthLectures = calendarLectures;
+  const visibleMonthDays = monthDays.filter((day) => isSameMonth(day, visibleMonth));
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -372,7 +390,7 @@ const TeacherDashboard = () => {
       />
 
       {/* Calendar */}
-      <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
+      <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-3 md:p-5 shadow-sm w-full max-w-full overflow-hidden">
         <div className="flex items-center justify-between mb-3 md:mb-4">
           <h3 className="font-bold text-gray-800 text-sm md:text-base">Calendar</h3>
           <button
@@ -383,56 +401,81 @@ const TeacherDashboard = () => {
             View All &rsaquo;
           </button>
         </div>
-        <div className="flex gap-2 overflow-x-auto pb-1">
-          {weekData.map((item, i) => (
-            <div key={i} className={`shrink-0 flex-1 min-w-[112px] md:min-w-[132px] min-h-[148px] rounded-2xl border p-2.5 md:p-3 flex flex-col gap-2 ${item.isToday ? "border-purple-200 bg-purple-50/70" : "border-gray-100 bg-gray-50/60"}`}>
-              <div className="flex items-center justify-between">
-                <span className={`font-bold text-xs ${item.isToday ? "text-purple-600" : "text-gray-500"}`}>{item.day}</span>
-                <span className={`size-7 rounded-full flex items-center justify-center font-bold text-sm ${item.isToday ? "bg-purple-600 text-white" : "bg-white text-gray-700"}`}>{item.date}</span>
-              </div>
-              <div className="flex flex-col gap-1.5 flex-1">
-                {item.classes.slice(0, 3).map((cls: any, ci: number) => {
-                  const batchStyle = getBatchStyle(batchColorMap, cls, ci);
-                  return (
-                  <div
-                    key={cls._id || `${item.date}-${ci}`}
-                    className={`bg-white border rounded-lg px-2 py-1.5 text-[10px] font-semibold capitalize ${batchStyle.border}`}
-                    style={{ borderLeftWidth: 3, borderLeftColor: batchStyle.accent }}
+        <div className="w-full max-w-full overflow-hidden rounded-xl border border-gray-100">
+          <div
+            ref={weekScrollRef}
+            className="flex w-full max-w-full overflow-x-auto overscroll-x-contain snap-x snap-mandatory pb-2 [-webkit-overflow-scrolling:touch]"
+          >
+            {weekData.map((item, i) => (
+              <div
+                key={i}
+                className={`shrink-0 snap-center w-[31vw] min-w-[96px] max-w-[124px] sm:min-w-[108px] md:w-[14.28%] md:max-w-none md:min-w-[132px] min-h-[140px] md:min-h-[148px] border-r last:border-r-0 border-gray-100 p-2 md:p-3 flex flex-col gap-2 ${
+                  item.isToday ? "bg-purple-50/80" : "bg-gray-50/40"
+                }`}
+              >
+                <div className="flex flex-col items-center border-b border-gray-100 pb-2 mb-1">
+                  <span className={`font-bold text-[11px] md:text-xs ${item.isToday ? "text-purple-600" : "text-gray-500"}`}>
+                    {item.day}
+                  </span>
+                  <span
+                    className={`mt-1 size-7 rounded-full flex items-center justify-center font-bold text-sm ${
+                      item.isToday ? "bg-purple-600 text-white" : "bg-white text-gray-700 border border-gray-100"
+                    }`}
                   >
-                    <p className={`truncate ${batchStyle.text}`}>{cls.batch?.name || "Batch"}</p>
-                    <p className="text-gray-600 truncate">{cls.class?.subject || cls.title || "Lecture"}</p>
-                  </div>
-                  );
-                })}
-                {item.classes.length > 3 && (
-                  <div className="text-[10px] font-semibold text-purple-600 text-center">
-                    +{item.classes.length - 3} more
-                  </div>
-                )}
-                {item.classes.length === 0 && (
-                  <div className="flex-1 flex items-center justify-center rounded-lg border border-dashed border-gray-200 text-[10px] font-medium text-gray-300">
-                    No lectures
-                  </div>
-                )}
+                    {item.date}
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1.5 flex-1 min-h-0">
+                  {item.classes.slice(0, 2).map((cls: any, ci: number) => {
+                    const batchStyle = getBatchStyle(batchColorMap, cls, ci);
+                    return (
+                      <div
+                        key={cls._id || `${item.date}-${ci}`}
+                        className={`bg-white border rounded-md px-1.5 py-1 text-[9px] md:text-[10px] font-semibold capitalize ${batchStyle.border}`}
+                        style={{ borderLeftWidth: 3, borderLeftColor: batchStyle.accent }}
+                      >
+                        <p className={`truncate leading-tight ${batchStyle.text}`}>
+                          {cls.batch?.name || "Batch"}
+                        </p>
+                        <p className="text-gray-600 truncate leading-tight">
+                          {cls.class?.subject || cls.title || "Lecture"}
+                        </p>
+                      </div>
+                    );
+                  })}
+                  {item.classes.length > 2 && (
+                    <div className="text-[9px] md:text-[10px] font-semibold text-purple-600 text-center">
+                      +{item.classes.length - 2} more
+                    </div>
+                  )}
+                  {item.classes.length === 0 && (
+                    <div className="flex-1 flex items-center justify-center rounded-md border border-dashed border-gray-200 text-[9px] md:text-[10px] font-medium text-gray-300 text-center px-1">
+                      No lectures
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
+        <p className="mt-2 text-[10px] text-gray-400 font-medium md:hidden">
+          Swipe sideways to see the full week
+        </p>
       </div>
 
       {isMonthCalendarOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 p-3 md:p-6 flex items-center justify-center">
-          <div className="bg-white rounded-2xl md:rounded-3xl shadow-xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between gap-3 border-b border-gray-100 p-4 md:p-5">
-              <div>
+        <div className="fixed inset-0 z-50 bg-black/40 p-2 sm:p-3 md:p-6 flex items-end sm:items-center justify-center">
+          <div className="bg-white rounded-t-2xl sm:rounded-2xl md:rounded-3xl shadow-xl w-full max-w-5xl max-h-[92vh] sm:max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-gray-100 p-3 sm:p-4 md:p-5">
+              <div className="min-w-0">
                 <h3 className="font-bold text-gray-900 text-base md:text-lg">Lecture Calendar</h3>
                 <p className="text-xs text-gray-400 font-medium">{format(visibleMonth, "MMMM yyyy")}</p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
                 <button
                   type="button"
                   onClick={() => setVisibleMonth((month) => subMonths(month, 1))}
-                  className="size-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
+                  className="size-8 sm:size-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
                   aria-label="Previous month"
                 >
                   <ChevronLeft className="size-4 text-gray-600" />
@@ -440,14 +483,14 @@ const TeacherDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setVisibleMonth(new Date())}
-                  className="h-9 px-3 rounded-full bg-purple-50 text-purple-600 text-xs font-bold hover:bg-purple-100 cursor-pointer"
+                  className="h-8 sm:h-9 px-2.5 sm:px-3 rounded-full bg-purple-50 text-purple-600 text-[11px] sm:text-xs font-bold hover:bg-purple-100 cursor-pointer"
                 >
                   Today
                 </button>
                 <button
                   type="button"
                   onClick={() => setVisibleMonth((month) => addMonths(month, 1))}
-                  className="size-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
+                  className="size-8 sm:size-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
                   aria-label="Next month"
                 >
                   <ChevronRight className="size-4 text-gray-600" />
@@ -455,7 +498,7 @@ const TeacherDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setIsMonthCalendarOpen(false)}
-                  className="size-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
+                  className="size-8 sm:size-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
                   aria-label="Close calendar"
                 >
                   <X className="size-4 text-gray-600" />
@@ -463,8 +506,59 @@ const TeacherDashboard = () => {
               </div>
             </div>
 
-            <div className="overflow-auto p-4 md:p-5">
-              <div className="grid grid-cols-7 gap-1.5 md:gap-2 min-w-[720px]">
+            <div className="overflow-y-auto p-3 sm:p-4 md:p-5 flex-1">
+              <div className="md:hidden space-y-2">
+                {visibleMonthDays.map((day) => {
+                  const lectures = getLecturesForDay(day, monthLectures);
+                  const isToday = isSameDay(day, new Date());
+
+                  return (
+                    <div
+                      key={day.toISOString()}
+                      className={`rounded-xl border p-3 ${
+                        isToday ? "border-purple-200 bg-purple-50/60" : "border-gray-100 bg-white"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-2 mb-2">
+                        <p className={`text-sm font-bold ${isToday ? "text-purple-700" : "text-gray-800"}`}>
+                          {format(day, "EEE, d MMM")}
+                        </p>
+                        {lectures.length > 0 && (
+                          <span className="rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-bold text-purple-600">
+                            {lectures.length} lecture{lectures.length === 1 ? "" : "s"}
+                          </span>
+                        )}
+                      </div>
+
+                      {lectures.length > 0 ? (
+                        <div className="space-y-1.5">
+                          {lectures.map((lecture: any, lectureIndex: number) => {
+                            const batchStyle = getBatchStyle(batchColorMap, lecture, lectureIndex);
+                            return (
+                              <div
+                                key={lecture._id}
+                                className={`rounded-lg px-2.5 py-2 text-xs font-semibold text-gray-700 border ${batchStyle.bg} ${batchStyle.border}`}
+                                style={{ borderLeftWidth: 3, borderLeftColor: batchStyle.accent }}
+                              >
+                                <p className={`capitalize ${batchStyle.text}`}>
+                                  {lecture.batch?.name || "Batch"}
+                                </p>
+                                <p className="capitalize text-gray-600 font-medium">
+                                  {lecture.class?.subject || lecture.title || "Lecture"}
+                                </p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <p className="text-xs text-gray-400 font-medium">No lectures</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="hidden md:grid grid-cols-7 gap-2">
                 {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
                   <div key={day} className="text-center text-[11px] font-bold uppercase tracking-wide text-gray-400 pb-1">
                     {day}
