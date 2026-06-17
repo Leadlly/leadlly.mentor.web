@@ -49,7 +49,7 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
   const syllabusProgress = report.syllabusCompleted || 0;
   const completedChapters = report.completedChapters || 0;
   const totalChapters = report.totalChapters || 0;
-  const chapterProgress = report.chapterProgress || 0;
+  const syllabusProgressValue = Math.max(0, Math.min(100, syllabusProgress));
 
   const totalLectures = report.totalLectures || 0;
   const totalMinutes = report.totalDuration || 0;
@@ -72,46 +72,38 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
           <div className="space-y-4 md:space-y-6 lg:space-y-8">
             {/* Syllabus Section */}
             <div className="space-y-2 md:space-y-3">
-              <h2 className="text-base md:text-[18px] font-bold text-gray-900 tracking-tight">Syllabus</h2>
-              <div className="bg-white border border-[#F2E0FF] rounded-2xl md:rounded-[20px] p-4 md:p-5 lg:p-6 space-y-4 md:space-y-5 shadow-sm">
-                
-                {/* Syllabus Completed */}
-                <div className="space-y-2">
-                  <div className="font-bold text-gray-800 text-[13px]">Syllabus Completed</div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-[#A855F7] rounded-full transition-all duration-500" 
-                        style={{ width: `${syllabusProgress}%` }}
-                      />
-                    </div>
-                    <span className="text-gray-900 font-bold w-10 text-right text-sm">
-                      {syllabusProgress}%
-                    </span>
-                  </div>
-                </div>
+              <div className="bg-white border border-[#F2E0FF] rounded-[28px] md:rounded-[32px] p-6 md:p-8 shadow-sm">
+                <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight mb-8">
+                  Syllabus Completed
+                </h2>
 
-                {/* Total Chapters Completed */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="font-bold text-gray-800 text-[13px]">Total Chapters Completed</div>
-                    <span className="text-xs font-bold text-gray-500">
+                <div className="flex items-center justify-between gap-5">
+                  <div className="min-w-0">
+                    <p className="text-5xl md:text-6xl font-extrabold text-[#A855F7] tracking-tight">
                       {completedChapters}/{totalChapters}
-                    </span>
+                    </p>
+                    <p className="text-base md:text-lg text-gray-500 font-medium mt-4 leading-snug">
+                      Chapters<br />completed so far
+                    </p>
                   </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-[#2DD4BF] rounded-full transition-all duration-500"
-                        style={{ width: `${chapterProgress}%` }}
-                      />
+
+                  <div
+                    className="size-32 md:size-40 rounded-full p-3 md:p-4 shrink-0"
+                    style={{
+                      background: `conic-gradient(#A855F7 ${syllabusProgressValue * 3.6}deg, #F3E8FF 0deg)`,
+                    }}
+                    aria-label={`${syllabusProgressValue}% syllabus completed`}
+                  >
+                    <div className="size-full rounded-full bg-white flex flex-col items-center justify-center">
+                      <span className="text-2xl md:text-3xl font-extrabold text-gray-900">
+                        {syllabusProgressValue}%
+                      </span>
+                      <span className="text-sm md:text-base text-gray-500 font-medium mt-1">
+                        overall
+                      </span>
                     </div>
-                    <span className="text-gray-900 font-bold w-10 text-right text-sm">
-                      {chapterProgress}%
-                    </span>
                   </div>
                 </div>
-
               </div>
             </div>
 
