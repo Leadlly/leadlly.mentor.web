@@ -17,11 +17,7 @@ export const getLectures = async (timeframe = "all") => {
           Cookie: `token=${token}`,
         },
         credentials: "include",
-        cache: "force-cache",
-        next: {
-          tags: ["teacher-report"],
-          revalidate: 60 * 60 * 24,
-        },
+        cache: "no-store",
       }
     );
 

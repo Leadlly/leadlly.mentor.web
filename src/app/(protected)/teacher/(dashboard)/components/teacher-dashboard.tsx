@@ -88,6 +88,39 @@ const overviewCards = (data: any) => [
 
 const BATCH_COLORS = ["#f59e0b", "#3b82f6", "#10b981", "#a855f7", "#ef4444", "#06b6d4"];
 
+const BATCH_BADGE_STYLES = [
+  { bg: "bg-amber-50", text: "text-amber-700", border: "border-amber-200", accent: "#f59e0b" },
+  { bg: "bg-blue-50", text: "text-blue-700", border: "border-blue-200", accent: "#3b82f6" },
+  { bg: "bg-green-50", text: "text-green-700", border: "border-green-200", accent: "#10b981" },
+  { bg: "bg-purple-50", text: "text-purple-700", border: "border-purple-200", accent: "#a855f7" },
+  { bg: "bg-rose-50", text: "text-rose-700", border: "border-rose-200", accent: "#ef4444" },
+  { bg: "bg-cyan-50", text: "text-cyan-700", border: "border-cyan-200", accent: "#06b6d4" },
+];
+
+const buildBatchColorMap = (batchPerformance: any[] = []) => {
+  const map = new Map<string, (typeof BATCH_BADGE_STYLES)[number]>();
+  batchPerformance.forEach((batch, index) => {
+    const style = BATCH_BADGE_STYLES[index % BATCH_BADGE_STYLES.length];
+    if (batch.batchId) map.set(String(batch.batchId), style);
+    if (batch.batchName) map.set(String(batch.batchName), style);
+  });
+  return map;
+};
+
+const getBatchStyle = (
+  batchColorMap: Map<string, (typeof BATCH_BADGE_STYLES)[number]>,
+  lecture: any,
+  fallbackIndex = 0
+) => {
+  const batchId = lecture?.batch?._id || lecture?.batchId;
+  const batchName = lecture?.batch?.name || lecture?.batchName;
+  return (
+    (batchId && batchColorMap.get(String(batchId))) ||
+    (batchName && batchColorMap.get(String(batchName))) ||
+    BATCH_BADGE_STYLES[fallbackIndex % BATCH_BADGE_STYLES.length]
+  );
+};
+
 const TeacherDashboard = () => {
   const [isMonthCalendarOpen, setIsMonthCalendarOpen] = useState(false);
   const [visibleMonth, setVisibleMonth] = useState(new Date());
@@ -138,6 +171,11 @@ const TeacherDashboard = () => {
         : "Start teaching today to begin your streak.";
 
   const monthlyTrend = dashboard.monthlyTrend || [];
+  const batchColorMap = buildBatchColorMap(dashboard.batchPerformance || []);
+  const calendarLectures =
+    allLectures?.lectures?.length
+      ? allLectures.lectures
+      : weeklyLectures?.lectures || [];
 
   const getLecturesForDay = (date: Date, lectures: any[] = []) =>
     lectures.filter((lecture: any) =>
@@ -149,8 +187,7 @@ const TeacherDashboard = () => {
     const start = startOfWeek(today, { weekStartsOn: 1 });
     return Array.from({ length: 7 }, (_, i) => {
       const current = addDays(start, i);
-      const classes =
-        getLecturesForDay(current, weeklyLectures?.lectures || []);
+      const classes = getLecturesForDay(current, calendarLectures);
       return {
         day: format(current, "EEE")[0],
         date: format(current, "d"),
@@ -164,7 +201,7 @@ const TeacherDashboard = () => {
   const monthStart = startOfWeek(startOfMonth(visibleMonth), { weekStartsOn: 1 });
   const monthEnd = endOfWeek(endOfMonth(visibleMonth), { weekStartsOn: 1 });
   const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
-  const monthLectures = allLectures?.lectures || weeklyLectures?.lectures || [];
+  const monthLectures = calendarLectures;
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -348,21 +385,28 @@ const TeacherDashboard = () => {
         </div>
         <div className="flex gap-2 overflow-x-auto pb-1">
           {weekData.map((item, i) => (
-            <div key={i} className={`shrink-0 flex-1 min-w-[112px] md:min-w-[132px] min-h-[132px] rounded-2xl border p-2.5 md:p-3 flex flex-col gap-2 ${item.isToday ? "border-purple-200 bg-purple-50/70" : "border-gray-100 bg-gray-50/60"}`}>
+            <div key={i} className={`shrink-0 flex-1 min-w-[112px] md:min-w-[132px] min-h-[148px] rounded-2xl border p-2.5 md:p-3 flex flex-col gap-2 ${item.isToday ? "border-purple-200 bg-purple-50/70" : "border-gray-100 bg-gray-50/60"}`}>
               <div className="flex items-center justify-between">
                 <span className={`font-bold text-xs ${item.isToday ? "text-purple-600" : "text-gray-500"}`}>{item.day}</span>
                 <span className={`size-7 rounded-full flex items-center justify-center font-bold text-sm ${item.isToday ? "bg-purple-600 text-white" : "bg-white text-gray-700"}`}>{item.date}</span>
               </div>
               <div className="flex flex-col gap-1.5 flex-1">
-                {item.classes.slice(0, 2).map((cls: any, ci: number) => (
-                  <div key={ci} className="bg-white border border-purple-100 text-gray-700 rounded-lg px-2 py-1.5 text-[10px] font-semibold capitalize">
-                    <p className="truncate">{cls.batch?.name || "Batch"}</p>
-                    <p className="text-purple-600 truncate">{cls.class?.subject || "Lecture"}</p>
+                {item.classes.slice(0, 3).map((cls: any, ci: number) => {
+                  const batchStyle = getBatchStyle(batchColorMap, cls, ci);
+                  return (
+                  <div
+                    key={cls._id || `${item.date}-${ci}`}
+                    className={`bg-white border rounded-lg px-2 py-1.5 text-[10px] font-semibold capitalize ${batchStyle.border}`}
+                    style={{ borderLeftWidth: 3, borderLeftColor: batchStyle.accent }}
+                  >
+                    <p className={`truncate ${batchStyle.text}`}>{cls.batch?.name || "Batch"}</p>
+                    <p className="text-gray-600 truncate">{cls.class?.subject || cls.title || "Lecture"}</p>
                   </div>
-                ))}
-                {item.classes.length > 2 && (
+                  );
+                })}
+                {item.classes.length > 3 && (
                   <div className="text-[10px] font-semibold text-purple-600 text-center">
-                    +{item.classes.length - 2} more
+                    +{item.classes.length - 3} more
                   </div>
                 )}
                 {item.classes.length === 0 && (
@@ -455,12 +499,19 @@ const TeacherDashboard = () => {
                       </div>
 
                       <div className="space-y-1 overflow-hidden">
-                        {lectures.slice(0, 3).map((lecture: any) => (
-                          <div key={lecture._id} className="rounded-lg bg-purple-50 px-2 py-1 text-[10px] font-semibold text-gray-700">
-                            <p className="truncate capitalize">{lecture.batch?.name || "Batch"}</p>
-                            <p className="truncate capitalize text-purple-600">{lecture.class?.subject || lecture.title || "Lecture"}</p>
+                        {lectures.slice(0, 3).map((lecture: any, lectureIndex: number) => {
+                          const batchStyle = getBatchStyle(batchColorMap, lecture, lectureIndex);
+                          return (
+                          <div
+                            key={lecture._id}
+                            className={`rounded-lg px-2 py-1 text-[10px] font-semibold text-gray-700 border ${batchStyle.bg} ${batchStyle.border}`}
+                            style={{ borderLeftWidth: 3, borderLeftColor: batchStyle.accent }}
+                          >
+                            <p className={`truncate capitalize ${batchStyle.text}`}>{lecture.batch?.name || "Batch"}</p>
+                            <p className="truncate capitalize text-gray-600">{lecture.class?.subject || lecture.title || "Lecture"}</p>
                           </div>
-                        ))}
+                          );
+                        })}
                         {lectures.length > 3 && (
                           <p className="text-center text-[10px] font-bold text-purple-600">
                             +{lectures.length - 3} more
@@ -586,15 +637,16 @@ const TeacherDashboard = () => {
           <h3 className="font-bold text-gray-800 mb-3 md:mb-4 text-sm md:text-base">Recent Activity</h3>
           {dashboard.recentLectures?.length > 0 ? (
             <div className="space-y-1">
-              {dashboard.recentLectures.map((lec: any) => {
+              {dashboard.recentLectures.map((lec: any, lecIndex: number) => {
                 const chapter = lec.chapters?.[0]?.name;
                 const topic = lec.topics?.[0]?.name;
                 const subtopic = lec.subtopics?.[0]?.name;
+                const batchStyle = getBatchStyle(batchColorMap, lec, lecIndex);
 
                 return (
                 <div key={lec._id} className="flex items-start gap-3 py-3 border-b border-gray-50 last:border-b-0">
-                  <div className="bg-purple-50 rounded-lg p-2 shrink-0 mt-0.5">
-                    <BookOpen className="size-4 text-purple-500" />
+                  <div className={`${batchStyle.bg} rounded-lg p-2 shrink-0 mt-0.5 border ${batchStyle.border}`}>
+                    <BookOpen className="size-4" style={{ color: batchStyle.accent }} />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-2">
@@ -603,7 +655,7 @@ const TeacherDashboard = () => {
                           {lec.title || chapter || topic || "Lecture"}
                         </p>
                       </div>
-                      <span className="text-[10px] font-semibold px-2.5 py-1 bg-purple-50 text-purple-600 rounded-md shrink-0 capitalize truncate max-w-[200px] mt-0.5">
+                      <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-md shrink-0 capitalize truncate max-w-[200px] mt-0.5 border ${batchStyle.bg} ${batchStyle.text} ${batchStyle.border}`}>
                         {lec.batchName?.length > 40 ? lec.batchName.slice(0, 40) + "..." : lec.batchName}
                       </span>
                     </div>
