@@ -24,7 +24,6 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
 
   const report = classData.classReport || {};
   const syllabusProgress = report.syllabusCompleted || 0;
-  const chapterProgress = report.chapterProgress || 0;
 
   const totalLectures = report.totalLectures || 0;
   const totalMinutes = report.totalDuration || 0;
@@ -55,22 +54,6 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
                     </div>
                     <span className="text-gray-900 font-bold w-10 text-right text-sm">
                       {syllabusProgress}%
-                    </span>
-                  </div>
-                </div>
-
-                {/* Chapter Completed */}
-                <div className="space-y-2">
-                  <div className="font-bold text-gray-800 text-[13px]">Chapter Completed</div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-[#2DD4BF] rounded-full transition-all duration-500" 
-                        style={{ width: `${chapterProgress}%` }}
-                      />
-                    </div>
-                    <span className="text-gray-900 font-bold w-10 text-right text-sm">
-                      {chapterProgress}%
                     </span>
                   </div>
                 </div>

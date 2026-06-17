@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getTeacherDashboard } from "@/actions/user_actions";
 import { getLectures } from "@/actions/lecture_actions";
@@ -12,14 +11,23 @@ import {
   Clock,
   Users,
   Loader2,
+  ChevronLeft,
   ChevronRight,
+  X,
 } from "lucide-react";
 import { formatStandardLabel } from "@/helpers/constants/academic";
 import {
   addDays,
+  addMonths,
+  eachDayOfInterval,
+  endOfMonth,
+  endOfWeek,
   format,
   isSameDay,
+  isSameMonth,
+  startOfMonth,
   startOfWeek,
+  subMonths,
 } from "date-fns";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -80,6 +88,9 @@ const overviewCards = (data: any) => [
 const BATCH_COLORS = ["#f59e0b", "#3b82f6", "#10b981", "#a855f7", "#ef4444", "#06b6d4"];
 
 const TeacherDashboard = () => {
+  const [isMonthCalendarOpen, setIsMonthCalendarOpen] = useState(false);
+  const [visibleMonth, setVisibleMonth] = useState(new Date());
+
   const { data: dashboard, isLoading } = useQuery({
     queryKey: ["teacher-dashboard"],
     queryFn: getTeacherDashboard,
@@ -88,6 +99,11 @@ const TeacherDashboard = () => {
   const { data: weeklyLectures } = useQuery({
     queryKey: ["weekly-lectures", "weekly"],
     queryFn: () => getLectures("weekly"),
+  });
+
+  const { data: allLectures } = useQuery({
+    queryKey: ["lectures", "all"],
+    queryFn: () => getLectures("all"),
   });
 
   if (isLoading) {
@@ -111,15 +127,18 @@ const TeacherDashboard = () => {
 
   const monthlyTrend = dashboard.monthlyTrend || [];
 
+  const getLecturesForDay = (date: Date, lectures: any[] = []) =>
+    lectures.filter((lecture: any) =>
+      isSameDay(new Date(lecture.lectureDate), date)
+    );
+
   const calendarData = () => {
     const today = new Date();
     const start = startOfWeek(today, { weekStartsOn: 1 });
     return Array.from({ length: 7 }, (_, i) => {
       const current = addDays(start, i);
       const classes =
-        weeklyLectures?.lectures?.filter((l: any) =>
-          isSameDay(new Date(l.lectureDate), current)
-        ) || [];
+        getLecturesForDay(current, weeklyLectures?.lectures || []);
       return {
         day: format(current, "EEE")[0],
         date: format(current, "d"),
@@ -130,6 +149,10 @@ const TeacherDashboard = () => {
   };
 
   const weekData = calendarData();
+  const monthStart = startOfWeek(startOfMonth(visibleMonth), { weekStartsOn: 1 });
+  const monthEnd = endOfWeek(endOfMonth(visibleMonth), { weekStartsOn: 1 });
+  const monthDays = eachDayOfInterval({ start: monthStart, end: monthEnd });
+  const monthLectures = allLectures?.lectures || weeklyLectures?.lectures || [];
 
   return (
     <div className="space-y-4 md:space-y-6">
@@ -237,9 +260,13 @@ const TeacherDashboard = () => {
       <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl p-4 md:p-5 shadow-sm">
         <div className="flex items-center justify-between mb-3 md:mb-4">
           <h3 className="font-bold text-gray-800 text-sm md:text-base">Calendar</h3>
-          <Link href="/teacher/classes" className="text-xs text-purple-600 font-semibold hover:underline">
+          <button
+            type="button"
+            onClick={() => setIsMonthCalendarOpen(true)}
+            className="text-xs text-purple-600 font-semibold hover:underline cursor-pointer"
+          >
             View All &rsaquo;
-          </Link>
+          </button>
         </div>
         <div className="flex gap-2 overflow-x-auto pb-1">
           {weekData.map((item, i) => (
@@ -270,6 +297,106 @@ const TeacherDashboard = () => {
           ))}
         </div>
       </div>
+
+      {isMonthCalendarOpen && (
+        <div className="fixed inset-0 z-50 bg-black/40 p-3 md:p-6 flex items-center justify-center">
+          <div className="bg-white rounded-2xl md:rounded-3xl shadow-xl w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between gap-3 border-b border-gray-100 p-4 md:p-5">
+              <div>
+                <h3 className="font-bold text-gray-900 text-base md:text-lg">Lecture Calendar</h3>
+                <p className="text-xs text-gray-400 font-medium">{format(visibleMonth, "MMMM yyyy")}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setVisibleMonth((month) => subMonths(month, 1))}
+                  className="size-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
+                  aria-label="Previous month"
+                >
+                  <ChevronLeft className="size-4 text-gray-600" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setVisibleMonth(new Date())}
+                  className="h-9 px-3 rounded-full bg-purple-50 text-purple-600 text-xs font-bold hover:bg-purple-100 cursor-pointer"
+                >
+                  Today
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setVisibleMonth((month) => addMonths(month, 1))}
+                  className="size-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
+                  aria-label="Next month"
+                >
+                  <ChevronRight className="size-4 text-gray-600" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsMonthCalendarOpen(false)}
+                  className="size-9 rounded-full border border-gray-200 flex items-center justify-center hover:bg-gray-50 cursor-pointer"
+                  aria-label="Close calendar"
+                >
+                  <X className="size-4 text-gray-600" />
+                </button>
+              </div>
+            </div>
+
+            <div className="overflow-auto p-4 md:p-5">
+              <div className="grid grid-cols-7 gap-1.5 md:gap-2 min-w-[720px]">
+                {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+                  <div key={day} className="text-center text-[11px] font-bold uppercase tracking-wide text-gray-400 pb-1">
+                    {day}
+                  </div>
+                ))}
+
+                {monthDays.map((day) => {
+                  const lectures = getLecturesForDay(day, monthLectures);
+                  const isCurrentMonth = isSameMonth(day, visibleMonth);
+                  const isToday = isSameDay(day, new Date());
+
+                  return (
+                    <div
+                      key={day.toISOString()}
+                      className={`min-h-[118px] rounded-2xl border p-2 flex flex-col gap-1.5 ${
+                        isToday
+                          ? "border-purple-300 bg-purple-50/70"
+                          : isCurrentMonth
+                            ? "border-gray-100 bg-white"
+                            : "border-gray-50 bg-gray-50/70 opacity-60"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className={`text-xs font-bold ${isToday ? "text-purple-600" : "text-gray-600"}`}>
+                          {format(day, "d")}
+                        </span>
+                        {lectures.length > 0 && (
+                          <span className="rounded-full bg-purple-100 px-1.5 py-0.5 text-[9px] font-bold text-purple-600">
+                            {lectures.length}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="space-y-1 overflow-hidden">
+                        {lectures.slice(0, 3).map((lecture: any) => (
+                          <div key={lecture._id} className="rounded-lg bg-purple-50 px-2 py-1 text-[10px] font-semibold text-gray-700">
+                            <p className="truncate capitalize">{lecture.batch?.name || "Batch"}</p>
+                            <p className="truncate capitalize text-purple-600">{lecture.class?.subject || lecture.title || "Lecture"}</p>
+                          </div>
+                        ))}
+                        {lectures.length > 3 && (
+                          <p className="text-center text-[10px] font-bold text-purple-600">
+                            +{lectures.length - 3} more
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Monthly Trend */}
       {monthlyTrend.length > 0 && (
@@ -368,18 +495,6 @@ const TeacherDashboard = () => {
                       <p className="font-bold text-gray-800 text-lg">{syllabusPct}%</p>
                     </div>
                   </div>
-                  <div>
-                    <div className="flex justify-between text-xs text-gray-500 mb-1.5">
-                      <span>Amount of syllabus completed</span>
-                      <span className="font-bold">{syllabusPct}%</span>
-                    </div>
-                    <div className="w-full h-2 bg-white/80 rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full transition-all"
-                        style={{ width: `${Math.max(syllabusPct, 2)}%`, backgroundColor: color }}
-                      />
-                    </div>
-                  </div>
                 </div>
               );
             })}
@@ -409,9 +524,6 @@ const TeacherDashboard = () => {
                         <p className="font-bold text-[15px] text-gray-900 truncate capitalize leading-tight">
                           {lec.title || chapter || topic || "Lecture"}
                         </p>
-                        <p className="text-xs text-gray-400 capitalize mt-0.5">
-                          {lec.subject || ""}
-                        </p>
                       </div>
                       <span className="text-[10px] font-semibold px-2.5 py-1 bg-purple-50 text-purple-600 rounded-md shrink-0 capitalize truncate max-w-[200px] mt-0.5">
                         {lec.batchName?.length > 40 ? lec.batchName.slice(0, 40) + "..." : lec.batchName}
@@ -424,11 +536,6 @@ const TeacherDashboard = () => {
                       <span>{dayjs(lec.lectureDate).fromNow()}</span>
                     </div>
                     <div className="flex flex-wrap gap-1.5 mt-2 text-[11px]">
-                      {chapter && (
-                        <span className="rounded-full bg-gray-100 px-2 py-1 font-medium text-gray-600 capitalize">
-                          Chapter: {chapter}
-                        </span>
-                      )}
                       {topic && (
                         <span className="rounded-full bg-blue-50 px-2 py-1 font-medium text-blue-600 capitalize">
                           Topic: {topic}
