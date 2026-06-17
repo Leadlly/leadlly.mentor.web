@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { getClassDetails } from "@/actions/batch_actions";
-import { formatCompetitiveExamLabel } from "@/helpers/constants/academic";
+import { formatCompetitiveExamLabel, formatStandardLabel } from "@/helpers/constants/academic";
 import { SidebarSeparator, SidebarTrigger } from "@/components/ui/sidebar";
 import { useAppSelector } from "@/redux/hooks";
 import { ChevronLeft } from "lucide-react";
@@ -39,8 +39,10 @@ const MainHeader = () => {
 
   const getClassSubtitle = useCallback(() => {
     const subject = classData?.subject;
+    const standard = formatStandardLabel(classData?.batch?.standard);
     const exam = formatCompetitiveExamLabel(classData?.batch?.competitiveExam);
-    return [subject, exam].filter(Boolean).join(" · ");
+    const stdLabel = standard && standard !== "N/A" ? `Class ${standard}` : null;
+    return [subject, stdLabel, exam].filter(Boolean).join(" · ");
   }, [classData]);
 
   const getHeading = useCallback(() => {
