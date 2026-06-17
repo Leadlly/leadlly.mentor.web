@@ -62,7 +62,7 @@ const WeekCalendar = ({ timeframe }: { timeframe: string }) => {
         <h3 className="text-xl font-semibold">Calendar</h3>
 
         <Button asChild variant={"link"} className="h-max">
-          <Link href={"/lecture-calendar"}>
+          <Link href={"/teacher/classes"}>
             <span>View All</span>
             <ChevronRight className="w-4 h-4" />
           </Link>
