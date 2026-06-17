@@ -9,7 +9,6 @@ import { getClassQuizzes } from "@/actions/quiz_actions";
 import { ChevronRight, FileText } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
-import ReportDetailBanner from "../components/report-detail-banner";
 
 const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
   const { classId } = use(params);
@@ -68,13 +67,6 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
   return (
     <div className="w-full h-full">
       <div className="flex flex-col space-y-4 md:space-y-8 pb-10">
-        <ReportDetailBanner
-          batchName={classData.batch?.name}
-          subject={classData.subject}
-          standard={classData.batch?.standard}
-          competitiveExam={classData.batch?.competitiveExam}
-        />
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 lg:gap-8">
           {/* Left Column */}
           <div className="space-y-4 md:space-y-6 lg:space-y-8">
