@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getClassDetails } from "@/actions/batch_actions";
 import { getDPPs, getNotes } from "@/actions/classwork_actions";
 import { getClassQuizzes } from "@/actions/quiz_actions";
-import { ChevronRight, FileQuestion, FileText } from "lucide-react";
+import { ChevronRight, FileText } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
 
@@ -61,6 +61,8 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
   const quizzes = quizzesData?.quizzes || [];
   const materialLoading = notesLoading || dppsLoading || quizzesLoading;
   const syllabusReportHref = `/class/${classId}/report/syllabus${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
+  const getMaterialHref = (type: string) =>
+    `/class/${classId}/report/material/${type}${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
 
   return (
     <div className="w-full h-full">
@@ -140,56 +142,29 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
                 {materialLoading ? (
                   <div className="text-sm text-gray-400 font-medium animate-pulse">Loading material...</div>
                 ) : (
-                  <>
-                    <div className="grid grid-cols-3 gap-2 md:gap-3">
-                      <div className="rounded-xl bg-[#FAF5FF] p-3 text-center">
-                        <p className="text-[10px] md:text-xs font-bold text-gray-500 uppercase">Notes</p>
-                        <p className="text-xl md:text-2xl font-bold text-[#A855F7]">{notes.length}</p>
-                      </div>
-                      <div className="rounded-xl bg-blue-50 p-3 text-center">
-                        <p className="text-[10px] md:text-xs font-bold text-gray-500 uppercase">DPPs</p>
-                        <p className="text-xl md:text-2xl font-bold text-blue-600">{dpps.length}</p>
-                      </div>
-                      <div className="rounded-xl bg-amber-50 p-3 text-center">
-                        <p className="text-[10px] md:text-xs font-bold text-gray-500 uppercase">Quizzes</p>
-                        <p className="text-xl md:text-2xl font-bold text-amber-600">{quizzes.length}</p>
-                      </div>
-                    </div>
-
-                    <div className="space-y-3">
-                      <MaterialList
-                        title="Notes"
-                        emptyText="No notes added"
-                        items={notes}
-                        iconColor="text-purple-500"
-                        getTitle={(note: any) => note.title || "Untitled note"}
-                        getDate={(note: any) => note.uploadedAt || note.createdAt}
-                        getHref={(note: any) => note.attachments?.[0]?.fileUrl}
-                      />
-                      <MaterialList
-                        title="DPPs"
-                        emptyText="No DPPs added"
-                        items={dpps}
-                        iconColor="text-blue-500"
-                        getTitle={(dpp: any) => dpp.title || "Untitled DPP"}
-                        getDate={(dpp: any) => dpp.createdAt || dpp.uploadedAt || dpp.dueDate}
-                        getHref={(dpp: any) => dpp.attachments?.[0]?.fileUrl}
-                      />
-                      <MaterialList
-                        title="Quizzes"
-                        emptyText="No quizzes added"
-                        items={quizzes}
-                        iconColor="text-amber-500"
-                        icon="quiz"
-                        getTitle={(quiz: any) => quiz.chapterName ? `${quiz.chapterName} Quiz` : "Quiz"}
-                        getDate={(quiz: any) => quiz.createdAt}
-                        getMeta={(quiz: any) => {
-                          const topics = quiz.topics?.length ? quiz.topics.join(", ") : "No topic";
-                          return `${quiz.chapterName || "No chapter"} • ${topics}`;
-                        }}
-                      />
-                    </div>
-                  </>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <MaterialSummaryCard
+                      title="Written Notes"
+                      count={notes.length}
+                      href={getMaterialHref("notes")}
+                      colorClass="text-[#A855F7]"
+                      bgClass="bg-[#FAF5FF]"
+                    />
+                    <MaterialSummaryCard
+                      title="DPP"
+                      count={dpps.length}
+                      href={getMaterialHref("dpps")}
+                      colorClass="text-blue-600"
+                      bgClass="bg-blue-50"
+                    />
+                    <MaterialSummaryCard
+                      title="Quizzes"
+                      count={quizzes.length}
+                      href={getMaterialHref("quizzes")}
+                      colorClass="text-amber-600"
+                      bgClass="bg-amber-50"
+                    />
+                  </div>
                 )}
               </div>
             </div>
@@ -254,84 +229,31 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
   );
 };
 
-const MaterialList = ({
+const MaterialSummaryCard = ({
   title,
-  emptyText,
-  items,
-  iconColor,
-  icon = "file",
-  getTitle,
-  getDate,
-  getMeta,
-  getHref,
+  count,
+  href,
+  colorClass,
+  bgClass,
 }: {
   title: string;
-  emptyText: string;
-  items: any[];
-  iconColor: string;
-  icon?: "file" | "quiz";
-  getTitle: (item: any) => string;
-  getDate: (item: any) => string | Date | undefined;
-  getMeta?: (item: any) => string;
-  getHref?: (item: any) => string | undefined;
-}) => {
-  const Icon = icon === "quiz" ? FileQuestion : FileText;
-
-  return (
-    <div className="space-y-1.5">
-      <div className="flex items-center justify-between">
-        <p className="text-xs font-bold uppercase tracking-wide text-gray-500">{title}</p>
-        <span className="text-[11px] font-bold text-gray-400">{items.length}</span>
-      </div>
-
-      {items.length > 0 ? (
-        <div className="space-y-1.5">
-          {items.slice(0, 5).map((item: any) => {
-            const href = getHref?.(item);
-            const content = (
-              <>
-                <Icon className={`size-4 shrink-0 mt-0.5 ${iconColor}`} />
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-start justify-between gap-2">
-                    <p className="text-sm font-bold text-gray-800 truncate capitalize">{getTitle(item)}</p>
-                    <span className="text-[10px] font-semibold text-gray-400 shrink-0">
-                      {getDate(item) ? dayjs(getDate(item)).format("DD MMM") : ""}
-                    </span>
-                  </div>
-                  {getMeta && (
-                    <p className="text-xs text-gray-500 mt-0.5 line-clamp-2 capitalize">{getMeta(item)}</p>
-                  )}
-                </div>
-              </>
-            );
-
-            return href ? (
-              <a
-                key={item._id}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-start gap-2 rounded-xl bg-gray-50 px-3 py-2 hover:bg-purple-50/70 transition-colors"
-              >
-                {content}
-              </a>
-            ) : (
-              <div key={item._id} className="flex items-start gap-2 rounded-xl bg-gray-50 px-3 py-2">
-                {content}
-              </div>
-            );
-          })}
-          {items.length > 5 && (
-            <p className="text-center text-[11px] font-semibold text-purple-600">
-              +{items.length - 5} more
-            </p>
-          )}
-        </div>
-      ) : (
-        <p className="rounded-xl bg-gray-50 px-3 py-2 text-xs font-medium text-gray-400">{emptyText}</p>
-      )}
+  count: number;
+  href: string;
+  colorClass: string;
+  bgClass: string;
+}) => (
+  <div className={`${bgClass} rounded-2xl p-4 space-y-3`}>
+    <div>
+      <p className="text-xs font-bold uppercase tracking-wide text-gray-500">{title}</p>
+      <p className={`text-3xl font-bold ${colorClass}`}>{count}</p>
     </div>
-  );
-};
+    <Link
+      href={href}
+      className={`inline-flex items-center text-xs font-bold ${colorClass} hover:underline underline-offset-4`}
+    >
+      View more <ChevronRight className="size-3.5 ml-0.5" strokeWidth={3} />
+    </Link>
+  </div>
+);
 
 export default Page;
