@@ -3,7 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { Calculator, FlaskConical, BookOpen, Dna, Monitor, Globe, Hourglass, Presentation, Plus } from "lucide-react";
+import { Atom, Calculator, FlaskConical, BookOpen, Dna, Monitor, Globe, Hourglass, Presentation, Plus } from "lucide-react";
 import { formatStdLabel } from "@/helpers/constants/academic";
 import {
   buildBatchColorMapFromClasses,
@@ -13,7 +13,9 @@ import {
 const getSubjectIcon = (subject: string = "") => {
   const s = subject.toLowerCase();
   if (s.includes("math")) return Calculator;
-  if (s.includes("physic") || s.includes("chemist") || s.includes("scienc")) return FlaskConical;
+  if (s.includes("physic")) return Atom;
+  if (s.includes("chemist")) return FlaskConical;
+  if (s.includes("scienc")) return FlaskConical;
   if (s.includes("english") || s.includes("litera") || s.includes("hindi") || s.includes("langu")) return BookOpen;
   if (s.includes("bio") || s.includes("zoo") || s.includes("botan")) return Dna;
   if (s.includes("comput") || s.includes("it") || s.includes("tech") || s.includes("program")) return Monitor;
