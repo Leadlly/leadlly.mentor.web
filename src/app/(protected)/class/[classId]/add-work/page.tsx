@@ -1572,10 +1572,15 @@ const ExistingNotesDPPList = ({ classId, dateStr }: { classId: string; dateStr: 
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Notes</p>
           {notes.map((note: any) => (
             <div key={note._id} className="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2">
-              <div className="flex items-center gap-2 min-w-0">
+              <a
+                href={note.attachments?.[0]?.fileUrl || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center gap-2 min-w-0 ${note.attachments?.[0]?.fileUrl ? "hover:text-purple-600" : "pointer-events-none"}`}
+              >
                 <FileText className="size-3.5 text-purple-500 shrink-0" />
                 <span className="text-sm text-gray-700 truncate">{note.title}</span>
-              </div>
+              </a>
               <button
                 onClick={() => deleteNoteMutation.mutate(note._id)}
                 disabled={deleteNoteMutation.isPending}
@@ -1592,10 +1597,15 @@ const ExistingNotesDPPList = ({ classId, dateStr }: { classId: string; dateStr: 
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">DPP</p>
           {dpps.map((dpp: any) => (
             <div key={dpp._id} className="flex items-center justify-between bg-white border border-gray-100 rounded-lg px-3 py-2">
-              <div className="flex items-center gap-2 min-w-0">
+              <a
+                href={dpp.attachments?.[0]?.fileUrl || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`flex items-center gap-2 min-w-0 ${dpp.attachments?.[0]?.fileUrl ? "hover:text-blue-600" : "pointer-events-none"}`}
+              >
                 <FileText className="size-3.5 text-blue-500 shrink-0" />
                 <span className="text-sm text-gray-700 truncate">{dpp.title}</span>
-              </div>
+              </a>
               <button
                 onClick={() => deleteDPPMutation.mutate(dpp._id)}
                 disabled={deleteDPPMutation.isPending}

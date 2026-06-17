@@ -164,6 +164,7 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
                         iconColor="text-purple-500"
                         getTitle={(note: any) => note.title || "Untitled note"}
                         getDate={(note: any) => note.uploadedAt || note.createdAt}
+                        getHref={(note: any) => note.attachments?.[0]?.fileUrl}
                       />
                       <MaterialList
                         title="DPPs"
@@ -172,6 +173,7 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
                         iconColor="text-blue-500"
                         getTitle={(dpp: any) => dpp.title || "Untitled DPP"}
                         getDate={(dpp: any) => dpp.createdAt || dpp.uploadedAt || dpp.dueDate}
+                        getHref={(dpp: any) => dpp.attachments?.[0]?.fileUrl}
                       />
                       <MaterialList
                         title="Quizzes"
@@ -261,6 +263,7 @@ const MaterialList = ({
   getTitle,
   getDate,
   getMeta,
+  getHref,
 }: {
   title: string;
   emptyText: string;
@@ -270,6 +273,7 @@ const MaterialList = ({
   getTitle: (item: any) => string;
   getDate: (item: any) => string | Date | undefined;
   getMeta?: (item: any) => string;
+  getHref?: (item: any) => string | undefined;
 }) => {
   const Icon = icon === "quiz" ? FileQuestion : FileText;
 
@@ -282,22 +286,41 @@ const MaterialList = ({
 
       {items.length > 0 ? (
         <div className="space-y-1.5">
-          {items.slice(0, 5).map((item: any) => (
-            <div key={item._id} className="flex items-start gap-2 rounded-xl bg-gray-50 px-3 py-2">
-              <Icon className={`size-4 shrink-0 mt-0.5 ${iconColor}`} />
-              <div className="min-w-0 flex-1">
-                <div className="flex items-start justify-between gap-2">
-                  <p className="text-sm font-bold text-gray-800 truncate capitalize">{getTitle(item)}</p>
-                  <span className="text-[10px] font-semibold text-gray-400 shrink-0">
-                    {getDate(item) ? dayjs(getDate(item)).format("DD MMM") : ""}
-                  </span>
+          {items.slice(0, 5).map((item: any) => {
+            const href = getHref?.(item);
+            const content = (
+              <>
+                <Icon className={`size-4 shrink-0 mt-0.5 ${iconColor}`} />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="text-sm font-bold text-gray-800 truncate capitalize">{getTitle(item)}</p>
+                    <span className="text-[10px] font-semibold text-gray-400 shrink-0">
+                      {getDate(item) ? dayjs(getDate(item)).format("DD MMM") : ""}
+                    </span>
+                  </div>
+                  {getMeta && (
+                    <p className="text-xs text-gray-500 mt-0.5 line-clamp-2 capitalize">{getMeta(item)}</p>
+                  )}
                 </div>
-                {getMeta && (
-                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-2 capitalize">{getMeta(item)}</p>
-                )}
+              </>
+            );
+
+            return href ? (
+              <a
+                key={item._id}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-2 rounded-xl bg-gray-50 px-3 py-2 hover:bg-purple-50/70 transition-colors"
+              >
+                {content}
+              </a>
+            ) : (
+              <div key={item._id} className="flex items-start gap-2 rounded-xl bg-gray-50 px-3 py-2">
+                {content}
               </div>
-            </div>
-          ))}
+            );
+          })}
           {items.length > 5 && (
             <p className="text-center text-[11px] font-semibold text-purple-600">
               +{items.length - 5} more

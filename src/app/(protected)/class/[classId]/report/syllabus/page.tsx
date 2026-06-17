@@ -4,12 +4,15 @@ import React, { use } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { BookOpen, Clock, FileText } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { BookOpen, ChevronLeft, Clock, FileText } from "lucide-react";
 
 import { getClassDetails } from "@/actions/batch_actions";
 
 const SyllabusReportPage = ({ params }: { params: Promise<{ classId: string }> }) => {
   const { classId } = use(params);
+  const searchParams = useSearchParams();
 
   const { data: classData, isLoading } = useQuery({
     queryKey: ["class-details", classId],
@@ -29,11 +32,19 @@ const SyllabusReportPage = ({ params }: { params: Promise<{ classId: string }> }
     (sum: number, day: any) => sum + (day.lectures?.length || 0),
     0
   );
+  const reportHref = `/class/${classId}/report${searchParams.toString() ? `?${searchParams.toString()}` : ""}`;
 
   return (
     <div className="w-full pb-10 space-y-4 md:space-y-6">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>
+          <Link
+            href={reportHref}
+            className="inline-flex items-center gap-1.5 mb-3 text-sm font-bold text-purple-600 hover:text-purple-700"
+          >
+            <ChevronLeft className="size-4" />
+            Back to Report
+          </Link>
           <h2 className="text-xl md:text-2xl font-bold text-gray-900">Syllabus Report</h2>
           <p className="text-sm text-gray-500 font-medium">
             Date-wise work added by teachers for this class.
