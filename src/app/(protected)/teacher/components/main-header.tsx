@@ -2,8 +2,10 @@
 
 import React, { useCallback } from "react";
 
+import { useQuery } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+import { getClassDetails } from "@/actions/batch_actions";
 import { SidebarSeparator, SidebarTrigger } from "@/components/ui/sidebar";
 import { useAppSelector } from "@/redux/hooks";
 import { ChevronLeft } from "lucide-react";
@@ -17,6 +19,13 @@ const MainHeader = () => {
   const { user } = useAppSelector((state) => state.user);
 
   const showBackButton = pathname.startsWith("/class/") || pathname.startsWith("/teacher/batch/");
+  const classId = pathname.startsWith("/class/") ? pathname.split("/")[2] : "";
+  const classNameFromQuery = searchParams.get("className");
+  const { data: classData } = useQuery({
+    queryKey: ["class-details", classId],
+    queryFn: () => getClassDetails(classId),
+    enabled: !!classId && !classNameFromQuery,
+  });
 
   const getHeading = useCallback(() => {
     if (pathname === "/teacher") return `Hey ${user?.firstname ?? ""}`;
@@ -24,11 +33,15 @@ const MainHeader = () => {
     if (pathname.startsWith("/teacher/batches")) return "Batches";
     if (pathname.startsWith("/teacher/students")) return "Attendance";
     if (pathname.startsWith("/class/")) {
-      return searchParams.get("className") || "Class";
+      if (classNameFromQuery) return classNameFromQuery;
+      if (classData?.subject) {
+        return `${classData.subject}${classData.batch?.name ? ` - ${classData.batch.name}` : ""}`;
+      }
+      return "Class";
     }
     if (pathname.startsWith("/teacher/batch/")) return "Batch";
     return "";
-  }, [pathname, user?.firstname, searchParams]);
+  }, [pathname, user?.firstname, classNameFromQuery, classData]);
 
   return (
     <div className="flex items-center justify-between px-3 md:px-4 py-2.5 sticky top-0 bg-white/80 backdrop-blur-md z-40 border-b border-gray-50">

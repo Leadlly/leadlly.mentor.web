@@ -25,7 +25,7 @@ const ClassTab = () => {
   return (
     <div className="flex justify-between md:justify-start border-b border-gray-100 mb-4 md:mb-8 gap-2 md:gap-8 bg-white pb-2 md:pb-0">
       {tabs.map((tab) => {
-        const isActive = pathname === tab.href;
+        const isActive = pathname === tab.href || pathname.startsWith(`${tab.href}/`);
         return (
           <Link
             key={tab.name}

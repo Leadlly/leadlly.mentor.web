@@ -220,10 +220,13 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
                   <div className="space-y-4">{[1,2,3].map(i => <div key={i} className="h-24 bg-gray-50 rounded-[20px] animate-pulse"></div>)}</div>
                ) : classes && classes.length > 0 ? (
                  <div className="grid grid-cols-1 gap-4">
-                    {classes.map((cls: any) => (
+                    {classes.map((cls: any) => {
+                      const className = `${cls.subject || "Subject"}${batch?.name ? ` - ${batch.name}` : ""}`;
+
+                      return (
                       <Link 
                         key={cls._id} 
-                        href={`/class/${cls._id}`}
+                        href={`/class/${cls._id}?className=${encodeURIComponent(className)}`}
                         className="bg-white border border-[#E9D5FF] rounded-2xl md:rounded-[24px] p-3 md:p-5 shadow-sm hover:shadow-md hover:border-[#A855F7] transition-all flex items-center justify-between group"
                       >
                         <div className="flex items-center gap-3 md:gap-5 lg:gap-6 min-w-0 flex-1">
@@ -250,7 +253,8 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
                             <ChevronRight className="text-gray-400 group-hover:text-[#A855F7] transition-colors size-5 lg:size-6" strokeWidth={2.5} />
                         </div>
                       </Link>
-                    ))}
+                      );
+                    })}
                  </div>
                ) : (
                   <div className="text-gray-500 font-medium py-10 bg-gray-50 rounded-[24px] text-center border border-dashed border-gray-200">
