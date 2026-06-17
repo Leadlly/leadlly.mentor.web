@@ -105,7 +105,7 @@ const AccountPersonalInfo = () => {
   const classOptions = [
     { _id: "11", name: "11" },
     { _id: "12", name: "12" },
-    { _id: "13", name: "13" },
+    { _id: "13", name: "Dropper" },
   ];
 
   const competitiveExamOptions = [

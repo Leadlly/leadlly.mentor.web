@@ -18,6 +18,7 @@ import {
   Loader2,
   ChevronRight,
 } from "lucide-react";
+import { formatStandardLabel } from "@/helpers/constants/academic";
 import {
   addDays,
   format,
@@ -387,7 +388,7 @@ const TeacherDashboard = () => {
                       >
                         {trimmedName}
                       </h4>
-                      <p className="text-xs text-gray-400 font-medium">Standard {batch.standard}</p>
+                      <p className="text-xs text-gray-400 font-medium">Standard {formatStandardLabel(batch.standard)}</p>
                     </div>
                     <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full shrink-0 ${batch.status === "Active" ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-500"}`}>
                       {batch.status}

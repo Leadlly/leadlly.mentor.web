@@ -6,6 +6,7 @@ import { getClassDetails, getBatchStudents } from "@/actions/batch_actions";
 import { getBackgroundColor } from "@/helpers/constants/efficiency";
 import { neutralEmoji, moodEmojis } from "@/helpers/constants/moodEmojis";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatClassLabel } from "@/helpers/constants/academic";
 import Progressbar from "@/components/shared/Progressbar";
 import { formatDate } from "@/helpers/utils";
 import { Search, SlidersHorizontal } from "lucide-react";
@@ -162,7 +163,7 @@ const StudentListCard = ({ student }: { student: any }) => {
             {student.firstname} {student.lastname}
           </h3>
           <p className="text-xs md:text-sm text-gray-600 font-medium">
-            Class: {student.academic?.standard || "N/A"}
+            {formatClassLabel(student.academic?.standard)}
           </p>
           <div className="flex items-center gap-2">
             <Image

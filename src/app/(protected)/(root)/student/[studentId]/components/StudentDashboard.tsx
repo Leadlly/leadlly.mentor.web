@@ -10,6 +10,7 @@ import { Studentinformation } from "@/helpers/types";
 import Loader from "@/components/shared/Loader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatDate } from "@/helpers/utils";
+import { formatClassLabel } from "@/helpers/constants/academic";
 
 export default function StudentDashboard({
   studentId,
@@ -43,7 +44,7 @@ export default function StudentDashboard({
                 {studentData.lastname ? studentData.lastname : ""}
               </div>
               <div className="text-white font-semibold text-base">
-                Class:{studentData.academic.standard}
+                {formatClassLabel(studentData.academic.standard)}
               </div>
               <Link
                 href={`/student-profile/${studentId}`}
@@ -111,7 +112,7 @@ export default function StudentDashboard({
                 {studentData.lastname ? studentData.lastname : ""}
               </div>
               <div className="text-[#989898] font-semibold text-[11px] md:text-base">
-                Class: {studentData.academic.standard}
+                {formatClassLabel(studentData.academic.standard)}
               </div>
               <Link
                 href={`/student-profile/${studentId}`}

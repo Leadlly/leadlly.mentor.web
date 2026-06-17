@@ -70,6 +70,11 @@ export const trackerTabs = [
     subject: "chemistry",
     href: "/chemistry",
   },
+  {
+    id: "biology",
+    subject: "biology",
+    href: "/biology",
+  },
 ];
 export const quizzesTabs = [
   {

@@ -13,7 +13,7 @@ const AttemptedChapterWiseQuizzes = ({
 }: AttemptedChapterWiseQuizzesProps) => {
   const [selectedSubject, setSelectedSubject] = useState<string>("All");
 
-  const subjects = ["All", "Maths", "Physics", "Chemistry"];
+  const subjects = ["All", "Maths", "Physics", "Chemistry", "Biology"];
 
   const filteredQuizzes =
     selectedSubject === "All"

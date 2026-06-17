@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Calculator, FlaskConical, BookOpen, Dna, Monitor, Globe, Hourglass, Presentation, Plus } from "lucide-react";
+import { formatStdLabel } from "@/helpers/constants/academic";
 
 const getSubjectIcon = (subject: string = "") => {
   const s = subject.toLowerCase();
@@ -50,7 +51,7 @@ const ClassList = () => {
                         {item.subject || "Unknown Class"}
                       </h3>
                       <p className="text-xs md:text-[13px] text-gray-500 font-medium truncate w-full mt-0.5 capitalize">
-                        {item.batch?.name || "No Batch"} • Std {item.batch?.standard || "N/A"}
+                        {item.batch?.name || "No Batch"} • {formatStdLabel(item.batch?.standard)}
                       </p>
                     </div>
                   </div>

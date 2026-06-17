@@ -5,6 +5,7 @@ import { Share2, Plus, Megaphone } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import AnnouncementModal from "@/components/shared/AnnouncementModal";
+import { formatStdLabel } from "@/helpers/constants/academic";
 
 interface BatchCardProps {
   batch: {
@@ -35,7 +36,7 @@ const BatchCard = ({ batch }: BatchCardProps) => {
                   {batch.name}
                 </h3>
                 <p className="text-xs md:text-[13px] text-gray-500 font-medium truncate w-full mt-0.5">
-                  Std {batch.standard} - {batch.subjects?.join(", ")}
+                  {formatStdLabel(batch.standard)} - {batch.subjects?.join(", ")}
                 </p>
               </div>
             </div>

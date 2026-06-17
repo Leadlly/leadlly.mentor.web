@@ -101,7 +101,9 @@ const WeekCalendar = ({ timeframe }: { timeframe: string }) => {
                         ? "chem"
                         : cls.class.subject === "physics"
                           ? "phy"
-                          : cls.class.subject}
+                          : cls.class.subject === "biology"
+                            ? "bio"
+                            : cls.class.subject}
                     </span>
                   </div>
                 ))}

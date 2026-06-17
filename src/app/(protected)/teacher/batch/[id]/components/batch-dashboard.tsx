@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import AnnouncementList from "@/components/shared/AnnouncementList";
 import AnnouncementModal from "@/components/shared/AnnouncementModal";
 import { Button } from "@/components/ui/button";
+import { formatClassLabel } from "@/helpers/constants/academic";
 
 const BatchDashboard = ({ batchId }: { batchId: string }) => {
   const [activeTab, setActiveTab] = useState("report");
@@ -281,7 +282,7 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
                             {student.lastname?.charAt(0) || ""}
                           </div>
                           <div className="font-semibold text-sm line-clamp-1">{student.firstname} {student.lastname}</div>
-                          <div className="text-[#504F4F] text-xs font-medium mt-1">Class: {student.academic?.standard || "N/A"}</div>
+                          <div className="text-[#504F4F] text-xs font-medium mt-1">{formatClassLabel(student.academic?.standard)}</div>
                           <div className="font-semibold text-[10px] text-[#464646] mt-1.5">
                             Level-
                             <span className="font-bold text-[#0075FF] ml-0.5 text-[11px]">
