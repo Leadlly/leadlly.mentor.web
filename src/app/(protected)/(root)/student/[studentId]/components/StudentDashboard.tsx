@@ -23,9 +23,9 @@ export default function StudentDashboard({
 }) {
   return (
     <>
-      <div className="bg-[#E8E3F063] overflow-y-auto custom__scrollbar p-4 border-[#DDDDDD] border rounded-2xl w-full">
-        <div className="bg-[#CDAAFF] rounded-xl flex flex-col sm:flex-row gap-5 p-5 items-center justify-between mb-2">
-          <div className="flex justify-center items-center gap-4">
+      <div className="bg-[#E8E3F063] overflow-y-auto custom__scrollbar p-4 border-[#DDDDDD] border rounded-2xl w-full flex flex-col gap-3">
+        <div className="bg-[#CDAAFF] rounded-xl flex flex-col gap-5 p-5">
+          <div className="flex gap-4">
             <Avatar className="size-24">
               <AvatarImage
                 src={studentData?.avatar?.url}
@@ -52,39 +52,21 @@ export default function StudentDashboard({
               </Link>
             </div>
           </div>
+
           <PointsBox
             points={studentData.details.points.number}
             level={studentData.details.level.number}
             streak={studentData.details.streak.number}
           />
         </div>
-        {/* <div className="flex w-full gap-2 mt-4 pb-2 border-b-2 border-[#DEDEDE]">
-          <MoodOfTheWeek mood={studentData.details.mood} />
-          <SubjectStreak />
-        </div> */}
-        <div className="flex flex-col gap-2 mb-2">
-          <DailyReport
-            dailyreportquiz={
-              studentData.details.report.dailyReport.date &&
-              formatDate(
-                new Date(studentData.details.report.dailyReport.date)
-              ) === formatDate(new Date(Date.now()))
-                ? studentData.details.report.dailyReport.quiz
-                : 0
-            }
-            dailyreportsession={
-              studentData.details.report.dailyReport.date &&
-              formatDate(
-                new Date(studentData.details.report.dailyReport.date)
-              ) === formatDate(new Date(Date.now()))
-                ? studentData.details.report.dailyReport.quiz
-                : 0
-            }
-          />
 
-          <SubjectProgress userSubjects={studentData.academic.subjects} />
-        </div>
+        <DailyReport
+          studentDailyReport={studentData.details.report.dailyReport}
+        />
+
         <ProgressAnalytics studentId={studentId} />
+
+        <SubjectProgress userSubjects={studentData.academic.subjects} />
       </div>
     </>
   );

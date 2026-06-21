@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
-import { Dialog, DialogContent, DialogOverlay } from "../ui/dialog";
+
 import { cn } from "@/lib/utils";
+
+import { Dialog, DialogContent, DialogOverlay } from "../ui/dialog";
 
 const Modal = ({
   children,
@@ -18,16 +20,14 @@ const Modal = ({
   };
   return (
     <Dialog defaultOpen={true} open={true} onOpenChange={handleOpenChange}>
-      <DialogOverlay className="backdrop-blur-sm">
-        <DialogContent
-          className={cn(
-            "text-black shadow-dialog bg-white rounded-xl max-w-4xl w-full p-4 overflow-hidden",
-            className
-          )}
-        >
-          {children}
-        </DialogContent>
-      </DialogOverlay>
+      <DialogContent
+        className={cn(
+          "text-black shadow-dialog bg-white rounded-xl max-w-4xl w-full p-4 overflow-hidden",
+          className
+        )}
+      >
+        {children}
+      </DialogContent>
     </Dialog>
   );
 };

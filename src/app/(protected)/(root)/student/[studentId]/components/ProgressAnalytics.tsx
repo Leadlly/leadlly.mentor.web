@@ -1,11 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-
-import { usePathname } from "next/navigation";
+import React, { useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { ArrowDown, ArrowUp } from "lucide-react";
 
 import {
   getMonthlyReport,
@@ -17,7 +15,7 @@ import AreaChartOver from "@/components/charts/AreaChartOver";
 import BarChart from "@/components/charts/BarChart";
 import TabContent from "@/components/shared/TabContent";
 import TabNavItem from "@/components/shared/TabNavItem";
-import { monthlyReport, overallReport, weeklyReport } from "@/helpers/types";
+import { cn } from "@/lib/utils";
 
 const progressAnalyticsMenus = [
   {
@@ -55,11 +53,27 @@ const ProgressAnalytics = ({ studentId }: { studentId: string }) => {
     enabled: !!studentId,
   });
 
+  const weeklySeries = React.useMemo(() => {
+    const days = weeklyReport?.weeklyReport?.days;
+    if (!Array.isArray(days)) return [];
+
+    return [
+      {
+        name: "Topics revised",
+        data: days.map((day: any) => day.session),
+      },
+      {
+        name: "Revision accuracy",
+        data: days.map((day: any) => day.quiz),
+      },
+    ];
+  }, [weeklyReport]);
+
   return (
     <div className="px-3 flex-1 pt-2 bg-[#FBFAFC] rounded-2xl border border-[#D8D5D5] shadow-custom-black">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col items-start md:flex-row gap-4 md:items-center justify-between">
         <h4 className="text-xs md:text-sm font-bold">Progress Analytics</h4>
-        <ul className="flex items-center gap-1 border border-[#989898] p-1 rounded">
+        <ul className="flex items-center gap-1 border p-1.5 rounded-full">
           {progressAnalyticsMenus.map((tab) => (
             <TabNavItem
               key={tab.id}
@@ -74,10 +88,80 @@ const ProgressAnalytics = ({ studentId }: { studentId: string }) => {
         </ul>
       </div>
 
-      <div className="w-full h-full overflow-hidden">
+      {activeTab === "weekly" && weeklyReport?.weeklyReport?.metrics && (
+        <div className="w-full flex justify-between mt-4">
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="font-medium text-sm">Topics revised</div>
+            <div className="flex items-center gap-x-1 mt-0.5">
+              {weeklyReport?.weeklyReport?.metrics.topicsRevisedChange >= 0 ? (
+                <ArrowUp size={14} color={"#16a34a"} />
+              ) : (
+                <ArrowDown size={14} color={"#dc2626"} />
+              )}
+
+              <div
+                className={cn(
+                  "font-semibold text-xl",
+                  weeklyReport?.weeklyReport?.metrics.topicsRevisedChange >= 0
+                    ? "text-[#16a34a]"
+                    : "text-[#dc2626]"
+                )}
+              >
+                {Math.abs(
+                  weeklyReport?.weeklyReport?.metrics.topicsRevisedChange
+                )}
+                %
+              </div>
+              <div className="text-xs">
+                {weeklyReport?.weeklyReport?.metrics.topicsRevisedChange >= 0
+                  ? "more"
+                  : "less"}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <div className="font-medium text-sm">Revision accuracy</div>
+            <div className="flex items-center gap-x-1 mt-0.5">
+              {weeklyReport?.weeklyReport?.metrics.revisionAccuracyChange >=
+              0 ? (
+                <ArrowUp size={14} color={"#16a34a"} />
+              ) : (
+                <ArrowDown size={14} color={"#dc2626"} />
+              )}
+
+              <div
+                className={cn(
+                  "font-semibold text-xl",
+                  weeklyReport?.weeklyReport?.metrics.revisionAccuracyChange >=
+                    0
+                    ? "text-[#16a34a]"
+                    : "text-[#dc2626]"
+                )}
+              >
+                {Math.abs(
+                  weeklyReport?.weeklyReport?.metrics.revisionAccuracyChange
+                )}
+                %
+              </div>
+              <div className="text-sm">
+                {weeklyReport?.weeklyReport?.metrics.revisionAccuracyChange >= 0
+                  ? "more"
+                  : "less"}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="w-full h-full min-h-40 overflow-hidden">
         <TabContent id="weekly" activeTab={activeTab}>
-          <div className="flex items-center gap-3">
-            <BarChart weekly={weeklyReport?.weeklyReport?.days} />
+          <div className="flex flex-col items-center w-full">
+            <BarChart
+              series={weeklySeries}
+              categories={["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]}
+              colors={["#9654F4", "#56CFE1"]}
+            />
           </div>
         </TabContent>
         <TabContent id="monthly" activeTab={activeTab}>

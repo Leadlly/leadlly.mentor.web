@@ -22,8 +22,7 @@ export default function MainLayout({
         className="md:py-3 flex items-start gap-3 flex-col h-screen overflow-hidden
           "
       >
-        {/*h-screen overflow-hidden*/}
-        <Navbar></Navbar>
+        <Navbar />
         <section className="flex-1 h-main-height w-full">{children}</section>
       </Container>
       <Toaster richColors position="top-center" />

@@ -5,8 +5,10 @@ import React, { useState } from "react";
 import { Plus, Trash2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { ISubject } from "@/helpers/types";
 import { getFormattedDate } from "@/helpers/utils";
 
+import ContinuousRevision from "./ContinuousRevision";
 import NewTopicLearnt from "./NewTopicLearnt";
 
 type Topic = {
@@ -22,7 +24,17 @@ type TweeksTopic = {
   backRevisionTopics: Topic[];
 };
 
-const Plannercontent = ({ weekstopic }: { weekstopic: TweeksTopic[] }) => {
+const Plannercontent = ({
+  weekstopic,
+  studentStandard,
+  studentSubjects,
+  studentCompetitiveExam,
+}: {
+  weekstopic: TweeksTopic[];
+  studentStandard: number;
+  studentSubjects: ISubject[];
+  studentCompetitiveExam: string;
+}) => {
   const [visibleTopics, setVisibleTopics] = useState(
     weekstopic.map((datecard) => ({
       continuous: datecard.continuousRevisionTopics.map(() => true),
@@ -52,25 +64,20 @@ const Plannercontent = ({ weekstopic }: { weekstopic: TweeksTopic[] }) => {
 
   return (
     <div className="md:border md:border-[#9898988A] mb-[20px] md:mb-0 h-[calc(100dvh-80px)] custom__scrollbar overflow-y-auto rounded-[6px] shadow-md px-[3%] pt-[3%]">
-      <div className="mb-[41px]">
-        <Button className="text-[16px] py-[3px] px-[10px]">
-          <p>Add Revision sessions</p>
-          <Plus className="size-3" />
-        </Button>
-      </div>
       {weekstopic.map((datecard, dateIndex) => (
         <div key={datecard.date}>
           <div className="bg-[#F0E5FF] flex items-center justify-between px-[3%] text-[16px] py-[1%] font-bold border rounded-t-[6px] border-b-0 border-[#DFDBDB]">
             <p>
               {datecard.day}, {getFormattedDate(new Date(datecard.date))}
             </p>
-            <div className="flex gap-5">
-              <Plus
-                onClick={() => setShowPopup(true)}
-                className="text-primary cursor-pointer size-5"
+            {/* <div className="flex gap-5">
+              <ContinuousRevision
+                studentStandard={studentStandard}
+                studentSubjects={studentSubjects}
+                studentCompetitiveExam={studentCompetitiveExam}
               />
               <Trash2 className="text-primary cursor-pointer size-5" />
-            </div>
+            </div> */}
           </div>
           <div className="bg-[#F5EFFF] h-[70px] w-full border py-[0.9%] mb-[11px] flex justify-center rounded-b-[6px] border-[#DFDBDB]">
             <div className="flex overflow-x-auto mx-[10px] md:mx-0 mb-[11px] md:mb-0 md:my-0 no-scrollbar flex-row items-center gap-[21px] md:gap-[41px] h-full px-[1.5%]">
@@ -104,21 +111,6 @@ const Plannercontent = ({ weekstopic }: { weekstopic: TweeksTopic[] }) => {
           </div>
         </div>
       ))}
-      {showPopup && (
-        <div className="fixed inset-0 rounded-[3px] bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white relative rounded-[10px] p-4 w-[90%] md:w-[70%] lg:w-[50%] xl:w-[40%]">
-            <button
-              type="button"
-              className="absolute top-4 right-4 text-black"
-              onClick={() => setShowPopup(false)}
-              aria-label="Close popup"
-            >
-              {/* <X size={24} className='text-[#6a6a6a]' /> */}
-            </button>
-            <NewTopicLearnt setNewTopicLearnt={setNewTopicLearnt} />
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -1,31 +1,64 @@
 "use client";
-import RadialBarChart from "@/components/charts/RadialBarChart";
+import BarChart from "@/components/charts/BarChart";
+import { IStudentDailyReport } from "@/helpers/types";
 import { formatDate } from "@/helpers/utils";
 
-const DailyReport = ({ dailyreportquiz, dailyreportsession }: any) => {
-  return (
-    <div className="px-3 bg-[#FBFAFC] rounded-2xl border border-[#D8D5D5] shadow-custom-black py-2">
-      <h4 className="text-xs md:text-sm font-bold">Daily Report</h4>
-      <div className="flex items-center justify-center">
-        <RadialBarChart
-          series={[dailyreportquiz, dailyreportsession]}
-          colors={["#9654F4", "#72EFDD"]}
-          labels={["Sessions", "Quizzes"]}
-          dataLabel="overall"
-          width="90%"
-          hollowSize="45%"
-          fontSize="18px"
-        />
+const DailyReport = ({
+  studentDailyReport,
+}: {
+  studentDailyReport: IStudentDailyReport;
+}) => {
+  const dailyReportQuiz =
+    studentDailyReport.date &&
+    formatDate(new Date(studentDailyReport.date)) ===
+      formatDate(new Date(Date.now()))
+      ? studentDailyReport.quiz
+      : 0;
 
-        <div className="flex flex-col gap-2">
-          <div className="flex items-center gap-2">
-            <span className=" block w-3 h-3 rounded bg-primary"></span>
-            <span className="text-xs capitalize">Sessions</span>
+  const dailyReportSession =
+    studentDailyReport.date &&
+    formatDate(new Date(studentDailyReport.date)) ===
+      formatDate(new Date(Date.now()))
+      ? studentDailyReport.session
+      : 0;
+
+  return (
+    <div className="px-3 md:px-6 bg-[#FBFAFC] rounded-2xl border border-[#D8D5D5] shadow-custom-black py-2">
+      <h4 className="text-base font-bold">Today</h4>
+      <div className="w-full flex flex-col-reverse md:flex-row items-center justify-between px-5">
+        <div className="w-full flex flex-row md:flex-col justify-between gap-4">
+          <div>
+            <div className="font-mada-semibold text-2xl">
+              {dailyReportSession}%
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="rounded size-3 bg-primary" />
+              <div className="font-mada-medium text-sm">Topics revised</div>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span className=" block w-3 h-3 rounded bg-[#72EFDD]"></span>
-            <span className="text-xs capitalize">Quizzes</span>
+
+          <div>
+            <div className="font-mada-semibold text-2xl">
+              {dailyReportQuiz}%
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="rounded size-3 bg-cyan-500" />
+              <div className="font-mada-medium text-sm">Revision accuracy</div>
+            </div>
           </div>
+        </div>
+
+        <div className="w-full md:w-auto flex justify-center">
+          <BarChart
+            series={[
+              { name: "Sessions", data: [dailyReportSession || 0] },
+              { name: "Quizzes", data: [dailyReportQuiz || 0] },
+            ]}
+            categories={["Today"]}
+            colors={["#9654F4", "#72EFDD"]}
+            hideLegend={true}
+            height={"100%"}
+          />
         </div>
       </div>
     </div>

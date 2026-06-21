@@ -1,14 +1,18 @@
 "use client";
 
 import React from "react";
-import Level from "./Level";
-import Efficiency from "./Efficiency";
-import EmojiMood from "./EmojiMoodSelector";
+import { useState } from "react";
+
+import Link from "next/link";
+
 import { SlidersHorizontal } from "lucide-react";
+
 import ArrowIcon from "@/components/icons/ArrowIcon";
 import RoundArrowIcon from "@/components/icons/RoundArrowIcon";
-import { useState } from "react";
-import Link from "next/link";
+
+import Efficiency from "./Efficiency";
+import EmojiMood from "./EmojiMoodSelector";
+import Level from "./Level";
 import SearchBar from "./SearchBar";
 
 const FilterBox = () => {
@@ -23,13 +27,13 @@ const FilterBox = () => {
           <div className="flex px-4 flex-col items-center gap-4 justify-between w-full">
             <Level />
             <Efficiency />
-            <EmojiMood />
+            {/* <EmojiMood />
             <div className="text-black">
               <h4 className="text-[10px] font-bold">Note:</h4>
               <p className="text-[10px] font-medium">
                 Emoji depict the average mood of a week
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

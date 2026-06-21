@@ -153,7 +153,7 @@ const RequestMeetingComponent = ({ studentId }: { studentId: string }) => {
                               currentDate.setHours(0, 0, 0, 0);
                               return date < currentDate || date > endDate;
                             }}
-                            initialFocus
+                            autoFocus
                           />
                         </PopoverContent>
                       </Popover>

@@ -13,6 +13,7 @@ import {
   MentorPersonalInfoProps,
   ResetPasswordProps,
   SignUpDataProps,
+  Studentinformation,
 } from "@/helpers/types";
 
 import { getCookie } from "./cookie_actions";
@@ -309,7 +310,7 @@ export const Studentinfo = async (id: string) => {
       throw new Error(`status: ${res.status}, response: ${errorText}`);
     }
 
-    const responseData = await res.json();
+    const responseData: { student: Studentinformation } = await res.json();
 
     return responseData;
   } catch (error) {

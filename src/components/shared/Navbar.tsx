@@ -1,18 +1,21 @@
 "use client";
 import React from "react";
-import LeadllyIcon from "../icons/LeadllyIcon";
-import SmallIcon from "../icons/respoLogo.svg";
-import NotificationIcon from "../icons/NotificationIcon";
-import dashboardsmall from "../icons/Dashboardsmall.svg";
-import communitysmall from "../icons/Comunitysmall.svg";
+
+// import Avatar from "./Avatar";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import { NavbarLinks } from "@/helpers/constants";
 import { NavbarLink, NavbarLinksmall } from "@/helpers/types";
 import { cn } from "@/lib/utils";
-// import Avatar from "./Avatar";
-import Image from "next/image";
 import { useAppSelector } from "@/redux/hooks";
+
+import communitysmall from "../icons/Comunitysmall.svg";
+import dashboardsmall from "../icons/Dashboardsmall.svg";
+import LeadllyIcon from "../icons/LeadllyIcon";
+import NotificationIcon from "../icons/NotificationIcon";
+import SmallIcon from "../icons/respoLogo.svg";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 const Navbar = () => {
@@ -22,10 +25,10 @@ const Navbar = () => {
   if (pathname.startsWith("/student/")) return null;
 
   return (
-    <div className="w-full">
+    <div className="w-full px-4">
       <nav className="h-20 shadow-md hidden lg:flex w-full bg-box justify-between px-10 rounded-[60px] items-center">
-        <Link className="h-14 w-10 cursor-pointer" href="/">
-          <LeadllyIcon></LeadllyIcon>
+        <Link className="h-10 cursor-pointer" href="/">
+          <LeadllyIcon />
         </Link>
 
         <ul className="flex justify-center items-center gap-7">

@@ -29,7 +29,7 @@ const Sidebar = ({ id }: { id: string }) => {
 
   return (
     <>
-      <aside className="md:rounded-xl rounded-l h-full bg-[#ffffff] shadow-custom-inset md:mr-[6%] mr-[15px] px-[4px] max-w-32">
+      <aside className="md:rounded-xl rounded-l h-full bg-[#ffffff] shadow-custom-inset md:mr-[6%] mr-[15px] px-[4px] max-w-32 md:max-w-max">
         <ul className="flex flex-col justify-start items-start h-full no-scrollbar overflow-y-auto pt-5">
           {/* <div className="relative px-4 py-2 rounded-xl md:rounded-full xl:rounded-xl w-full flex items-center justify-start md:justify-center xl:justify-start bg-white shadow-custom-inset">
             <Link href="#" onClick={handleListClick}>
@@ -52,17 +52,18 @@ const Sidebar = ({ id }: { id: string }) => {
               href={`/student/${id}${item.href}`}
               key={item.href}
               className={cn(
-                "relative px-4 py-2 rounded-xl md:rounded-full xl:rounded-xl w-full flex items-center justify-start md:justify-center xl:justify-start"
+                "relative px-4 py-2 rounded-xl md:rounded-full w-full flex items-center"
               )}
               onClick={handleTabClick}
             >
               <li
                 className={cn(
+                  "flex items-center gap-x-2 px-4 py-2.5 transition-all duration-300 ease-in-out",
                   isPopupOpen
-                    ? "bg-none p-4" // Inactive styling when popup is open
+                    ? "bg-none" // Inactive styling when popup is open
                     : pathname === `/student/${id}${item.href}`
-                      ? "bg-[#9654F4] rounded-full p-4" // Active styling for current route
-                      : "bg-none p-4" // Default inactive styling
+                      ? "bg-[#9654F4] rounded-full text-white font-medium" // Active styling for current route
+                      : "bg-transparent" // Default inactive styling
                 )}
               >
                 <item.icon
@@ -79,6 +80,7 @@ const Sidebar = ({ id }: { id: string }) => {
                           : "fill-[#9654F4]" // Default icon styling
                   )}
                 />
+                <span className="sr-only md:not-sr-only">{item.label}</span>
               </li>
             </Link>
           ))}

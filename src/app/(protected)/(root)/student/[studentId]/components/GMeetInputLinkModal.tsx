@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { getUser, mentorPersonalInfo } from "@/actions/user_actions";
 import Modal from "@/components/shared/Modal";
 import { Button } from "@/components/ui/button";
+import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import {
   Form,
   FormField,
@@ -39,6 +40,9 @@ const GMeetInputLinkModal = ({
 
   const form = useForm<z.infer<typeof GMeetLinkFormSchema>>({
     resolver: zodResolver(GMeetLinkFormSchema),
+    defaultValues: {
+      gmeet: "",
+    },
   });
 
   const onLinkSubmit = async (data: z.infer<typeof GMeetLinkFormSchema>) => {
@@ -67,9 +71,12 @@ const GMeetInputLinkModal = ({
   return (
     <Modal setOpenDialogBox={setOpenGMeetLinkInputModal} className="max-w-lg">
       <div className="flex items-center justify-between w-full">
-        <h3 className="text-xl leading-tight font-medium">
+        <DialogTitle className="text-xl leading-tight font-medium">
           Submit your google meet link
-        </h3>
+        </DialogTitle>
+        <DialogDescription className="sr-only">
+          Submit your google meet link
+        </DialogDescription>
         <Button
           size={"sm"}
           variant={"outline"}

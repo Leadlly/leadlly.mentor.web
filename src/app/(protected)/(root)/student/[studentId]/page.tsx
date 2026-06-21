@@ -15,9 +15,9 @@ export default async function StudentPage({
 
   return (
     <>
-      <div className="mx-px overflow-auto flex gap-5 h-[calc(100dvh-80px)]">
+      <div className="mx-px overflow-auto flex flex-col h-auto xl:flex-row gap-5 xl:h-[calc(100dvh-80px)] pb-20 md:pb-10 xl:pb-0 custom__scrollbar px-4">
         <StudentDashboard studentId={studentId} studentData={student.student} />
-        {/* <CommunicationPanel studentId={studentId} /> */}
+        <CommunicationPanel studentId={studentId} />
       </div>
     </>
   );

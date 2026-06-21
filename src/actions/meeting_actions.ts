@@ -21,8 +21,6 @@ export const getMeetings = async (
       queryParams.append("createdBy", createdBy);
     }
 
-    console.log(queryParams);
-
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/meeting/get?${queryParams.toString()}`,
       {
