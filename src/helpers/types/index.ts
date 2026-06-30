@@ -47,6 +47,11 @@ export type Chapter = {
   plannerFrequency?: number;
   level?: string;
   overall_efficiency?: number;
+  overall_progress?: number;
+  total_questions_solved: {
+    number?: number;
+    percentage?: number;
+  };
   studiedAt: {
     date?: Date;
     efficiency?: number;
@@ -219,10 +224,18 @@ interface Report {
 }
 
 export interface ISubject {
+  _id: string;
   name: string;
   overall_efficiency: number;
   overall_progress: number;
   total_questions_solved: { number: number; percentage: number };
+}
+
+export interface IStudentDailyReport {
+  date: string;
+  session: number;
+  quiz: number;
+  overall: number;
 }
 
 export interface Studentinformation {
@@ -230,6 +243,7 @@ export interface Studentinformation {
   firstname: string;
   lastname: string;
   email: string;
+  category: string | null;
   phone: {
     personal: string;
     other: string;
@@ -239,9 +253,16 @@ export interface Studentinformation {
     phone: string;
   };
   mentor: {
-    id: string;
+    _id: string;
   };
   planner: boolean;
+  preferences: {
+    continuousData: {
+      nextDay: boolean;
+    };
+    dailyQuestions: number;
+    backRevisionTopics: number;
+  };
   address: {
     country: string;
     addressLine: string;
@@ -275,12 +296,7 @@ export interface Studentinformation {
       emoji: string;
     }[];
     report: {
-      dailyReport: {
-        date: string;
-        session: number;
-        quiz: number;
-        overall: number;
-      };
+      dailyReport: IStudentDailyReport;
     };
   };
   subscription: {
@@ -626,3 +642,14 @@ export interface EventItem {
 }
 
 export type EventsData = Record<string, EventItem[]>;
+
+export type SubItem = {
+  _id: string;
+  name: string;
+};
+
+export type Item = {
+  _id: string;
+  name: string;
+  subItems?: SubItem[];
+};

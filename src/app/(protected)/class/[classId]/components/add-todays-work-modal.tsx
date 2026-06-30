@@ -1,21 +1,31 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  BookOpen,
+  Check,
+  ChevronDown,
+  Clock,
+  Loader2,
+  Pencil,
+  Plus,
+} from "lucide-react";
+import { toast } from "sonner";
+
+import {
+  createTodaysWork,
+  getTodaysLecture,
+  updateTodaysWork,
+} from "@/actions/lecture_actions";
+import {
+  getChapters,
+  getTopicsWithSubtopics,
+} from "@/actions/questionbank_actions";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -24,29 +34,21 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
-  Check,
-  ChevronDown,
-  Clock,
-  Loader2,
-  BookOpen,
-  Plus,
-  Pencil,
-} from "lucide-react";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  getChapters,
-  getTopicsWithSubtopics,
-} from "@/actions/questionbank_actions";
-import {
-  createTodaysWork,
-  getTodaysLecture,
-  updateTodaysWork,
-} from "@/actions/lecture_actions";
-import { toast } from "sonner";
-import dayjs from "dayjs";
 
 interface ChapterItem {
   _id: string;
@@ -76,7 +78,7 @@ interface AddTodaysWorkProps {
   classId: string;
   batchId: string;
   subject: string;
-  standard: string | number;
+  standard: number;
   className?: string;
   compact?: boolean;
 }
@@ -94,7 +96,9 @@ const AddTodaysWorkModal = ({
   const [duration, setDuration] = useState(60);
 
   const [chapters, setChapters] = useState<ChapterItem[]>([]);
-  const [selectedChapter, setSelectedChapter] = useState<ChapterItem | null>(null);
+  const [selectedChapter, setSelectedChapter] = useState<ChapterItem | null>(
+    null
+  );
   const [chaptersLoading, setChaptersLoading] = useState(false);
 
   const [topics, setTopics] = useState<TopicItem[]>([]);
@@ -103,7 +107,8 @@ const AddTodaysWorkModal = ({
   >(new Map());
   const [topicsLoading, setTopicsLoading] = useState(false);
 
-  const [existingLecture, setExistingLecture] = useState<ExistingLecture | null>(null);
+  const [existingLecture, setExistingLecture] =
+    useState<ExistingLecture | null>(null);
   const [initialLoading, setInitialLoading] = useState(false);
   const prefillDoneRef = useRef(false);
 
@@ -145,20 +150,30 @@ const AddTodaysWorkModal = ({
   }, [open, classId]);
 
   useEffect(() => {
-    if (prefillDoneRef.current || !existingLecture || chapters.length === 0) return;
+    if (prefillDoneRef.current || !existingLecture || chapters.length === 0)
+      return;
     const existingChapter = existingLecture.chapters?.[0];
     if (existingChapter) {
       const match = chapters.find((c) => c._id === existingChapter._id);
-      setSelectedChapter(match || { _id: existingChapter._id, name: existingChapter.name });
+      setSelectedChapter(
+        match || { _id: existingChapter._id, name: existingChapter.name }
+      );
     }
   }, [existingLecture, chapters]);
 
   useEffect(() => {
-    if (!selectedChapter) { setTopics([]); return; }
+    if (!selectedChapter) {
+      setTopics([]);
+      return;
+    }
     const fetchTopics = async () => {
       setTopicsLoading(true);
       try {
-        const data = await getTopicsWithSubtopics(subject, standard, selectedChapter._id);
+        const data = await getTopicsWithSubtopics(
+          subject,
+          standard,
+          selectedChapter._id
+        );
         setTopics(data.topics || []);
       } catch {
         toast.error("Failed to load topics");
@@ -170,10 +185,18 @@ const AddTodaysWorkModal = ({
   }, [selectedChapter, subject, standard]);
 
   useEffect(() => {
-    if (prefillDoneRef.current || !existingLecture || topics.length === 0) return;
-    const existingTopicIds = new Set(existingLecture.topics?.map((t) => t._id) || []);
-    const existingSubtopicIds = new Set(existingLecture.subtopics?.map((s) => s._id) || []);
-    const prefilled = new Map<string, { topic: TopicItem; selectedSubtopics: Set<string> }>();
+    if (prefillDoneRef.current || !existingLecture || topics.length === 0)
+      return;
+    const existingTopicIds = new Set(
+      existingLecture.topics?.map((t) => t._id) || []
+    );
+    const existingSubtopicIds = new Set(
+      existingLecture.subtopics?.map((s) => s._id) || []
+    );
+    const prefilled = new Map<
+      string,
+      { topic: TopicItem; selectedSubtopics: Set<string> }
+    >();
     for (const topic of topics) {
       if (existingTopicIds.has(topic._id)) {
         const subs = new Set<string>();
@@ -196,7 +219,10 @@ const AddTodaysWorkModal = ({
       if (next.has(topic._id)) {
         next.delete(topic._id);
       } else {
-        next.set(topic._id, { topic, selectedSubtopics: new Set(topic.subtopics.map((s) => s._id)) });
+        next.set(topic._id, {
+          topic,
+          selectedSubtopics: new Set(topic.subtopics.map((s) => s._id)),
+        });
       }
       return next;
     });
@@ -207,7 +233,10 @@ const AddTodaysWorkModal = ({
       const next = new Map(prev);
       const entry = next.get(topic._id);
       if (!entry) {
-        next.set(topic._id, { topic, selectedSubtopics: new Set([subtopicId]) });
+        next.set(topic._id, {
+          topic,
+          selectedSubtopics: new Set([subtopicId]),
+        });
       } else {
         const subs = new Set(entry.selectedSubtopics);
         if (subs.has(subtopicId)) {
@@ -225,13 +254,20 @@ const AddTodaysWorkModal = ({
 
   const buildPayload = () => {
     if (!selectedChapter) throw new Error("Please select a chapter");
-    if (selectedTopics.size === 0) throw new Error("Please select at least one topic");
-    const topicsPayload = Array.from(selectedTopics.values()).map(({ topic, selectedSubtopics }) => ({
-      _id: topic._id,
-      name: topic.name,
-      subItems: topic.subtopics.filter((s) => selectedSubtopics.has(s._id)).map((s) => ({ _id: s._id, name: s.name })),
-    }));
-    const allSubtopics = topicsPayload.flatMap((t) => t.subItems.map((s) => ({ _id: s._id, name: s.name })));
+    if (selectedTopics.size === 0)
+      throw new Error("Please select at least one topic");
+    const topicsPayload = Array.from(selectedTopics.values()).map(
+      ({ topic, selectedSubtopics }) => ({
+        _id: topic._id,
+        name: topic.name,
+        subItems: topic.subtopics
+          .filter((s) => selectedSubtopics.has(s._id))
+          .map((s) => ({ _id: s._id, name: s.name })),
+      })
+    );
+    const allSubtopics = topicsPayload.flatMap((t) =>
+      t.subItems.map((s) => ({ _id: s._id, name: s.name }))
+    );
     return {
       chapter: [{ _id: selectedChapter._id, name: selectedChapter.name }],
       topics: topicsPayload,
@@ -247,7 +283,11 @@ const AddTodaysWorkModal = ({
       return createTodaysWork({ classId, batchId, ...payload });
     },
     onSuccess: () => {
-      toast.success(isUpdateMode ? "Work updated! Student planners are being refreshed." : "Today's work saved! Student planners are being updated.");
+      toast.success(
+        isUpdateMode
+          ? "Work updated! Student planners are being refreshed."
+          : "Today's work saved! Student planners are being updated."
+      );
       queryClient.invalidateQueries({ queryKey: ["class-details", classId] });
       queryClient.invalidateQueries({ queryKey: ["teacher-report"] });
       queryClient.invalidateQueries({ queryKey: ["teacher-dashboard"] });
@@ -270,17 +310,28 @@ const AddTodaysWorkModal = ({
   };
 
   const selectedCount = selectedTopics.size;
-  const totalSubtopicsSelected = Array.from(selectedTopics.values()).reduce((sum, entry) => sum + entry.selectedSubtopics.size, 0);
+  const totalSubtopicsSelected = Array.from(selectedTopics.values()).reduce(
+    (sum, entry) => sum + entry.selectedSubtopics.size,
+    0
+  );
 
-  const isUnchanged = isUpdateMode && !!existingLecture && !!selectedChapter && (
+  const isUnchanged =
+    isUpdateMode &&
+    !!existingLecture &&
+    !!selectedChapter &&
     existingLecture.chapters?.[0]?._id === selectedChapter._id &&
     existingLecture.duration === duration &&
     existingLecture.topics?.length === selectedTopics.size &&
-    (existingLecture.topics?.every((t) => selectedTopics.has(t._id)) ?? false)
-  );
+    (existingLecture.topics?.every((t) => selectedTopics.has(t._id)) ?? false);
 
   return (
-    <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) resetForm(); }}>
+    <Dialog
+      open={open}
+      onOpenChange={(v) => {
+        setOpen(v);
+        if (!v) resetForm();
+      }}
+    >
       <DialogTrigger asChild>
         <Button
           variant="outline"
@@ -305,20 +356,28 @@ const AddTodaysWorkModal = ({
           <>
             <DialogHeader>
               <DialogTitle className="text-xl font-bold tracking-tight flex items-center gap-2">
-                {isUpdateMode ? <Pencil className="size-5 text-purple-600" /> : <BookOpen className="size-5 text-purple-600" />}
+                {isUpdateMode ? (
+                  <Pencil className="size-5 text-purple-600" />
+                ) : (
+                  <BookOpen className="size-5 text-purple-600" />
+                )}
                 {isUpdateMode ? "Update Today's Work" : "Today's Class Work"}
               </DialogTitle>
             </DialogHeader>
 
-            <div className="bg-gradient-to-r from-purple-50 to-violet-50 rounded-xl p-4 border border-purple-100">
+            <div className="bg-linear-to-r from-purple-50 to-violet-50 rounded-xl p-4 border border-purple-100">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-gray-500">Class</p>
-                  <p className="text-lg font-bold text-gray-900 capitalize">{className || subject}</p>
+                  <p className="text-lg font-bold text-gray-900 capitalize">
+                    {className || subject}
+                  </p>
                 </div>
                 <div className="text-right">
                   <p className="text-sm font-medium text-gray-500">Date</p>
-                  <p className="text-sm font-bold text-gray-800">{dayjs().format("DD MMM YYYY")}</p>
+                  <p className="text-sm font-bold text-gray-800">
+                    {dayjs().format("DD MMM YYYY")}
+                  </p>
                 </div>
               </div>
               {isUpdateMode && (
@@ -333,37 +392,78 @@ const AddTodaysWorkModal = ({
                 <Clock className="size-4 text-purple-500" />
                 Duration (minutes)
               </Label>
-              <Input type="number" min={1} max={600} value={duration} onChange={(e) => setDuration(Number(e.target.value) || 60)} className="w-32" />
+              <Input
+                type="number"
+                min={1}
+                max={600}
+                value={duration}
+                onChange={(e) => setDuration(Number(e.target.value) || 60)}
+                className="w-32"
+              />
             </div>
 
             <div className="space-y-2">
-              <Label className="font-semibold text-gray-700">Select Chapter *</Label>
-              <Popover open={chapterPopoverOpen} onOpenChange={setChapterPopoverOpen}>
+              <Label className="font-semibold text-gray-700">
+                Select Chapter *
+              </Label>
+              <Popover
+                open={chapterPopoverOpen}
+                onOpenChange={setChapterPopoverOpen}
+              >
                 <PopoverTrigger asChild>
-                  <Button variant="outline" role="combobox" className={cn("w-full justify-between text-left", !selectedChapter && "text-muted-foreground")}>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className={cn(
+                      "w-full justify-between text-left",
+                      !selectedChapter && "text-muted-foreground"
+                    )}
+                  >
                     <span className="flex-1 truncate">
-                      {selectedChapter ? selectedChapter.name : chaptersLoading ? "Loading chapters..." : "Select chapter"}
+                      {selectedChapter
+                        ? selectedChapter.name
+                        : chaptersLoading
+                          ? "Loading chapters..."
+                          : "Select chapter"}
                     </span>
                     <ChevronDown className="ml-2 h-4 w-4 shrink-0" />
                   </Button>
                 </PopoverTrigger>
-                <PopoverContent className="p-0 w-[--radix-popover-trigger-width]" align="start">
+                <PopoverContent
+                  className="p-0 w-[--radix-popover-trigger-width]"
+                  align="start"
+                >
                   <Command>
                     <CommandInput placeholder="Search chapter..." />
                     <CommandList className="max-h-[200px]">
                       <CommandEmpty>No chapter found.</CommandEmpty>
                       <CommandGroup>
                         {chaptersLoading ? (
-                          <CommandItem disabled><Loader2 className="animate-spin size-4 mr-2" />Loading...</CommandItem>
+                          <CommandItem disabled>
+                            <Loader2 className="animate-spin size-4 mr-2" />
+                            Loading...
+                          </CommandItem>
                         ) : (
                           chapters.map((chapter) => (
                             <CommandItem
                               key={chapter._id}
                               value={chapter.name}
-                              onSelect={() => { setSelectedChapter(chapter); setSelectedTopics(new Map()); prefillDoneRef.current = true; setChapterPopoverOpen(false); }}
+                              onSelect={() => {
+                                setSelectedChapter(chapter);
+                                setSelectedTopics(new Map());
+                                prefillDoneRef.current = true;
+                                setChapterPopoverOpen(false);
+                              }}
                               className="cursor-pointer"
                             >
-                              <Check className={cn("mr-2 h-4 w-4", selectedChapter?._id === chapter._id ? "opacity-100" : "opacity-0")} />
+                              <Check
+                                className={cn(
+                                  "mr-2 h-4 w-4",
+                                  selectedChapter?._id === chapter._id
+                                    ? "opacity-100"
+                                    : "opacity-0"
+                                )}
+                              />
                               {chapter.name}
                             </CommandItem>
                           ))
@@ -380,20 +480,30 @@ const AddTodaysWorkModal = ({
                 Select Topics *{" "}
                 {selectedCount > 0 && (
                   <span className="text-purple-600 font-normal text-xs ml-1">
-                    ({selectedCount} topic{selectedCount > 1 ? "s" : ""}{totalSubtopicsSelected > 0 ? `, ${totalSubtopicsSelected} subtopic${totalSubtopicsSelected > 1 ? "s" : ""}` : ""})
+                    ({selectedCount} topic{selectedCount > 1 ? "s" : ""}
+                    {totalSubtopicsSelected > 0
+                      ? `, ${totalSubtopicsSelected} subtopic${totalSubtopicsSelected > 1 ? "s" : ""}`
+                      : ""}
+                    )
                   </span>
                 )}
               </Label>
 
               {!selectedChapter ? (
-                <div className="text-sm text-gray-400 border rounded-md p-4 text-center">Select a chapter first</div>
+                <div className="text-sm text-gray-400 border rounded-md p-4 text-center">
+                  Select a chapter first
+                </div>
               ) : topicsLoading ? (
                 <div className="flex items-center justify-center p-4 border rounded-md">
                   <Loader2 className="animate-spin size-4 mr-2 text-purple-500" />
-                  <span className="text-sm text-gray-500">Loading topics...</span>
+                  <span className="text-sm text-gray-500">
+                    Loading topics...
+                  </span>
                 </div>
               ) : topics.length === 0 ? (
-                <div className="text-sm text-gray-400 border rounded-md p-4 text-center">No topics found for this chapter</div>
+                <div className="text-sm text-gray-400 border rounded-md p-4 text-center">
+                  No topics found for this chapter
+                </div>
               ) : (
                 <div className="border rounded-lg max-h-[250px] overflow-y-auto divide-y">
                   {topics.map((topic) => {
@@ -401,16 +511,33 @@ const AddTodaysWorkModal = ({
                     const entry = selectedTopics.get(topic._id);
                     return (
                       <div key={topic._id} className="px-3 py-2">
-                        <div className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded p-1 -m-1" onClick={() => toggleTopic(topic)}>
+                        <div
+                          className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded p-1 -m-1"
+                          onClick={() => toggleTopic(topic)}
+                        >
                           <Checkbox checked={isSelected} />
-                          <span className="text-sm font-medium text-gray-800">{topic.name}</span>
+                          <span className="text-sm font-medium text-gray-800">
+                            {topic.name}
+                          </span>
                         </div>
                         {isSelected && topic.subtopics.length > 0 && (
                           <div className="ml-6 mt-1.5 space-y-1">
                             {topic.subtopics.map((sub) => (
-                              <div key={sub._id} className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded p-1 -m-1" onClick={() => toggleSubtopic(topic, sub._id)}>
-                                <Checkbox checked={entry?.selectedSubtopics.has(sub._id) ?? false} className="size-3.5" />
-                                <span className="text-xs text-gray-600">{sub.name}</span>
+                              <div
+                                key={sub._id}
+                                className="flex items-center gap-2 cursor-pointer hover:bg-gray-50 rounded p-1 -m-1"
+                                onClick={() => toggleSubtopic(topic, sub._id)}
+                              >
+                                <Checkbox
+                                  checked={
+                                    entry?.selectedSubtopics.has(sub._id) ??
+                                    false
+                                  }
+                                  className="size-3.5"
+                                />
+                                <span className="text-xs text-gray-600">
+                                  {sub.name}
+                                </span>
                               </div>
                             ))}
                           </div>
@@ -423,15 +550,35 @@ const AddTodaysWorkModal = ({
             </div>
 
             <div className="pt-2 flex justify-end gap-3">
-              <Button variant="outline" onClick={() => { setOpen(false); resetForm(); }}>Cancel</Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setOpen(false);
+                  resetForm();
+                }}
+              >
+                Cancel
+              </Button>
               <Button
                 className="bg-purple-600 hover:bg-purple-700 px-6 cursor-pointer"
-                disabled={mutation.isPending || !selectedChapter || selectedTopics.size === 0 || isUnchanged}
+                disabled={
+                  mutation.isPending ||
+                  !selectedChapter ||
+                  selectedTopics.size === 0 ||
+                  isUnchanged
+                }
                 onClick={() => mutation.mutate()}
               >
                 {mutation.isPending ? (
-                  <><Loader2 className="mr-2 h-4 w-4 animate-spin" />{isUpdateMode ? "Updating..." : "Saving..."}</>
-                ) : isUpdateMode ? "Update Work" : "Save Work"}
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {isUpdateMode ? "Updating..." : "Saving..."}
+                  </>
+                ) : isUpdateMode ? (
+                  "Update Work"
+                ) : (
+                  "Save Work"
+                )}
               </Button>
             </div>
           </>

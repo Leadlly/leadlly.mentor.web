@@ -9,7 +9,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { resetPassword } from "@/actions/user_actions";
@@ -32,6 +32,8 @@ const ResetPasswordSchema = z.object({
 });
 
 const ResetPasswordForm = () => {
+  const [toggleNewPassword, setToggleNewPassword] = useState(false);
+  const [toggleConfirmPassword, setToggleConfirmPassword] = useState(false);
   const [isResettingPassword, setIsResettingPassword] = useState(false);
   const [passwordError, setPasswordError] = useState("");
 
@@ -90,7 +92,23 @@ const ResetPasswordForm = () => {
                 <Input
                   placeholder="Enter password"
                   className="focus-visible:ring-0 text-lg focus:ring-offset-0"
+                  type={toggleNewPassword ? "text" : "password"}
                   inputWrapperClassName="h-12"
+                  icon2={
+                    <Button
+                      type="button"
+                      variant={"ghost"}
+                      size={"icon"}
+                      onClick={() => setToggleNewPassword(!toggleNewPassword)}
+                      className="cursor-pointer"
+                    >
+                      {toggleNewPassword ? (
+                        <EyeOffIcon className="size-5" />
+                      ) : (
+                        <EyeIcon className="size-5" />
+                      )}
+                    </Button>
+                  }
                   {...field}
                 />
               </FormControl>
@@ -110,7 +128,25 @@ const ResetPasswordForm = () => {
                 <Input
                   placeholder="Confirm password"
                   className="focus-visible:ring-0 text-lg focus:ring-offset-0"
+                  type={toggleConfirmPassword ? "text" : "password"}
                   inputWrapperClassName="h-12"
+                  icon2={
+                    <Button
+                      type="button"
+                      variant={"ghost"}
+                      size={"icon"}
+                      onClick={() =>
+                        setToggleConfirmPassword(!toggleConfirmPassword)
+                      }
+                      className="cursor-pointer"
+                    >
+                      {toggleConfirmPassword ? (
+                        <EyeOffIcon className="size-5" />
+                      ) : (
+                        <EyeIcon className="size-5" />
+                      )}
+                    </Button>
+                  }
                   {...field}
                 />
               </FormControl>

@@ -1,4 +1,4 @@
-import MessageBox from "@/components/shared/MessageBox";
+// import MessageBox from "@/components/shared/MessageBox";
 
 export default function ToolsLayout({
   children,
@@ -7,8 +7,8 @@ export default function ToolsLayout({
 }) {
   return (
     <>
-      <MessageBox />
-      <div className="h-main-height w-full">{children}</div>
+      {/* <MessageBox /> */}
+      <div className="h-main-height w-full px-4">{children}</div>
     </>
   );
 }

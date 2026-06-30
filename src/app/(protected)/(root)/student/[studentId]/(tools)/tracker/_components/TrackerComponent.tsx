@@ -1,7 +1,8 @@
+import Loader from "@/components/shared/Loader";
 import { ISubject, TTrackerProps } from "@/helpers/types";
+
 import ChapterOverviewTable from "./ChapterOverviewTable";
 import SubjectOverview from "./SubjectOverview";
-import Loader from "@/components/shared/Loader";
 
 const TrackerComponent = ({
   trackerData,

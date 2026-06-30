@@ -1,13 +1,15 @@
 "use client";
+import React, { useState } from "react";
+
 import ArrowIcon from "@/components/icons/ArrowIcon";
 import RoundArrowIcon from "@/components/icons/RoundArrowIcon";
-
-import React, { useState } from "react";
-import SearchBar from "./SearchBar";
-import Students from "./Students";
 import { Button } from "@/components/ui/button";
 import { Studentinformation } from "@/helpers/types";
+import { cn } from "@/lib/utils";
+
 import RescheduleDialogBox from "../../student/[studentId]/components/RescheduleDialogBox";
+import SearchBar from "./SearchBar";
+import Students from "./Students";
 
 const StudentContainer = ({ students }: { students: Studentinformation[] }) => {
   const [AscOrder, setAscOrder] = useState<Boolean>(true);
@@ -27,13 +29,14 @@ const StudentContainer = ({ students }: { students: Studentinformation[] }) => {
   };
 
   return (
-    <div className="md:h-full h-[calc(100dvh-200px)] md:max-h-[calc(100dvh-140px)] md:mt-0 mt-[5%] overflow-y-auto custom__scrollbar md:min-h-[calc(100dvh-140px)] text-black md:border-[#D7D7D7] md:border-[2px] md:p-4 lg:rounded-3xl flex flex-col lg:gap-5">
+    <div className="md:h-full h-[calc(100dvh-200px)] md:max-h-[calc(100dvh-140px)] md:mt-0 mt-[5%] overflow-y-auto custom__scrollbar md:min-h-[calc(100dvh-140px)] text-black md:border-[#D7D7D7] md:border-2 md:p-4 lg:rounded-3xl flex flex-col lg:gap-5">
       <div className="flex items-center justify-between gap-3 w-full">
-        <div className="md:flex gap-5 hidden">
+        <div className="md:flex items-center gap-5 hidden">
           <p>Sort by</p>
-          <button
+          <Button
             id="sort"
-            className="flex justify-center gap-1 shadow-md items-center bg-[#F0EEEE] rounded px-2"
+            variant={"secondary"}
+            size={"sm"}
             onClick={() => {
               setAscOrder((order) => !order);
             }}
@@ -41,11 +44,12 @@ const StudentContainer = ({ students }: { students: Studentinformation[] }) => {
             A<ArrowIcon />Z
             <RoundArrowIcon
               stroke="#6200EE"
-              className={
+              className={cn(
+                "size-1 transition-transform duration-200",
                 AscOrder ? "translate-y-1 " : "rotate-180 translate-y-0"
-              }
+              )}
             />
-          </button>
+          </Button>
         </div>
 
         <div className="md:block hidden">

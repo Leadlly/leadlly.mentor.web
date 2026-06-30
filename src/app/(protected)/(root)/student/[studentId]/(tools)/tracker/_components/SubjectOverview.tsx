@@ -1,110 +1,78 @@
 import RadialBarChart from "@/components/charts/RadialBarChart";
 import { Progress } from "@/components/ui/progress";
+import { calculateProgress } from "@/helpers/constants";
 import { ISubject } from "@/helpers/types";
 
 const SubjectOverview = ({ subject }: { subject: ISubject | undefined }) => {
   return (
-    <div className="rounded-xl shadow-tracker_subject_overview px-5 py-4">
-      <h2 className="text-lg md:text-2xl leading-none font-semibold text-black mb-4 lg:mb-0">
+    <div className="rounded-xl shadow-tracker_subject_overview py-4">
+      <h2 className="text-lg md:text-2xl leading-none font-semibold text-black mb-4">
         Subject Overview
       </h2>
 
-      {/* ===== LARGE DEVICE LAYOUT ====== */}
-      <div className="hidden lg:flex items-center gap-4 h-48">
-        <div className="flex items-center h-full">
-          <RadialBarChart
-            series={[subject?.overall_progress!]}
-            colors={["#9654f4"]}
-            labels={["Revision Completion"]}
-            width="80%"
-            hollowSize="60%"
-            dataLabel="completed"
-            fontSize="24px"
-          />
-          <RadialBarChart
-            series={[subject?.overall_efficiency!]}
-            colors={["#72EFDD"]}
-            labels={["Revision Efficiency"]}
-            width="80%"
-            hollowSize="60%"
-            dataLabel="efficiency"
-            fontSize="24px"
-          />
-          <RadialBarChart
-            series={[subject?.total_questions_solved.percentage!]}
-            colors={["#FFDA57"]}
-            labels={["No. of Questions Solved"]}
-            width="80%"
-            hollowSize="60%"
-            dataLabel="questions"
-          />
-        </div>
-
-        <div className="flex flex-col space-y-5">
-          <div className="flex items-center gap-3">
-            <span className="w-6 h-6 bg-primary rounded-md"></span>
-            <p className="text-lg leading-none font-semibold">
+      <div className="flex flex-col gap-y-3">
+        <div className="bg-primary/5 p-4 rounded-2xl flex flex-col gap-4">
+          <div>
+            <h4 className="leading-none text-sm md:text-lg lg:text-xl font-medium mb-1">
               Revision Completion
-            </p>
+            </h4>
+            <div className="flex items-center gap-4">
+              <Progress
+                value={calculateProgress(subject?.overall_progress!)}
+                className="h-2 bg-[#EDE5F9]"
+                indicatorClassName="bg-primary"
+              />
+              <p className="leading-none text-sm md:text-lg lg:text-xl font-semibold">
+                {Math.round(subject?.overall_progress!)}%
+              </p>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="w-6 h-6 bg-[#72EFDD] rounded-md"></span>
-            <p className="text-lg leading-none font-semibold">
+          <div>
+            <h4 className="leading-none text-sm md:text-lg lg:text-xl font-medium mb-1">
               Revision Efficiency
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            <span className="w-6 h-6 bg-[#FFDA57] rounded-md"></span>
-            <p className="text-lg leading-none font-semibold">
-              No. of Questions Solved
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* ===== SMALL DEVICE LAYOUT ====== */}
-      <div className="lg:hidden flex flex-col space-y-3">
-        <div>
-          <h4 className="leading-none text-sm font-medium mb-1">
-            Revision Completion
-          </h4>
-          <div className="flex items-center gap-4">
-            <Progress value={subject?.overall_progress!} className="h-2" />
-            <p className="leading-none text-lg font-semibold">
-              {subject?.overall_progress}%
-            </p>
+            </h4>
+            <div className="flex items-center gap-4">
+              <Progress
+                value={calculateProgress(subject?.overall_efficiency!)}
+                className="h-2 bg-[#D3E6EA]"
+                indicatorClassName="bg-[#57BDCC]"
+              />
+              <p className="leading-none text-sm md:text-lg lg:text-xl font-semibold">
+                {Math.round(subject?.overall_efficiency!)}%
+              </p>
+            </div>
           </div>
         </div>
-        <div>
-          <h4 className="leading-none text-sm font-medium mb-1">
-            Revision Efficiency
+        <div className="bg-[#FDF6E6] p-4 rounded-2xl">
+          <h4 className="leading-none text-sm md:text-lg lg:text-xl font-medium mb-4">
+            Questions Attempted
           </h4>
-          <div className="flex items-center gap-4">
-            <Progress
-              value={subject?.overall_efficiency!}
-              className="h-2"
-              indicatorClassName="bg-[#72EFDD]"
-            />
-            <p className="leading-none text-lg font-semibold">
-              {subject?.overall_efficiency}%
-            </p>
+          <div className="flex items-center justify-between mb-2">
+            <div>
+              <div className="text-sm md:text-lg lg:text-xl font-medium">
+                You:
+              </div>
+              <div className="text-sm md:text-lg lg:text-xl font-semibold">
+                {subject?.total_questions_solved.number}
+              </div>
+            </div>
+            <div className="flex flex-col items-end">
+              <div className="text-sm md:text-lg lg:text-xl font-medium">
+                Highest:
+              </div>
+              <div className="text-sm md:text-lg lg:text-xl font-semibold">
+                {subject?.total_questions_solved.number}
+              </div>
+            </div>
           </div>
-        </div>
-        <div>
-          <h4 className="leading-none text-sm font-medium mb-1">
-            No. of Questions Solved
-          </h4>
           <div className="flex items-center gap-4">
             <Progress
-              value={subject?.total_questions_solved.percentage}
-              className="h-2"
-              indicatorClassName="bg-[#FFDA57]"
+              value={calculateProgress(
+                subject?.total_questions_solved.percentage!
+              )}
+              className="h-2 bg-[#FDE68A]"
+              indicatorClassName="bg-[#F1B022]"
             />
-            <p className="leading-none text-lg font-semibold">
-              {subject?.total_questions_solved.number! > 120
-                ? "120+"
-                : subject?.total_questions_solved.number}
-            </p>
           </div>
         </div>
       </div>

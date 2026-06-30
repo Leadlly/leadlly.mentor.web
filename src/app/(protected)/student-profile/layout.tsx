@@ -8,7 +8,7 @@ export default function StudentProfileLayout({
 }>) {
   return (
     <>
-      <div className="lg:hidden">
+      <div className="px-4 lg:hidden">
         <Navbar />
       </div>
       <div className="max-w-7xl w-full mx-auto flex items-start gap-3 px-0 flex-col h-screen overflow-hidden">

@@ -1,18 +1,26 @@
 "use client";
-import { Chapter } from "@/helpers/types";
-import { color } from "framer-motion";
 import dynamic from "next/dynamic";
+
+import { color } from "framer-motion";
+
+import { Chapter } from "@/helpers/types";
 
 const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 const DonutChart = ({ data }: { data: Chapter }) => {
+  const seriesArray = [
+    data.overall_progress!,
+    data.overall_efficiency!,
+    data.total_questions_solved.percentage!,
+  ];
+
   return (
     <>
       <Charts
         type="donut"
         width={"100%"}
         height={"100%"}
-        series={[80, 60, 70]}
+        series={seriesArray}
         options={{
           chart: {
             height: "100%",
@@ -46,7 +54,7 @@ const DonutChart = ({ data }: { data: Chapter }) => {
                 },
                 stroke: {
                   width: 0, // Remove stroke on small screens
-                  color: "transparent"
+                  color: "transparent",
                 },
               },
             },

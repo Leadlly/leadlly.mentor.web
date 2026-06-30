@@ -1,15 +1,16 @@
 "use client";
 
 import dynamic from "next/dynamic";
+
+import { TSemiRadialChartProps } from "@/helpers/types";
+import { cn } from "@/lib/utils";
+
+import SemiRadialChartSkeleton from "./_skeletons/SemiRadialChartSkeleton";
+
 const Charts = dynamic(() => import("react-apexcharts"), {
   ssr: false,
   loading: () => <SemiRadialChartSkeleton />,
 });
-
-import { TSemiRadialChartProps } from "@/helpers/types";
-
-import { cn } from "@/lib/utils";
-import SemiRadialChartSkeleton from "./_skeletons/SemiRadialChartSkeleton";
 
 const SemiRadialChart = ({
   series = [],
@@ -73,7 +74,7 @@ const SemiRadialChart = ({
         <span
           className={cn(
             "w-2 h-2 rounded-[2px] -mt-[2px]",
-            chartLabel === "revision" ? "bg-primary" : "bg-[#56CFE1]"
+            chartLabel === "revisions" ? "bg-primary" : "bg-[#56CFE1]"
           )}
         ></span>
         <p className="text-xs capitalize">{chartLabel}</p>

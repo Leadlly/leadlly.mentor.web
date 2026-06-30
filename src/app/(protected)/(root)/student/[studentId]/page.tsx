@@ -1,7 +1,9 @@
+import { ReactElement } from "react";
+
+import { Studentinfo } from "@/actions/user_actions";
+
 import CommunicationPanel from "./components/CommunicationPanel";
 import StudentDashboard from "./components/StudentDashboard";
-import { ReactElement } from "react";
-import { Studentinfo } from "@/actions/user_actions";
 
 export default async function StudentPage({
   params,
@@ -9,17 +11,13 @@ export default async function StudentPage({
   params: Promise<{ studentId: string }>;
 }) {
   const { studentId } = await params;
-  const studentData = Studentinfo(studentId);
+  const student = await Studentinfo(studentId);
 
-  const [student] = await Promise.all([studentData]);
   return (
     <>
-      <div className="mx-px overflow-auto lg:flex hidden gap-5 h-[calc(100dvh-120px)]">
+      <div className="mx-px overflow-auto flex flex-col h-auto xl:flex-row gap-5 xl:h-[calc(100dvh-80px)] pb-20 md:pb-10 xl:pb-0 custom__scrollbar px-4">
         <StudentDashboard studentId={studentId} studentData={student.student} />
-        {/* <CommunicationPanel studentId={studentId} /> */}
-      </div>
-      <div className="mx-px overflow-auto flex h-[calc(100dvh-160px)] lg:hidden">
-        <StudentDashboard studentId={studentId} studentData={student.student} />
+        <CommunicationPanel studentId={studentId} />
       </div>
     </>
   );

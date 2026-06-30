@@ -1,15 +1,17 @@
 "use client";
-import DashboardIcon from "@/components/icons/DashboardIcon";
-import { NavbarLink, SidebarLink } from "../types";
 import CommunityIcon from "@/components/icons/CommunityIcon";
-import PlannerIcon from "@/components/icons/PlannerIcon";
+import DashboardIcon from "@/components/icons/DashboardIcon";
 import ErrorBookIcon from "@/components/icons/ErrorBookIcon";
 import GrowthMeterIcon from "@/components/icons/GrowthMeterIcon";
-import WorkshopIcon from "@/components/icons/WorkshopIcon";
-import QuizIcon from "@/components/icons/QuizIcon";
 import ListIcon from "@/components/icons/ListIcon";
-import TrackerIcon from "@/components/icons/TrackerIcon";
+import PlannerIcon from "@/components/icons/PlannerIcon";
+import QuizIcon from "@/components/icons/QuizIcon";
 import StudentDashboardIcon from "@/components/icons/StudentDashBoardIcon";
+import TrackerIcon from "@/components/icons/TrackerIcon";
+import WorkshopIcon from "@/components/icons/WorkshopIcon";
+
+import { NavbarLink, SidebarLink } from "../types";
+
 export const NavbarLinks: NavbarLink[] = [
   {
     label: "Mentor Dashboard",
@@ -112,3 +114,10 @@ export const manageAccountTabs = [
   //   label: "Your Mentor",
   // },
 ];
+
+export const calculateProgress = (overallProgress: number) => {
+  if (typeof overallProgress !== "number" || isNaN(overallProgress)) {
+    return 0; // Default to 0 if the value is invalid
+  }
+  return Math.min(Math.max(overallProgress / 100, 0), 1);
+};

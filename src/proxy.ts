@@ -32,11 +32,11 @@ export async function proxy(request: NextRequest) {
     const isTeacher = userData.user?.role === "teacher";
 
     // initial personal info middleware
-    if (!hasSubmittedInitialInfo && path !== "/initial-info") {
+    if (!hasSubmittedInitialInfo && isTeacher && path !== "/initial-info") {
       return NextResponse.redirect(new URL("/initial-info", request.nextUrl));
     }
 
-    if (hasSubmittedInitialInfo && path === "/initial-info") {
+    if (hasSubmittedInitialInfo && isTeacher && path === "/initial-info") {
       return NextResponse.redirect(new URL("/Status", request.nextUrl));
     }
 
@@ -53,9 +53,7 @@ export async function proxy(request: NextRequest) {
     }
 
     if (isTeacher && path === "/") {
-      return NextResponse.redirect(
-        new URL("/teacher", request.nextUrl)
-      );
+      return NextResponse.redirect(new URL("/teacher", request.nextUrl));
     }
   }
 

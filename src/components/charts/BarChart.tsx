@@ -1,36 +1,36 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useMemo } from "react";
 
 const Charts = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const BarChart = ({ weekly }: { weekly: any }) => {
-  const series = useMemo(() => {
-    if (!Array.isArray(weekly)) return [];
+export type BarChartSeries = {
+  name: string;
+  data: number[];
+};
 
-    const sessionData = weekly.map((day) => day.session);
-    const quizData = weekly.map((day) => day.quiz);
+interface BarChartProps {
+  series: BarChartSeries[];
+  categories?: string[];
+  colors?: string[];
+  height?: number | string;
+  hideLegend?: boolean;
+}
 
-    return [
-      {
-        name: "Revisions",
-        data: sessionData,
-      },
-      {
-        name: "Quizzes",
-        data: quizData,
-      },
-    ];
-  }, [weekly]);
-
+const BarChart = ({
+  series,
+  categories,
+  colors = ["#9654F4", "#56CFE1"],
+  height = 125,
+  hideLegend = false,
+}: BarChartProps) => {
   return (
     <>
-      <div className="flex-1">
+      <div className="flex-1 w-full min-w-0">
         <Charts
           type="bar"
           width={"100%"}
-          height={125}
+          height={height}
           series={series}
           options={{
             chart: {
@@ -52,11 +52,13 @@ const BarChart = ({ weekly }: { weekly: any }) => {
               width: 3,
               colors: ["transparent"],
             },
-            xaxis: {
-              categories: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
-            },
+            ...(categories && {
+              xaxis: {
+                categories: categories,
+              },
+            }),
             fill: {
-              colors: ["#9654F4", "#56CFE1"],
+              colors: colors,
             },
             legend: {
               show: false,
@@ -65,18 +67,21 @@ const BarChart = ({ weekly }: { weekly: any }) => {
         />
       </div>
 
-      <div className="w-36 hidden md:block">
-        <div className="flex items-center gap-2">
-          <span className=" block w-3 h-3 rounded bg-[#9654F4]"></span>
-          <span className="text-xs capitalize font-semibold">
-            Revision Sessions
-          </span>
+      {!hideLegend && (
+        <div className="flex items-center justify-around w-full px-4">
+          {series.map((item, index) => (
+            <div key={item.name} className="flex items-center gap-2 mb-2">
+              <span
+                className="block w-3 h-3 rounded"
+                style={{ backgroundColor: colors[index % colors.length] }}
+              ></span>
+              <span className="text-xs capitalize font-semibold">
+                {item.name}
+              </span>
+            </div>
+          ))}
         </div>
-        <div className="flex items-center gap-2">
-          <span className=" block w-3 h-3 rounded bg-[#72EFDD]"></span>
-          <span className="text-xs capitalize font-semibold">Quizzes</span>
-        </div>
-      </div>
+      )}
     </>
   );
 };

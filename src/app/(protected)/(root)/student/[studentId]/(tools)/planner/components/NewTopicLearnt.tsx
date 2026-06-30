@@ -1,6 +1,6 @@
 "use client";
 
-import {
+import React, {
   MutableRefObject,
   useCallback,
   useEffect,
@@ -8,13 +8,13 @@ import {
   useState,
 } from "react";
 
-import { cn } from "@/lib/utils";
-
-import Input from "@/components/shared/Input";
 import { ChevronDown } from "lucide-react";
+
 import LeftArrowIcon from "@/components/icons/LeftArrowIcon";
 import MenuIcon from "@/components/icons/MenuIcon";
+import Input from "@/components/shared/Input";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 const topicsLearntToday = [
   {
@@ -402,7 +402,8 @@ const NewTopicLearnt = ({
                   ? "bg-primary/10 text-[#9654F4]"
                   : ""
               )}
-              onClick={() => setActiveSubject(item.subject)}>
+              onClick={() => setActiveSubject(item.subject)}
+            >
               {item.subject}
             </li>
           ))}
@@ -423,7 +424,9 @@ const NewTopicLearnt = ({
             />
           }
           onFocus={() => setChapterModal(true)}
-          onChange={(e:React.ChangeEvent<HTMLInputElement>) => setSelectedChapter(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setSelectedChapter(e.target.value)
+          }
         />
 
         {chapterModal ? (
@@ -431,7 +434,7 @@ const NewTopicLearnt = ({
             {topicsLearntToday.map(
               (item) =>
                 item.subject === activeSubject && (
-                  <>
+                  <React.Fragment key={item.subject}>
                     {item.chapters.map((chapter) => (
                       <div
                         key={chapter.id}
@@ -439,11 +442,12 @@ const NewTopicLearnt = ({
                           setSelectedChapter(chapter.title);
                           onChapterModalClose();
                         }}
-                        className="text-center font-medium py-1.5 border-b last:border-none cursor-pointer">
+                        className="text-center font-medium py-1.5 border-b last:border-none cursor-pointer"
+                      >
                         {chapter.title}
                       </div>
                     ))}
-                  </>
+                  </React.Fragment>
                 )
             )}
           </div>
@@ -468,7 +472,9 @@ const NewTopicLearnt = ({
               setTopicModal(true);
             }
           }}
-          onChange={(e:React.ChangeEvent<HTMLInputElement>) => setSelectedTopic(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setSelectedTopic(e.target.value)
+          }
         />
 
         {topicModal ? (
@@ -486,7 +492,8 @@ const NewTopicLearnt = ({
                               setSelectedTopic(topic.title);
                               onTopicModalClose();
                             }}
-                            className="text-center font-medium py-1.5 border-b last:border-none cursor-pointer">
+                            className="text-center font-medium py-1.5 border-b last:border-none cursor-pointer"
+                          >
                             {topic.title}
                           </div>
                         ))}
@@ -500,7 +507,9 @@ const NewTopicLearnt = ({
       </div>
 
       <div className="flex items-center justify-center">
-        <button className="bg-[#9654F4] font-semibold mb-2 mt-1 text-white rounded-[10px] px-[10px] py-[7px]">Update</button>
+        <button className="bg-[#9654F4] font-semibold mb-2 mt-1 text-white rounded-[10px] px-[10px] py-[7px]">
+          Update
+        </button>
       </div>
     </div>
   );

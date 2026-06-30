@@ -2,12 +2,16 @@
 
 import { getCookie } from "./cookie_actions";
 
-export const getChapters = async (subjectName: string, standard: number | string) => {
+export const getChapters = async (
+  subjectName: string,
+  standard: number,
+  competitiveExam: string
+) => {
   const token = await getCookie("token");
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/questionbank/chapter?subjectName=${encodeURIComponent(subjectName)}&standard=${standard}`,
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/questionbank/chapter?subjectName=${encodeURIComponent(subjectName)}&standard=${standard}&competitiveExam=${competitiveExam}`,
       {
         method: "GET",
         headers: {
@@ -35,13 +39,14 @@ export const getChapters = async (subjectName: string, standard: number | string
 export const getTopicsWithSubtopics = async (
   subjectName: string,
   standard: number | string,
-  chapterId: string
+  chapterId: string,
+  competitiveExam: string
 ) => {
   const token = await getCookie("token");
 
   try {
     const res = await fetch(
-      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/questionbank/topicwithsubtopic?subjectName=${encodeURIComponent(subjectName)}&standard=${standard}&chapterId=${chapterId}`,
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/questionbank/topicwithsubtopic?subjectName=${encodeURIComponent(subjectName)}&standard=${standard}&chapterId=${chapterId}&competitiveExam=${competitiveExam}`,
       {
         method: "GET",
         headers: {
