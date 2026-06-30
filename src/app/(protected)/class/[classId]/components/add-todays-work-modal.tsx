@@ -79,6 +79,7 @@ interface AddTodaysWorkProps {
   batchId: string;
   subject: string;
   standard: number;
+  competitiveExam: string;
   className?: string;
   compact?: boolean;
 }
@@ -88,6 +89,7 @@ const AddTodaysWorkModal = ({
   batchId,
   subject,
   standard,
+  competitiveExam,
   className,
   compact = false,
 }: AddTodaysWorkProps) => {
@@ -116,11 +118,11 @@ const AddTodaysWorkModal = ({
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    if (!open || !subject || !standard) return;
+    if (!open || !subject || !standard || !competitiveExam) return;
     const fetchChapters = async () => {
       setChaptersLoading(true);
       try {
-        const data = await getChapters(subject, standard);
+        const data = await getChapters(subject, standard, competitiveExam);
         setChapters(data.chapters || []);
       } catch {
         toast.error("Failed to load chapters");
@@ -129,7 +131,7 @@ const AddTodaysWorkModal = ({
       }
     };
     fetchChapters();
-  }, [open, subject, standard]);
+  }, [open, subject, standard, competitiveExam]);
 
   useEffect(() => {
     if (!open) return;
@@ -172,7 +174,8 @@ const AddTodaysWorkModal = ({
         const data = await getTopicsWithSubtopics(
           subject,
           standard,
-          selectedChapter._id
+          selectedChapter._id,
+          competitiveExam
         );
         setTopics(data.topics || []);
       } catch {
@@ -182,7 +185,7 @@ const AddTodaysWorkModal = ({
       }
     };
     fetchTopics();
-  }, [selectedChapter, subject, standard]);
+  }, [selectedChapter, subject, standard, competitiveExam]);
 
   useEffect(() => {
     if (prefillDoneRef.current || !existingLecture || topics.length === 0)

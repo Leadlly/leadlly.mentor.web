@@ -1,4 +1,5 @@
 import { Studentinfo } from "@/actions/user_actions";
+import { formatStandardLabel } from "@/helpers/constants/academic";
 
 import ProfileComponent from "./components/Profilecomponent";
 
@@ -21,7 +22,7 @@ const Page = async ({ params, searchParams }: Params) => {
         { label: "Last Name", value: data.student.lastname },
         { label: "Date of Birth", value: data.student.about.dateOfBirth },
         { label: "Email", value: data.student.email },
-        { label: "Class", value: data.student.academic.standard },
+        { label: "Class", value: formatStandardLabel(data.student.academic.standard) },
         { label: "Gender", value: data.student.about.gender },
         { label: "Phone", value: data.student.phone.personal },
       ],

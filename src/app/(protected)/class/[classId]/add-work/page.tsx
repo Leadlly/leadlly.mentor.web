@@ -71,6 +71,10 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
     typeof classData?.batch === "object" ? classData?.batch._id : classData?.batch;
   const batchStandard =
     typeof classData?.batch === "object" ? classData?.batch.standard : "12";
+  const batchCompetitiveExam =
+    typeof classData?.batch === "object"
+      ? classData?.batch.competitiveExam ?? ""
+      : "";
   const subject = classData?.subject || "";
 
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
@@ -116,11 +120,15 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
   const prefillDoneRef = React.useRef(false);
 
   useEffect(() => {
-    if (!subject || !batchStandard) return;
+    if (!subject || !batchStandard || !batchCompetitiveExam) return;
     const fetchChapters = async () => {
       setChaptersLoading(true);
       try {
-        const data = await getChapters(subject, batchStandard);
+        const data = await getChapters(
+          subject,
+          Number(batchStandard),
+          batchCompetitiveExam
+        );
         setChapters(data.chapters || []);
       } catch {
         toast.error("Failed to load chapters");
@@ -129,7 +137,7 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
       }
     };
     fetchChapters();
-  }, [subject, batchStandard]);
+  }, [subject, batchStandard, batchCompetitiveExam]);
 
   useEffect(() => {
     if (!classId) return;
@@ -178,7 +186,12 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
     const fetchTopics = async () => {
       setTopicsLoading(true);
       try {
-        const data = await getTopicsWithSubtopics(subject, batchStandard, selectedChapter._id);
+        const data = await getTopicsWithSubtopics(
+          subject,
+          batchStandard,
+          selectedChapter._id,
+          batchCompetitiveExam
+        );
         setTopics(data.topics || []);
       } catch {
         toast.error("Failed to load topics");
@@ -187,7 +200,7 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
       }
     };
     fetchTopics();
-  }, [selectedChapter, subject, batchStandard]);
+  }, [selectedChapter, subject, batchStandard, batchCompetitiveExam]);
 
   useEffect(() => {
     if (prefillDoneRef.current || !existingLecture || topics.length === 0) return;
@@ -739,6 +752,7 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
         instituteId={classData?.instituteId || ""}
         subject={subject}
         batchStandard={batchStandard}
+        batchCompetitiveExam={batchCompetitiveExam}
         chapters={chapters}
         chaptersLoading={chaptersLoading}
         dateStr={dateStr}
@@ -756,6 +770,7 @@ const QuizSection = ({
   instituteId,
   subject,
   batchStandard,
+  batchCompetitiveExam,
   chapters,
   chaptersLoading,
   dateStr,
@@ -765,6 +780,7 @@ const QuizSection = ({
   instituteId: string;
   subject: string;
   batchStandard: string | number;
+  batchCompetitiveExam: string;
   chapters: ChapterItem[];
   chaptersLoading: boolean;
   dateStr: string;
@@ -790,7 +806,12 @@ const QuizSection = ({
     const fetchTopics = async () => {
       setQuizTopicsLoading(true);
       try {
-        const data = await getTopicsWithSubtopics(subject, batchStandard, quizChapter._id);
+        const data = await getTopicsWithSubtopics(
+          subject,
+          batchStandard,
+          quizChapter._id,
+          batchCompetitiveExam
+        );
         setQuizTopics(data.topics || []);
       } catch {
         toast.error("Failed to load topics");
@@ -799,7 +820,7 @@ const QuizSection = ({
       }
     };
     fetchTopics();
-  }, [quizChapter, subject, batchStandard]);
+  }, [quizChapter, subject, batchStandard, batchCompetitiveExam]);
 
   const toggleQuizTopic = useCallback((topicId: string) => {
     setQuizSelectedTopicIds((prev) => {

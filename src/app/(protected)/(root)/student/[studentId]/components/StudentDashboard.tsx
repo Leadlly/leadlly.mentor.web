@@ -56,7 +56,7 @@ export default function StudentDashboard({
 
           <SubjectProgress userSubjects={studentData.academic.subjects} />
         </div>
-        <ProgressAnalytics />
+        <ProgressAnalytics studentId={studentId} />
       </div>
 
       <div className="bg-[] py-2 lg:px-4 overflow-y-auto custom__scrollbar lg:hidden lg:rounded-tr-2xl w-full">
