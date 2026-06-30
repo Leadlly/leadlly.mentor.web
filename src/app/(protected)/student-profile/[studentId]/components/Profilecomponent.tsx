@@ -3,10 +3,6 @@ import Avatar from "@/components/shared/Avatar";
 import Head from "./Head";
 import PersonalInfo from "./PersonalInfo";
 import ProfileTab from "./Profiletab";
-import { Studentinfo } from "@/actions/user_actions";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
-import { formatStandardLabel } from "@/helpers/constants/academic";
 
 type Section = {
   title: string;
@@ -18,76 +14,12 @@ type ProfileComponentProps = {
   sections: Section[];
   activeTab: string;
 };
-const ProfileComponent = ({ params: { studentId }, searchParams }: Params) => {
-  const [studentdata, setStudentData] = useState<any[]>([]);
-  const [nameStd, setnamestd] = useState<any[]>([]);
-
-  useEffect(() => {
-    const getStudentData = async () => {
-      try {
-        const data = await Studentinfo(studentId);
-
-        const structuredData = [
-          {
-            title: "Basic Information",
-            items: [
-              { label: "First Name", value: data.student.firstname },
-              { label: "Last Name", value: data.student.lastname },
-              { label: "Date of Birth", value: data.student.about.dateOfBirth },
-              { label: "Email", value: data.student.email },
-              { label: "Class", value: formatStandardLabel(data.student.academic.standard) },
-              { label: "Gender", value: data.student.about.gender },
-              { label: "Phone", value: data.student.phone.personal },
-            ],
-          },
-          {
-            title: "Other Information",
-            items: [
-              {
-                label: "Parent Name (Or Guardian)",
-                value: data.student.parent.name,
-              },
-              { label: "Parents Phone No.", value: data.student.parent.phone },
-              { label: "Address", value: data.student.address.addressLine },
-              { label: "PIN Code", value: data.student.address.pincode },
-              { label: "Country", value: data.student.address.country },
-            ],
-          },
-          {
-            title: "Academic Information",
-            items: [
-              {
-                label: "Competitive Exam",
-                value: data.student.academic.competitiveExam,
-              },
-              { label: "Schedule", value: data.student.academic.schedule },
-              {
-                label: "School/College Name",
-                value: data.student.academic.schoolOrCollegeName,
-              },
-              {
-                label: "School/College Address",
-                value: data.student.academic.schoolOrCollegeAddress,
-              },
-            ],
-          },
-        ];
-
-        setStudentData(structuredData);
-      } catch (error: any) {
-        toast.error(error.message);
-      }
-    };
-
-    getStudentData();
-  }, [studentId]);
 
 const ProfileComponent = ({
   studentId,
   sections,
   activeTab,
 }: ProfileComponentProps) => {
-  // Extract display values directly from props — no hooks needed
   const basicInfo = sections.find((s) => s.title === "Basic Information");
   const firstName =
     basicInfo?.items.find((i) => i.label === "First Name")?.value ?? "";
