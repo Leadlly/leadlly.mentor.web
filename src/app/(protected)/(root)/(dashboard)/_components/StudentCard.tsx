@@ -8,6 +8,7 @@ import { getBackgroundColor } from "@/helpers/constants/efficiency";
 import { Studentinformation } from "@/helpers/types";
 import { formatDate } from "@/helpers/utils";
 import { cn } from "@/lib/utils";
+import { formatClassLabel } from "@/helpers/constants/academic";
 
 const StudentCard = ({
   studentInfo,
@@ -82,7 +83,7 @@ const StudentCard = ({
               {studentInfo.firstname}
             </div>
             <div className="text-[#504F4F] md:text-base text-[10px] font-medium">
-              Class: {studentInfo.academic.standard}
+              {formatClassLabel(studentInfo.academic.standard)}
             </div>
             <div className="font-semibold md:mb-0 mb-[2%] md:text-base text-[8px] text-[#464646]">
               Level-

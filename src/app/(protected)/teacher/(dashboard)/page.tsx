@@ -20,6 +20,10 @@ const Page = async () => {
       queryKey: ["weekly-lectures", "weekly"],
       queryFn: () => getLectures("weekly"),
     }),
+    queryClient.prefetchQuery({
+      queryKey: ["lectures", "all"],
+      queryFn: () => getLectures("all"),
+    }),
   ]);
 
   return (

@@ -8,8 +8,7 @@ export const createNote = async (params: {
   batchId: string;
   classId: string;
   subject: string;
-  fileUrl: string;
-  fileType: string;
+  attachments: { fileName: string; fileUrl: string; fileType: string }[];
 }) => {
   const token = await getCookie("token");
 

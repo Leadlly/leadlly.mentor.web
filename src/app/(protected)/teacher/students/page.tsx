@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
+import { formatStdLabel } from "@/helpers/constants/academic";
 
 const AttendancePage = () => {
   const queryClient = useQueryClient();
@@ -286,7 +287,7 @@ const AttendancePage = () => {
                           {student.firstname} {student.lastname}
                         </h3>
                         <div className="flex items-center gap-3 mt-0.5 text-xs text-gray-400">
-                          {standard && <span>Std {standard}</span>}
+                          {standard && <span>{formatStdLabel(standard)}</span>}
                           {student.email && (
                             <span className="hidden sm:inline truncate max-w-[180px]">
                               {student.email}

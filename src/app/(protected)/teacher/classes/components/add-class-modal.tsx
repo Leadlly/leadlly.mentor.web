@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getTeacherBatches, createClassAction } from "@/actions/batch_actions";
+import { SUBJECT_OPTIONS, formatStdLabel } from "@/helpers/constants/academic";
 import { useAppSelector } from "@/redux/hooks";
 import { toast } from "sonner";
 
@@ -31,8 +32,6 @@ export const AddClassModal = () => {
     topic: "",
     date: "",
   });
-
-  const SUBJECT_OPTIONS = ["Physics", "Chemistry", "Maths"] as const;
 
   const mutation = useMutation({
     mutationFn: async (data: any) => {
@@ -96,7 +95,7 @@ export const AddClassModal = () => {
                 <SelectContent>
                   {batches && batches.map((batch: any) => (
                     <SelectItem key={batch._id} value={batch._id}>
-                      {batch.name} - Std {batch.standard}
+                      {batch.name} - {formatStdLabel(batch.standard)}
                     </SelectItem>
                   ))}
                 </SelectContent>

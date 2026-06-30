@@ -9,6 +9,8 @@ import dayjs from "dayjs";
 import AnnouncementList from "@/components/shared/AnnouncementList";
 import AnnouncementModal from "@/components/shared/AnnouncementModal";
 import { Button } from "@/components/ui/button";
+import { formatClassLabel } from "@/helpers/constants/academic";
+import ReportDetailBanner from "@/app/(protected)/class/[classId]/components/report-detail-banner";
 
 const BatchDashboard = ({ batchId }: { batchId: string }) => {
   const [activeTab, setActiveTab] = useState("report");
@@ -47,19 +49,27 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
   ];
 
   const syllabusProgress = batch.batchReport?.syllabusProgress || 0;
+  const chapterProgress = batch.batchReport?.chapterProgress || 0;
   const totalClass = batch.batchReport?.totalClasses || 0;
-  const completedClasses = batch.batchReport?.completedClasses || 0;
-  const classProgress = totalClass > 0 ? Math.round((completedClasses / totalClass) * 100) : 0;
+  const totalLectures = batch.batchReport?.totalLectures || 0;
 
   const totalMinutes = batch.batchReport?.totalDuration || 0;
   const totalHours = Math.floor(totalMinutes / 60);
 
   const pendingClasses = batch.batchReport?.pendingClasses || 0;
   const totalStudents = studentsData?.students?.length || batch.batchReport?.totalStudents || 0;
+  const syllabusReport = batch.syllabusReport || [];
 
   return (
     <div className="w-full min-h-screen bg-[#FAFAFA] flex flex-col">
       <div className="flex-1 w-full bg-white rounded-t-[24px] md:rounded-t-[40px] shadow-[0_-4px_20px_rgba(0,0,0,0.02)] px-3 md:px-8 py-4 md:py-6 border-t border-gray-100 flex flex-col pb-20 md:pb-6 mt-2">
+        <ReportDetailBanner
+          batchName={batch.name}
+          subject={batch.subjects?.join(", ")}
+          standard={batch.standard}
+          competitiveExam={batch.competitiveExam}
+        />
+
         {/* Tabs */}
         <div className="flex border-b border-gray-100 mb-4 md:mb-8 gap-3 md:gap-8 overflow-x-auto scrollbar-hide">
           {tabs.map((tab) => (
@@ -106,18 +116,18 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
                        </div>
                     </div>
 
-                    {/* Class Progress */}
+                    {/* Chapter Progress */}
                     <div className="space-y-2">
-                       <div className="font-bold text-gray-800 text-[13px]">Classes Completed</div>
+                       <div className="font-bold text-gray-800 text-[13px]">Chapter Completed</div>
                        <div className="flex items-center gap-3">
                          <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
                            <div 
                              className="h-full bg-[#2DD4BF] rounded-full transition-all duration-500" 
-                             style={{ width: `${classProgress}%` }}
+                             style={{ width: `${chapterProgress}%` }}
                            />
                          </div>
                          <span className="text-gray-900 font-bold w-10 text-right text-sm">
-                           {classProgress}%
+                           {chapterProgress}%
                          </span>
                        </div>
                     </div>
@@ -127,17 +137,22 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
 
                 {/* Batch Metrics Section */}
                 <div className="space-y-2 md:space-y-3">
-                  <h2 className="text-base md:text-[18px] font-bold text-gray-900 tracking-tight">Batch Metrics</h2>
+                  <h2 className="text-base md:text-[18px] font-bold text-gray-900 tracking-tight">Lectures taken</h2>
                   <div className="grid grid-cols-2 gap-3 md:gap-4 lg:gap-5">
                     
                     <div className="bg-[#FAF5FF] rounded-2xl md:rounded-[20px] p-3 md:p-4 flex flex-col items-center justify-center gap-1 md:gap-1.5 transition-transform hover:scale-[1.02]">
-                      <div className="text-gray-600 font-bold text-[11px] md:text-[12px] uppercase">Total Classes</div>
-                      <div className="text-[#A855F7] text-2xl md:text-3xl font-bold">{totalClass}</div>
+                      <div className="text-gray-600 font-bold text-[11px] md:text-[12px] uppercase">Total Lectures</div>
+                      <div className="text-[#A855F7] text-2xl md:text-3xl font-bold">{totalLectures}</div>
                     </div>
 
                     <div className="bg-[#FAF5FF] rounded-2xl md:rounded-[20px] p-3 md:p-4 flex flex-col items-center justify-center gap-1 md:gap-1.5 transition-transform hover:scale-[1.02]">
                       <div className="text-gray-600 font-bold text-[11px] md:text-[12px] uppercase">Total Hours</div>
                       <div className="text-[#A855F7] text-2xl md:text-3xl font-bold">{totalHours}</div>
+                    </div>
+
+                    <div className="bg-[#F0FDFA] rounded-2xl md:rounded-[20px] p-3 md:p-4 flex flex-col items-center justify-center gap-1 md:gap-1.5 transition-transform hover:scale-[1.02]">
+                      <div className="text-gray-600 font-bold text-[11px] md:text-[12px] uppercase">Total Classes</div>
+                      <div className="text-[#0D9488] text-2xl md:text-3xl font-bold">{totalClass}</div>
                     </div>
 
                     <div className="bg-[#F0FDFA] rounded-2xl md:rounded-[20px] p-3 md:p-4 flex flex-col items-center justify-center gap-1 md:gap-1.5 transition-transform hover:scale-[1.02]">
@@ -160,7 +175,7 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
               <div className="space-y-2 md:space-y-3 lg:space-y-4">
                 <h2 className="text-[18px] font-bold text-transparent select-none hidden lg:block">Spacer</h2>
                 {/* Syllabus Report Box */}
-                <div className="bg-white border border-[#F2E0FF] rounded-2xl md:rounded-[20px] p-4 md:p-5 lg:p-6 h-full shadow-sm max-h-[350px] overflow-hidden flex flex-col">
+                <div className="bg-white border border-[#F2E0FF] rounded-2xl md:rounded-[20px] p-4 md:p-5 lg:p-6 h-full shadow-sm max-h-[430px] overflow-hidden flex flex-col">
                   <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                       <div className="bg-[#FAF5FF] p-2 rounded-xl">
@@ -168,27 +183,38 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
                       </div>
                       <h3 className="text-[16px] font-bold text-gray-900">Syllabus Report</h3>
                     </div>
-                    <Link href={"#"} className="flex items-center text-[#A855F7] text-[13px] font-bold hover:underline underline-offset-4">
-                      View All <ChevronRight className="size-4 ml-0.5" strokeWidth={3} />
-                    </Link>
+                    <span className="text-[#A855F7] text-[13px] font-bold">Date-wise</span>
                   </div>
 
                   <div className="mt-2 space-y-4 flex-1 overflow-y-auto pr-2">
-                    <div className="font-bold text-gray-900 text-[13px]">Today - Jan 10</div>
-                    
-                    {classes && classes.length > 0 ? (
-                      <ul className="space-y-4">
-                        {classes.map((cls: any) => (
-                          <li key={cls._id} className="flex items-center gap-3 group">
-                            <div className="size-2.5 rounded-full bg-[#A855F7] min-w-[10px] group-hover:scale-125 transition-transform" />
-                            <Link href={`/class/${cls._id}`} className="text-gray-700 font-bold text-[15px] line-clamp-1 flex-1 underline-offset-4 hover:underline hover:text-[#A855F7] transition-colors">
-                              {cls.subject || cls.topic || "Unknown Topic"}
-                            </Link>
-                          </li>
-                        ))}
-                      </ul>
+                    {syllabusReport.length > 0 ? (
+                      syllabusReport.map((day: any) => (
+                        <div key={day.date} className="space-y-2 border-b border-gray-50 pb-4 last:border-b-0">
+                          <div className="font-bold text-gray-900 text-[13px]">
+                            {dayjs(day.date).format("DD MMM, YYYY")}
+                          </div>
+                          <div className="space-y-2">
+                            {day.lectures.map((lecture: any) => (
+                              <div key={lecture._id} className="rounded-xl bg-gray-50 p-3">
+                                <p className="font-bold text-gray-800 text-sm capitalize">{lecture.subject || lecture.title || "Lecture"}</p>
+                                <p className="text-xs text-gray-500 mt-1 capitalize">
+                                  {(lecture.chapters || []).map((item: any) => item.name).join(", ") || "No chapter"}
+                                </p>
+                                <p className="text-xs text-gray-500 mt-1 capitalize">
+                                  Topics: {(lecture.topics || []).map((item: any) => item.name).join(", ") || "No topic"}
+                                </p>
+                                {(lecture.subtopics || []).length > 0 && (
+                                  <p className="text-xs text-purple-600 mt-1 capitalize">
+                                    Subtopics: {lecture.subtopics.map((item: any) => item.name).join(", ")}
+                                  </p>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))
                     ) : (
-                      <div className="text-gray-400 text-[15px] italic font-medium px-2 py-4">No classes found</div>
+                      <div className="text-gray-400 text-[15px] italic font-medium px-2 py-4">No syllabus work added yet</div>
                     )}
                   </div>
                 </div>
@@ -202,10 +228,13 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
                   <div className="space-y-4">{[1,2,3].map(i => <div key={i} className="h-24 bg-gray-50 rounded-[20px] animate-pulse"></div>)}</div>
                ) : classes && classes.length > 0 ? (
                  <div className="grid grid-cols-1 gap-4">
-                    {classes.map((cls: any) => (
+                    {classes.map((cls: any) => {
+                      const className = `${cls.subject || "Subject"}${batch?.name ? ` - ${batch.name}` : ""}`;
+
+                      return (
                       <Link 
                         key={cls._id} 
-                        href={`/class/${cls._id}`}
+                        href={`/class/${cls._id}?className=${encodeURIComponent(className)}`}
                         className="bg-white border border-[#E9D5FF] rounded-2xl md:rounded-[24px] p-3 md:p-5 shadow-sm hover:shadow-md hover:border-[#A855F7] transition-all flex items-center justify-between group"
                       >
                         <div className="flex items-center gap-3 md:gap-5 lg:gap-6 min-w-0 flex-1">
@@ -232,7 +261,8 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
                             <ChevronRight className="text-gray-400 group-hover:text-[#A855F7] transition-colors size-5 lg:size-6" strokeWidth={2.5} />
                         </div>
                       </Link>
-                    ))}
+                      );
+                    })}
                  </div>
                ) : (
                   <div className="text-gray-500 font-medium py-10 bg-gray-50 rounded-[24px] text-center border border-dashed border-gray-200">
@@ -281,7 +311,7 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
                             {student.lastname?.charAt(0) || ""}
                           </div>
                           <div className="font-semibold text-sm line-clamp-1">{student.firstname} {student.lastname}</div>
-                          <div className="text-[#504F4F] text-xs font-medium mt-1">Class: {student.academic?.standard || "N/A"}</div>
+                          <div className="text-[#504F4F] text-xs font-medium mt-1">{formatClassLabel(student.academic?.standard)}</div>
                           <div className="font-semibold text-[10px] text-[#464646] mt-1.5">
                             Level-
                             <span className="font-bold text-[#0075FF] ml-0.5 text-[11px]">
