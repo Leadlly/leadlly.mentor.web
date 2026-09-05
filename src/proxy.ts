@@ -37,7 +37,7 @@ export async function proxy(request: NextRequest) {
     }
 
     if (hasSubmittedInitialInfo && isTeacher && path === "/initial-info") {
-      return NextResponse.redirect(new URL("/Status", request.nextUrl));
+      return NextResponse.redirect(new URL("/teacher/profile?setup=1", request.nextUrl));
     }
 
     if (path !== "/initial-info") {

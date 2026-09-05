@@ -50,6 +50,7 @@ const MainHeader = () => {
     if (pathname.startsWith("/teacher/classes")) return "Classes";
     if (pathname.startsWith("/teacher/batches")) return "Batches";
     if (pathname.startsWith("/teacher/students")) return "Attendance";
+    if (pathname.startsWith("/teacher/profile")) return "Profile";
     if (isClassRoute) return getClassHeading();
     if (pathname.startsWith("/teacher/batch/")) return "Batch";
     return "";

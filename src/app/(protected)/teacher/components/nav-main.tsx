@@ -32,8 +32,10 @@ const NavMain = ({
         const isBatches = item.href === "/teacher/batches" && (pathname.startsWith("/teacher/batches") || pathname.startsWith("/teacher/batch"));
         const isClasses = item.href === "/teacher/classes" && (pathname.startsWith("/teacher/classes") || pathname.startsWith("/class"));
         const isAddClasses = item.href === "/teacher/add-classes" && pathname.startsWith("/teacher/add-classes");
+        const isStudents = item.href === "/teacher/students" && pathname.startsWith("/teacher/students");
+        const isProfile = item.href === "/teacher/profile" && pathname.startsWith("/teacher/profile");
 
-        const isActive = isDashboard || isBatches || isClasses || isAddClasses;
+        const isActive = isDashboard || isBatches || isClasses || isAddClasses || isStudents || isProfile;
 
         return (
           <SidebarMenuItem key={item.title}>

@@ -184,6 +184,44 @@ export const mentorPersonalInfo = async (data: any) => {
   }
 };
 
+export const updateTeacherProfile = async (data: {
+  name?: string;
+  phone?: string;
+  teacherCode?: string;
+}) => {
+  const token = await getCookie("token");
+
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_MENTOR_API_BASE_URL}/api/user/teacher/profile`,
+      {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `token=${token}`,
+        },
+        credentials: "include",
+      }
+    );
+
+    const responseData = await res.json();
+
+    if (!res.ok) {
+      throw new Error(responseData.message || "Failed to update profile");
+    }
+
+    updateTag("userData");
+
+    return responseData;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+    throw new Error("An unknown error occurred while updating profile");
+  }
+};
+
 export const joinInstitute = async (instituteCode: string) => {
   const token = await getCookie("token");
 

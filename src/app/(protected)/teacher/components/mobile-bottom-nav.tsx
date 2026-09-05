@@ -3,13 +3,13 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Presentation, BookOpen, Users } from "lucide-react";
+import { LayoutDashboard, BookOpen, UserRound, Users } from "lucide-react";
 
 const navItems = [
   { title: "Home", href: "/teacher", icon: LayoutDashboard },
-  // { title: "Batches", href: "/teacher/batches", icon: Presentation },
   { title: "Classes", href: "/teacher/classes", icon: BookOpen },
   { title: "Attendance", href: "/teacher/students", icon: Users },
+  { title: "Profile", href: "/teacher/profile", icon: UserRound },
 ];
 
 const MobileBottomNav = () => {
@@ -28,7 +28,9 @@ const MobileBottomNav = () => {
             (pathname.startsWith("/teacher/classes") || pathname.startsWith("/class"));
           const isStudents =
             item.href === "/teacher/students" && pathname.startsWith("/teacher/students");
-          const isActive = isDashboard || isBatches || isClasses || isStudents;
+          const isProfile =
+            item.href === "/teacher/profile" && pathname.startsWith("/teacher/profile");
+          const isActive = isDashboard || isBatches || isClasses || isStudents || isProfile;
 
           return (
             <Link

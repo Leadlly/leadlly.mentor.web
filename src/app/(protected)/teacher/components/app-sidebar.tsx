@@ -5,7 +5,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 
-import { CalendarPlus, LayoutDashboard, Presentation, Users } from "lucide-react";
+import { LayoutDashboard, Presentation, UserRound, Users } from "lucide-react";
 
 import {
   Sidebar,
@@ -39,6 +39,11 @@ const navItems = [
     title: "Attendance",
     href: "/teacher/students",
     icon: Users,
+  },
+  {
+    title: "Profile",
+    href: "/teacher/profile",
+    icon: UserRound,
   },
 ];
 

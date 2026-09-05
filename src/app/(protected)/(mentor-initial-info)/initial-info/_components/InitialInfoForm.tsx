@@ -53,7 +53,7 @@ const InitialInfoForm = () => {
       dispatch(userData(res.user));
 
       toast.success(res.message);
-      router.replace("/Status");
+      router.replace("/teacher/profile?setup=1");
     } catch (error: any) {
       toast.error(error?.message);
     } finally {

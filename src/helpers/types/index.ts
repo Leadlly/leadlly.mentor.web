@@ -439,6 +439,7 @@ export interface MentorPersonalInfoProps {
   lastname: string | null;
   email: string;
   role: "teacher" | "mentor";
+  teacherCode?: string | null;
   institute: {
     _id: string;
     name: string;
