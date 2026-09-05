@@ -3,13 +3,14 @@
 import React from "react";
 
 import Image from "next/image";
-import Link from "next/link";
 
 import { LayoutDashboard, Presentation, UserRound, Users } from "lucide-react";
 
+import LogoutButton from "@/components/shared/LogoutButton";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarHeader,
   SidebarMenu,
@@ -68,6 +69,9 @@ const AppSidebar = ({ ...props }: React.ComponentProps<typeof Sidebar>) => {
           <NavMain items={navItems} />
         </SidebarGroup>
       </SidebarContent>
+      <SidebarFooter className="p-3">
+        <LogoutButton className="rounded-lg text-sm h-10" />
+      </SidebarFooter>
     </Sidebar>
   );
 };

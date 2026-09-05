@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Image from "next/image";
@@ -12,6 +12,10 @@ import { Building2, Loader } from "lucide-react";
 import { toast } from "sonner";
 
 import { joinInstitute } from "@/actions/user_actions";
+import {
+  captureInviteInstituteCodeFromUrl,
+  clearInviteInstituteCode,
+} from "@/helpers/institute-invite";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -25,6 +29,8 @@ import { Input } from "@/components/ui/input";
 import { useAppDispatch } from "@/redux/hooks";
 import { userData } from "@/redux/slices";
 
+let inviteAutoJoinAttempted = false;
+
 const InstituteCodeSchema = z.object({
   instituteCode: z
     .string({ message: "Please enter your institute code!" })
@@ -34,6 +40,7 @@ const InstituteCodeSchema = z.object({
 
 const InitialInfoForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const autoJoinStarted = useRef(false);
 
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -45,21 +52,37 @@ const InitialInfoForm = () => {
     },
   });
 
-  const onFormSubmit = async (data: z.infer<typeof InstituteCodeSchema>) => {
-    setIsSubmitting(true);
+  const onFormSubmit = useCallback(
+    async (data: z.infer<typeof InstituteCodeSchema>) => {
+      setIsSubmitting(true);
 
-    try {
-      const res = await joinInstitute(data.instituteCode);
-      dispatch(userData(res.user));
+      try {
+        const res = await joinInstitute(data.instituteCode);
+        dispatch(userData(res.user));
+        clearInviteInstituteCode();
 
-      toast.success(res.message);
-      router.replace("/teacher/profile?setup=1");
-    } catch (error: any) {
-      toast.error(error?.message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+        toast.success(res.message);
+        router.replace("/teacher/profile?setup=1");
+      } catch (error: any) {
+        toast.error(error?.message);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [dispatch, router]
+  );
+
+  useEffect(() => {
+    const code = captureInviteInstituteCodeFromUrl();
+    if (!code) return;
+
+    form.setValue("instituteCode", code);
+
+    if (autoJoinStarted.current || inviteAutoJoinAttempted) return;
+    autoJoinStarted.current = true;
+    inviteAutoJoinAttempted = true;
+    void onFormSubmit({ instituteCode: code });
+  }, [form, onFormSubmit]);
 
   return (
     <section className="flex flex-col gap-y-5 items-center justify-center min-h-screen w-full px-3 py-10">
@@ -80,7 +103,9 @@ const InitialInfoForm = () => {
             Join Your Institute
           </h3>
           <p className="text-sm text-muted-foreground">
-            Enter the institute code provided by your admin to get started
+            {isSubmitting && autoJoinStarted.current
+              ? "Joining your institute from the invite link..."
+              : "Enter the institute code provided by your admin to get started"}
           </p>
         </div>
         <Form {...form}>

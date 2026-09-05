@@ -25,6 +25,8 @@ import { SUBJECT_OPTIONS } from "@/helpers/constants/academic";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/slices";
 
+import LogoutButton from "@/components/shared/LogoutButton";
+
 import JoinAnotherInstitute from "./join-another-institute";
 
 const subjectSelectOptions = SUBJECT_OPTIONS.map((subject) => ({
@@ -306,6 +308,10 @@ const TeacherProfileForm = () => {
       </div>
 
       {!isSetup ? <JoinAnotherInstitute /> : null}
+
+      <div className="mt-6">
+        <LogoutButton className="rounded-lg" />
+      </div>
     </div>
   );
 };

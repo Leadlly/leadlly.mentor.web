@@ -487,24 +487,37 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
               </button>
             ))}
             {showCustomInput ? (
-              <input
-                type="number"
-                min={1}
-                max={12}
-                value={customHours && !HOUR_OPTIONS.includes(customHours) ? customHours : ""}
-                onChange={(e) => {
-                  const hours = Number(e.target.value) || null;
-                  setCustomHours(hours);
-                  setSelectedHours(hours);
-                  if (hours) setStoredLectureDurationHours(hours, true);
-                }}
-                onBlur={() => {
-                  if (customHours) setShowCustomInput(false);
-                }}
-                placeholder="hrs"
-                className="w-16 px-3 py-2 rounded-lg text-sm font-semibold border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400 text-center"
-                autoFocus
-              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min={1}
+                  max={12}
+                  inputMode="numeric"
+                  value={customHours && !HOUR_OPTIONS.includes(customHours) ? customHours : ""}
+                  onChange={(e) => {
+                    const hours = Number(e.target.value) || null;
+                    setCustomHours(hours);
+                    setSelectedHours(hours);
+                    if (hours) setStoredLectureDurationHours(hours, true);
+                  }}
+                  placeholder="hrs"
+                  className="w-16 px-3 py-2 rounded-lg text-sm font-semibold border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400 text-center"
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (customHours) {
+                      setSelectedHours(customHours);
+                      setStoredLectureDurationHours(customHours, true);
+                    }
+                    setShowCustomInput(false);
+                  }}
+                  className="px-3 py-2 rounded-lg text-sm font-semibold bg-purple-600 text-white border border-purple-600"
+                >
+                  Done
+                </button>
+              </div>
             ) : (
               <button
                 onClick={() => {

@@ -1,5 +1,6 @@
 import Image from "next/image";
-import Link from "next/link";
+
+import InviteAuthLink from "@/components/shared/InviteAuthLink";
 
 import SignUpForm from "./components/SignUpForm";
 
@@ -40,9 +41,9 @@ const SignUp = () => {
 
             <p className="w-full text-center text-base md:text-lg -mt-5">
               Already have an account?{" "}
-              <Link href={"/login"} className="text-[#9652f4]">
+              <InviteAuthLink href="/login" className="text-[#9652f4]">
                 Login
-              </Link>
+              </InviteAuthLink>
             </p>
           </div>
         </div>

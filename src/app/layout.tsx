@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next"
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "sonner";
 
+import InviteInstituteCodeCapture from "@/components/shared/InviteInstituteCodeCapture";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
@@ -32,6 +33,7 @@ export default async function RootLayout({
         <GoogleOAuthProvider
           clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}
         >
+          <InviteInstituteCodeCapture />
           <main className="">{children}</main>
           <Toaster richColors position="top-center" />
           <Analytics />

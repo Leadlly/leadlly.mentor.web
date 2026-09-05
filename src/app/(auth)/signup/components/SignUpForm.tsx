@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { useRouter } from "next/navigation";
@@ -13,6 +13,10 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 import { signUpUser } from "@/actions/user_actions";
+import {
+  captureInviteInstituteCodeFromUrl,
+  persistInviteInstituteCode,
+} from "@/helpers/institute-invite";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -34,10 +38,16 @@ const SignUpForm = () => {
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       role: "teacher",
+      instituteCode: "",
     },
   });
 
   const selectedRole = form.watch("role");
+
+  useEffect(() => {
+    const code = captureInviteInstituteCodeFromUrl();
+    if (code) form.setValue("instituteCode", code);
+  }, [form]);
 
   const onFormSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmitting(true);
@@ -48,6 +58,7 @@ const SignUpForm = () => {
       if (responseData.success) {
         toast.success(responseData.message);
         localStorage.setItem("email", data.email);
+        if (data.instituteCode) persistInviteInstituteCode(data.instituteCode);
         router.replace("/verify");
       } else {
         toast.error(responseData.message);
@@ -174,6 +185,11 @@ const SignUpForm = () => {
                     icon1={<School className="w-5 h-5 opacity-70" />}
                     className="focus-visible:ring-0 text-lg focus:ring-offset-0 uppercase"
                     {...field}
+                    onChange={(e) => {
+                      const code = e.target.value.toUpperCase();
+                      field.onChange(code);
+                      persistInviteInstituteCode(code);
+                    }}
                   />
                 </FormControl>
                 <FormMessage />

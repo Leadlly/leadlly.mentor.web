@@ -8,9 +8,11 @@ import { toast } from "sonner";
 import { useAppDispatch } from "@/redux/hooks";
 import { userData } from "@/redux/slices";
 
+import { cn } from "@/lib/utils";
+
 import { Button } from "../ui/button";
 
-const LogoutButton = () => {
+const LogoutButton = ({ className }: { className?: string }) => {
   const router = useRouter();
 
   const dispatch = useAppDispatch();
@@ -38,7 +40,10 @@ const LogoutButton = () => {
     <Button
       onClick={logoutHandler}
       variant={"outline"}
-      className="w-full h-11 items-center gap-2 text-primary hover:text-primary hover:bg-primary/10 border-primary rounded-full xl:rounded-xl text-base md:text-lg font-normal py-3 px-2 md:px-4"
+      className={cn(
+        "w-full h-11 items-center gap-2 text-primary hover:text-primary hover:bg-primary/10 border-primary rounded-full xl:rounded-xl text-base md:text-lg font-normal py-3 px-2 md:px-4",
+        className
+      )}
     >
       <LogOut className="w-4 h-4" />
       <span>Logout</span>

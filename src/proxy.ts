@@ -4,6 +4,18 @@ import type { NextRequest } from "next/server";
 
 import { getUser } from "./actions/user_actions";
 
+const getInviteInstituteCode = (request: NextRequest) =>
+  request.nextUrl.searchParams.get("institutecode") ||
+  request.nextUrl.searchParams.get("instituteCode") ||
+  request.nextUrl.searchParams.get("institute_code");
+
+const redirectWithInviteCode = (path: string, request: NextRequest) => {
+  const dest = new URL(path, request.nextUrl);
+  const code = getInviteInstituteCode(request);
+  if (code) dest.searchParams.set("institutecode", code);
+  return NextResponse.redirect(dest);
+};
+
 export async function proxy(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
@@ -19,11 +31,12 @@ export async function proxy(request: NextRequest) {
     path.startsWith("/api/google");
 
   if (token && isPublicPath && !path.startsWith("/api")) {
-    return NextResponse.redirect(new URL("/", request.nextUrl));
+    return redirectWithInviteCode("/", request);
   }
 
   if (!token && !isPublicPath) {
-    return NextResponse.redirect(new URL("/login", request.nextUrl));
+    const code = getInviteInstituteCode(request);
+    return redirectWithInviteCode(code ? "/signup" : "/login", request);
   }
 
   if (token && !isPublicPath) {
@@ -36,7 +49,7 @@ export async function proxy(request: NextRequest) {
 
     // initial personal info middleware
     if (!hasSubmittedInitialInfo && isTeacher && path !== "/initial-info") {
-      return NextResponse.redirect(new URL("/initial-info", request.nextUrl));
+      return redirectWithInviteCode("/initial-info", request);
     }
 
     if (hasSubmittedInitialInfo && isTeacher && path === "/initial-info") {
@@ -47,11 +60,11 @@ export async function proxy(request: NextRequest) {
       const isVerified = userData.user?.status === "Verified";
 
       if (!isVerified && path !== "/Status") {
-        return NextResponse.redirect(new URL("/Status", request.nextUrl));
+        return redirectWithInviteCode("/Status", request);
       }
 
       if (isVerified && path === "/Status") {
-        return NextResponse.redirect(new URL("/", request.nextUrl));
+        return redirectWithInviteCode("/", request);
       }
     }
 

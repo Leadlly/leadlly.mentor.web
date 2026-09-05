@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import Link from "next/link";
@@ -23,6 +23,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { signInSchema } from "@/schemas/signInSchema";
 
+import { captureInviteInstituteCodeFromUrl, withInstituteCodeQuery } from "@/helpers/institute-invite";
+
 import GoogleLoginButton from "../../_components/GoogleLoginButton";
 
 const LoginForm = () => {
@@ -31,6 +33,8 @@ const LoginForm = () => {
 
   const router = useRouter();
 
+  const [inviteCode, setInviteCode] = useState("");
+
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -38,6 +42,10 @@ const LoginForm = () => {
       password: "",
     },
   });
+
+  useEffect(() => {
+    setInviteCode(captureInviteInstituteCodeFromUrl());
+  }, []);
 
   const onFormSubmit = async (data: z.infer<typeof signInSchema>) => {
     setIsLoggingIn(true);
@@ -171,7 +179,7 @@ const LoginForm = () => {
       <div className="w-full text-center">
         <p>
           No account yet?{" "}
-          <Link href={"/signup"} className="text-primary">
+          <Link href={withInstituteCodeQuery("/signup", inviteCode)} className="text-primary">
             Sign Up
           </Link>
         </p>
