@@ -64,6 +64,8 @@ const InitialInfoForm = () => {
         toast.success(res.message);
         router.replace("/teacher/profile?setup=1");
       } catch (error: any) {
+        inviteAutoJoinAttempted = false;
+        autoJoinStarted.current = false;
         toast.error(error?.message);
       } finally {
         setIsSubmitting(false);

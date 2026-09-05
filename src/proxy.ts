@@ -53,6 +53,9 @@ export async function proxy(request: NextRequest) {
     }
 
     if (hasSubmittedInitialInfo && isTeacher && path === "/initial-info") {
+      if (getInviteInstituteCode(request)) {
+        return NextResponse.redirect(new URL("/teacher", request.nextUrl));
+      }
       return NextResponse.redirect(new URL("/teacher/profile?setup=1", request.nextUrl));
     }
 

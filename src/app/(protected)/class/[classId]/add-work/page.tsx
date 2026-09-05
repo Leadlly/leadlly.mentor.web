@@ -103,6 +103,7 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
   const [selectedHours, setSelectedHours] = useState<number | null>(null);
   const [customHours, setCustomHours] = useState<number | null>(null);
   const [showCustomInput, setShowCustomInput] = useState(false);
+  const [customInputValue, setCustomInputValue] = useState("");
   const [nothingDoneToday, setNothingDoneToday] = useState(false);
 
   const [chapterPopoverOpen, setChapterPopoverOpen] = useState(false);
@@ -493,12 +494,23 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
                   min={1}
                   max={12}
                   inputMode="numeric"
-                  value={customHours && !HOUR_OPTIONS.includes(customHours) ? customHours : ""}
+                  enterKeyHint="done"
+                  value={customInputValue}
                   onChange={(e) => {
-                    const hours = Number(e.target.value) || null;
-                    setCustomHours(hours);
+                    const raw = e.target.value;
+                    setCustomInputValue(raw);
+                    const hours = Number(raw);
+                    if (!Number.isFinite(hours) || hours <= 0) return;
+                    const isCustom = !HOUR_OPTIONS.includes(hours);
                     setSelectedHours(hours);
-                    if (hours) setStoredLectureDurationHours(hours, true);
+                    if (isCustom) setCustomHours(hours);
+                    setStoredLectureDurationHours(hours, isCustom);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      setShowCustomInput(false);
+                    }
                   }}
                   placeholder="hrs"
                   className="w-16 px-3 py-2 rounded-lg text-sm font-semibold border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400 text-center"
@@ -506,13 +518,7 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
                 />
                 <button
                   type="button"
-                  onClick={() => {
-                    if (customHours) {
-                      setSelectedHours(customHours);
-                      setStoredLectureDurationHours(customHours, true);
-                    }
-                    setShowCustomInput(false);
-                  }}
+                  onClick={() => setShowCustomInput(false)}
                   className="px-3 py-2 rounded-lg text-sm font-semibold bg-purple-600 text-white border border-purple-600"
                 >
                   Done
@@ -522,7 +528,11 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
               <button
                 onClick={() => {
                   setShowCustomInput(true);
-                  setSelectedHours(null);
+                  setCustomInputValue(
+                    customHours && !HOUR_OPTIONS.includes(customHours)
+                      ? String(customHours)
+                      : ""
+                  );
                   setNothingDoneToday(false);
                 }}
                 className="size-9 rounded-lg border border-gray-200 bg-white flex items-center justify-center hover:border-purple-300 transition-all"

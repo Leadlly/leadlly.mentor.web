@@ -231,6 +231,7 @@ const TeacherProfileForm = () => {
                   </FormLabel>
                   <FormControl>
                     <MultiSelect
+                      key={`${user?._id ?? "teacher"}-${(field.value ?? []).join(",")}`}
                       options={subjectSelectOptions}
                       onValueChange={field.onChange}
                       defaultValue={field.value ?? []}
