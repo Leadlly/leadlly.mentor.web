@@ -48,6 +48,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  getStoredLectureDurationMinutes,
+  setStoredLectureDurationMinutes,
+} from "@/helpers/lecture-duration";
 import { cn } from "@/lib/utils";
 
 interface ChapterItem {
@@ -141,7 +145,11 @@ const AddTodaysWorkModal = ({
       try {
         const lecture = await getTodaysLecture(classId);
         setExistingLecture(lecture);
-        if (lecture) setDuration(lecture.duration || 60);
+        if (lecture) {
+          setDuration(lecture.duration || 60);
+        } else {
+          setDuration(getStoredLectureDurationMinutes() ?? 60);
+        }
       } catch {
         setExistingLecture(null);
       } finally {
@@ -306,7 +314,7 @@ const AddTodaysWorkModal = ({
   const resetForm = () => {
     setSelectedChapter(null);
     setSelectedTopics(new Map());
-    setDuration(60);
+    setDuration(getStoredLectureDurationMinutes() ?? 60);
     setTopics([]);
     setExistingLecture(null);
     prefillDoneRef.current = false;
@@ -400,7 +408,11 @@ const AddTodaysWorkModal = ({
                 min={1}
                 max={600}
                 value={duration}
-                onChange={(e) => setDuration(Number(e.target.value) || 60)}
+                onChange={(e) => {
+                  const minutes = Number(e.target.value) || 60;
+                  setDuration(minutes);
+                  setStoredLectureDurationMinutes(minutes);
+                }}
                 className="w-32"
               />
             </div>

@@ -39,6 +39,12 @@ import { createQuizForClass, getClassQuizzes, deleteQuiz } from "@/actions/quiz_
 import { getAttendance } from "@/actions/attendance_actions";
 import { useFileUpload } from "@/hooks/use-file-upload";
 import { createNote, createDPP, getNotes, getDPPs, deleteNote, deleteDPP } from "@/actions/classwork_actions";
+import {
+  getStoredLectureDuration,
+  LECTURE_HOUR_OPTIONS,
+  setStoredLectureDurationHours,
+  splitLectureDurationHours,
+} from "@/helpers/lecture-duration";
 
 interface ChapterItem {
   _id: string;
@@ -56,7 +62,7 @@ interface TopicItem {
   subtopics: SubtopicItem[];
 }
 
-const HOUR_OPTIONS = [1, 2, 3];
+const HOUR_OPTIONS = LECTURE_HOUR_OPTIONS;
 
 const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
   const { classId } = use(params);
@@ -147,23 +153,34 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
         if (lecture) {
           setExistingLecture(lecture);
           const durationHrs = Math.round((lecture.duration || 60) / 60);
-          if (HOUR_OPTIONS.includes(durationHrs)) {
-            setSelectedHours(durationHrs);
-          } else {
-            setCustomHours(durationHrs || 1);
-            setShowCustomInput(true);
-          }
+          const remembered = getStoredLectureDuration();
+          setSelectedHours(durationHrs || 1);
+          setCustomHours(
+            HOUR_OPTIONS.includes(durationHrs)
+              ? remembered?.customHours ?? null
+              : durationHrs || 1
+          );
+          setShowCustomInput(false);
         } else {
           setExistingLecture(null);
-          setSelectedHours(null);
-          setCustomHours(null);
-          setShowCustomInput(false);
+          const remembered = splitLectureDurationHours(
+            getStoredLectureDuration()
+          );
+          setSelectedHours(remembered.selectedHours);
+          setCustomHours(remembered.customHours);
+          setShowCustomInput(remembered.showCustomInput);
           setSelectedChapter(null);
           setSelectedTopics(new Map());
           prefillDoneRef.current = false;
         }
       } catch {
         setExistingLecture(null);
+        const remembered = splitLectureDurationHours(
+          getStoredLectureDuration()
+        );
+        setSelectedHours(remembered.selectedHours);
+        setCustomHours(remembered.customHours);
+        setShowCustomInput(remembered.showCustomInput);
       }
     };
     fetchExisting();
@@ -438,14 +455,26 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
         <div className="space-y-2.5">
           <label className="text-sm font-bold text-gray-800">Class Hours</label>
           <div className="flex items-center gap-2 flex-wrap">
-            {HOUR_OPTIONS.map((hr) => (
+            {Array.from(
+              new Set([
+                ...HOUR_OPTIONS,
+                ...(customHours && !HOUR_OPTIONS.includes(customHours)
+                  ? [customHours]
+                  : []),
+                ...(selectedHours && !HOUR_OPTIONS.includes(selectedHours)
+                  ? [selectedHours]
+                  : []),
+              ])
+            ).map((hr) => (
               <button
                 key={hr}
                 onClick={() => {
+                  const isCustom = !HOUR_OPTIONS.includes(hr);
                   setSelectedHours(hr);
                   setShowCustomInput(false);
-                  setCustomHours(null);
+                  setCustomHours(isCustom ? hr : customHours);
                   setNothingDoneToday(false);
+                  setStoredLectureDurationHours(hr, isCustom);
                 }}
                 className={cn(
                   "px-4 py-2 rounded-lg text-sm font-semibold border transition-all",
@@ -462,10 +491,15 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
                 type="number"
                 min={1}
                 max={12}
-                value={customHours || ""}
+                value={customHours && !HOUR_OPTIONS.includes(customHours) ? customHours : ""}
                 onChange={(e) => {
-                  setCustomHours(Number(e.target.value) || null);
-                  setSelectedHours(null);
+                  const hours = Number(e.target.value) || null;
+                  setCustomHours(hours);
+                  setSelectedHours(hours);
+                  if (hours) setStoredLectureDurationHours(hours, true);
+                }}
+                onBlur={() => {
+                  if (customHours) setShowCustomInput(false);
                 }}
                 placeholder="hrs"
                 className="w-16 px-3 py-2 rounded-lg text-sm font-semibold border border-purple-300 focus:outline-none focus:ring-2 focus:ring-purple-400 text-center"
@@ -676,6 +710,13 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
                 setSelectedHours(null);
                 setShowCustomInput(false);
                 setCustomHours(null);
+              } else {
+                const remembered = splitLectureDurationHours(
+                  getStoredLectureDuration()
+                );
+                setSelectedHours(remembered.selectedHours);
+                setCustomHours(remembered.customHours);
+                setShowCustomInput(remembered.showCustomInput);
               }
             }}
             className={cn(

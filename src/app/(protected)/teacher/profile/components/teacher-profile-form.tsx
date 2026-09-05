@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Hash, Loader2, User } from "lucide-react";
+import { Hash, Loader2, Phone, User } from "lucide-react";
 import { toast } from "sonner";
 
 import { updateTeacherProfile } from "@/actions/user_actions";
@@ -34,9 +34,21 @@ const subjectSelectOptions = SUBJECT_OPTIONS.map((subject) => ({
 
 const TeacherProfileSchema = z.object({
   name: z.string().trim().optional().or(z.literal("")),
+  phone: z
+    .string()
+    .trim()
+    .max(10, "Phone number must be at most 10 digits")
+    .regex(/^\d*$/, "Enter a valid phone number")
+    .optional()
+    .or(z.literal("")),
   subjects: z.array(z.string()).optional(),
   teacherCode: z.string().trim().optional().or(z.literal("")),
 });
+
+const getPhoneValue = (phone?: { personal?: string | number | null }) =>
+  phone?.personal != null && phone.personal !== ""
+    ? String(phone.personal)
+    : "";
 
 const TeacherProfileForm = () => {
   const [isSaving, setIsSaving] = useState(false);
@@ -54,6 +66,7 @@ const TeacherProfileForm = () => {
     resolver: zodResolver(TeacherProfileSchema),
     defaultValues: {
       name: existingName,
+      phone: getPhoneValue(user?.phone),
       subjects: user?.subjects ?? [],
       teacherCode: user?.teacherCode ?? "",
     },
@@ -64,6 +77,7 @@ const TeacherProfileForm = () => {
 
     form.reset({
       name: [user.firstname, user.lastname].filter(Boolean).join(" "),
+      phone: getPhoneValue(user.phone),
       subjects: user.subjects ?? [],
       teacherCode: user.teacherCode ?? "",
     });
@@ -73,10 +87,15 @@ const TeacherProfileForm = () => {
     setIsSaving(true);
 
     try {
-      const payload: { name?: string; subjects?: string[]; teacherCode?: string } =
-        {};
+      const payload: {
+        name?: string;
+        phone?: string;
+        subjects?: string[];
+        teacherCode?: string;
+      } = {};
 
       if (data.name?.trim()) payload.name = data.name.trim();
+      payload.phone = data.phone?.trim() ?? "";
       payload.subjects = data.subjects ?? [];
       if (data.teacherCode !== undefined) {
         payload.teacherCode = data.teacherCode.trim();
@@ -93,6 +112,7 @@ const TeacherProfileForm = () => {
               res.user.lastname !== undefined
                 ? res.user.lastname
                 : user.lastname,
+            phone: res.user.phone ?? user.phone,
             subjects: res.user.subjects ?? user.subjects,
             teacherCode:
               res.user.teacherCode !== undefined
@@ -131,8 +151,8 @@ const TeacherProfileForm = () => {
           </>
         ) : (
           <p className="text-sm text-gray-500">
-            Update your name, subjects, and teacher code. All fields are
-            optional.
+            Update your name, phone number, subjects, and teacher code. All
+            fields are optional.
           </p>
         )}
       </div>
@@ -158,6 +178,37 @@ const TeacherProfileForm = () => {
                       className="text-sm font-medium"
                       inputWrapperClassName="h-12 rounded-lg"
                       {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem className="space-y-2">
+                  <FormLabel className="text-sm font-semibold text-gray-700">
+                    Phone number
+                    <span className="ml-1.5 font-normal text-gray-400">
+                      (optional)
+                    </span>
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      type="tel"
+                      inputMode="numeric"
+                      maxLength={10}
+                      placeholder="Enter your phone number"
+                      icon2={<Phone className="w-4 h-4 text-gray-400" />}
+                      className="text-sm font-medium"
+                      inputWrapperClassName="h-12 rounded-lg"
+                      {...field}
+                      onChange={(e) =>
+                        field.onChange(e.target.value.replace(/\D/g, ""))
+                      }
                     />
                   </FormControl>
                   <FormMessage />
