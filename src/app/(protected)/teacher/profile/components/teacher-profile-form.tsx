@@ -152,10 +152,22 @@ const TeacherProfileForm = () => {
             </p>
           </>
         ) : (
-          <p className="text-sm text-gray-500">
-            Update your name, phone number, subjects, and teacher code. All
-            fields are optional.
-          </p>
+          <>
+            {existingName ? (
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900">
+                {existingName}
+                {user?.teacherCode ? (
+                  <span className="ml-2 font-semibold text-gray-500">
+                    ({user.teacherCode})
+                  </span>
+                ) : null}
+              </h2>
+            ) : null}
+            <p className="text-sm text-gray-500">
+              Update your name, phone number, subjects, and teacher code. All
+              fields are optional.
+            </p>
+          </>
         )}
       </div>
 
@@ -253,10 +265,8 @@ const TeacherProfileForm = () => {
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel className="text-sm font-semibold text-gray-700">
-                    Teacher code
-                    <span className="ml-1.5 font-normal text-gray-400">
-                      (optional)
-                    </span>
+                    Teacher code{" "}
+                    <span className="font-normal text-gray-400">(optional)</span>
                   </FormLabel>
                   <FormControl>
                     <Input
