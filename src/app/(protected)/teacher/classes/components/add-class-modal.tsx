@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getTeacherBatches, createClassAction } from "@/actions/batch_actions";
-import { SUBJECT_OPTIONS, formatStdLabel } from "@/helpers/constants/academic";
+import { SUBJECT_OPTIONS, formatStdLabel, getBatchInstituteName } from "@/helpers/constants/academic";
 import { useAppSelector } from "@/redux/hooks";
 import { toast } from "sonner";
 
@@ -95,7 +95,9 @@ export const AddClassModal = () => {
                 <SelectContent>
                   {batches && batches.map((batch: any) => (
                     <SelectItem key={batch._id} value={batch._id}>
-                      {batch.name} - {formatStdLabel(batch.standard)}
+                      {[getBatchInstituteName(batch), batch.name, formatStdLabel(batch.standard)]
+                        .filter(Boolean)
+                        .join(" · ")}
                     </SelectItem>
                   ))}
                 </SelectContent>

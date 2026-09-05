@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { Atom, Calculator, FlaskConical, BookOpen, Dna, Monitor, Globe, Hourglass, Presentation, Plus } from "lucide-react";
-import { formatStdLabel } from "@/helpers/constants/academic";
+import { formatStdLabel, getBatchInstituteName } from "@/helpers/constants/academic";
 import {
   buildBatchColorMapFromClasses,
   getBatchStyle,
@@ -74,7 +74,13 @@ const ClassList = () => {
                         {item.batch?.name || "No Batch"}
                       </h3>
                       <p className="text-xs md:text-[13px] text-gray-500 font-medium truncate w-full mt-0.5 capitalize">
-                        {item.subject || "Unknown Subject"} • {formatStdLabel(item.batch?.standard)}
+                        {[
+                          getBatchInstituteName(item.batch),
+                          item.subject || "Unknown Subject",
+                          formatStdLabel(item.batch?.standard),
+                        ]
+                          .filter(Boolean)
+                          .join(" · ")}
                       </p>
                     </div>
                   </div>

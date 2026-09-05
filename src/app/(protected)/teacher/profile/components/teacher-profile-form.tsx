@@ -23,6 +23,8 @@ import { Input } from "@/components/ui/input";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/slices";
 
+import JoinAnotherInstitute from "./join-another-institute";
+
 const TeacherProfileSchema = z.object({
   name: z.string().trim().optional().or(z.literal("")),
   phone: z
@@ -251,6 +253,8 @@ const TeacherProfileForm = () => {
           </form>
         </Form>
       </div>
+
+      {!isSetup ? <JoinAnotherInstitute /> : null}
     </div>
   );
 };

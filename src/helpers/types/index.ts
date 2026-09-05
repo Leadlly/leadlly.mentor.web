@@ -386,10 +386,20 @@ interface IStudent {
   gmeet: IGMeet;
 }
 
+export interface IInstituteMembership {
+  _id: string;
+  status: "active" | "blocked";
+  joinedAt?: string;
+  blockedAt?: string | null;
+  name?: string;
+  instituteCode?: string;
+}
+
 export interface IBatch {
   schedule: { days: any[]; timezone: string };
   _id: string;
   name: string;
+  institute?: string | { _id: string; name?: string; instituteCode?: string };
   standard: string;
   subjects: string[];
   mentor: string;
@@ -440,6 +450,7 @@ export interface MentorPersonalInfoProps {
   email: string;
   role: "teacher" | "mentor";
   teacherCode?: string | null;
+  institutes?: IInstituteMembership[];
   institute: {
     _id: string;
     name: string;
@@ -611,7 +622,7 @@ export interface IClassProps {
 
 export interface ILectureProps {
   _id: string;
-  batch: { _id: string; name: string };
+  batch: { _id: string; name: string; institute?: { _id?: string; name?: string } };
   class: { _id: string; subject: string };
   mentor: string;
   chapters: Array<{ _id: string; name: string }>;

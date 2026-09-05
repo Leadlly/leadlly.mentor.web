@@ -28,7 +28,10 @@ export async function proxy(request: NextRequest) {
 
   if (token && !isPublicPath) {
     const userData = await getUser();
-    const hasSubmittedInitialInfo = !!userData.user?.institute;
+    const hasSubmittedInitialInfo =
+      (Array.isArray(userData.user?.institutes) &&
+        userData.user.institutes.length > 0) ||
+      !!userData.user?.institute;
     const isTeacher = userData.user?.role === "teacher";
 
     // initial personal info middleware

@@ -13,7 +13,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { formatStdLabel } from "@/helpers/constants/academic";
+import { formatStdLabel, getBatchInstituteName } from "@/helpers/constants/academic";
 
 const AttendancePage = () => {
   const queryClient = useQueryClient();
@@ -144,7 +144,9 @@ const AttendancePage = () => {
               <SelectItem value="all">All Students</SelectItem>
               {batches?.map((batch: any) => (
                 <SelectItem key={batch._id} value={batch._id}>
-                  {batch.name}
+                  {[getBatchInstituteName(batch), batch.name]
+                    .filter(Boolean)
+                    .join(" · ")}
                 </SelectItem>
               ))}
             </SelectContent>

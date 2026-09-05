@@ -96,7 +96,15 @@ const WeekCalendar = ({ timeframe }: { timeframe: string }) => {
                     )}`}
                   >
                     <span>
-                      {cls.batch.name} -{" "}
+                      {[
+                        typeof cls.batch.institute === "object"
+                          ? cls.batch.institute?.name
+                          : "",
+                        cls.batch.name,
+                      ]
+                        .filter(Boolean)
+                        .join(" · ")}{" "}
+                      -{" "}
                       {cls.class.subject === "chemistry"
                         ? "chem"
                         : cls.class.subject === "physics"

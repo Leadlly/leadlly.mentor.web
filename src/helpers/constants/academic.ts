@@ -49,6 +49,17 @@ export function formatStdLabel(
   return `Std ${label}`;
 }
 
+export function getBatchInstituteName(batch?: {
+  institute?: { name?: string } | string | null;
+  instituteName?: string;
+}): string {
+  if (batch?.instituteName) return batch.instituteName;
+  if (batch?.institute && typeof batch.institute === "object") {
+    return batch.institute.name || "";
+  }
+  return "";
+}
+
 export function formatClassLabel(
   standard: string | number | null | undefined
 ): string {

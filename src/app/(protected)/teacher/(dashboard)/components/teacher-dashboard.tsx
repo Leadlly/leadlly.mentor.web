@@ -16,7 +16,7 @@ import {
   ChevronRight,
   X,
 } from "lucide-react";
-import { formatStandardLabel } from "@/helpers/constants/academic";
+import { formatStandardLabel, getBatchInstituteName } from "@/helpers/constants/academic";
 import {
   BATCH_CHART_COLORS,
   buildBatchColorMapFromPerformance,
@@ -402,7 +402,9 @@ const TeacherDashboard = () => {
                         style={{ borderLeftWidth: 3, borderLeftColor: batchStyle.accent }}
                       >
                         <p className={`truncate leading-tight ${batchStyle.text}`}>
-                          {cls.batch?.name || "Batch"}
+                          {[getBatchInstituteName(cls.batch), cls.batch?.name || "Batch"]
+                            .filter(Boolean)
+                            .join(" · ")}
                         </p>
                         <p className="text-gray-600 truncate leading-tight">
                           {cls.class?.subject || cls.title || "Lecture"}
@@ -660,7 +662,9 @@ const TeacherDashboard = () => {
                         {trimmedName}
                       </h4>
                       <p className="text-xs text-gray-400 font-medium truncate">
-                        {subjects.map((subject: string) => subject).join(", ")}
+                        {[batch.instituteName, subjects.map((subject: string) => subject).join(", ")]
+                          .filter(Boolean)
+                          .join(" · ")}
                       </p>
                     </div>
                     <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full shrink-0 ${batch.status === "Active" ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-500"}`}>
@@ -717,7 +721,7 @@ const TeacherDashboard = () => {
                         </p>
                       </div>
                       <span className={`text-[10px] font-semibold px-2.5 py-1 rounded-md shrink-0 capitalize truncate max-w-[200px] mt-0.5 border ${batchStyle.bg} ${batchStyle.text} ${batchStyle.border}`}>
-                        {lec.batchName?.length > 40 ? lec.batchName.slice(0, 40) + "..." : lec.batchName}
+                        {[lec.instituteName, lec.batchName].filter(Boolean).join(" · ") || "Batch"}
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5 mt-1.5 text-[11px] text-gray-400">
@@ -765,7 +769,9 @@ const TeacherDashboard = () => {
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold text-sm text-gray-800 truncate capitalize">{cls.subject}</p>
-                    <p className="text-xs text-gray-400">{cls.batchName} &bull; {dayjs(cls.date).format("DD MMM")}</p>
+                    <p className="text-xs text-gray-400">
+                      {[cls.instituteName, cls.batchName].filter(Boolean).join(" · ")} &bull; {dayjs(cls.date).format("DD MMM")}
+                    </p>
                   </div>
                   <span className="text-xs font-medium text-gray-500 shrink-0">
                     {cls.startTime || ""} {cls.startTime && cls.endTime ? "-" : ""} {cls.endTime || ""}
@@ -890,7 +896,7 @@ const ClassesTakenSection = ({
               className={`${bgClass} rounded-xl p-3 md:p-4 text-center`}
             >
               <p className="text-xs font-semibold text-gray-600 truncate mb-1" title={batch.batchName}>
-                {batch.batchName}
+                {[batch.instituteName, batch.batchName].filter(Boolean).join(" · ")}
               </p>
               <p className={`text-xl md:text-2xl font-bold ${textClass}`}>
                 {value}
