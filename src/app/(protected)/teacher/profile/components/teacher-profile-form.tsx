@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Hash, Loader2, Phone, User } from "lucide-react";
+import { Hash, Loader2, User } from "lucide-react";
 import { toast } from "sonner";
 
 import { updateTeacherProfile } from "@/actions/user_actions";
@@ -20,21 +20,21 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { MultiSelect } from "@/components/ui/multi-select";
+import { SUBJECT_OPTIONS } from "@/helpers/constants/academic";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { userData } from "@/redux/slices";
 
 import JoinAnotherInstitute from "./join-another-institute";
 
+const subjectSelectOptions = SUBJECT_OPTIONS.map((subject) => ({
+  _id: subject,
+  name: subject,
+}));
+
 const TeacherProfileSchema = z.object({
   name: z.string().trim().optional().or(z.literal("")),
-  phone: z
-    .string()
-    .trim()
-    .optional()
-    .or(z.literal(""))
-    .refine((value) => !value || /^\d{10}$/.test(value), {
-      message: "Phone number must be 10 digits",
-    }),
+  subjects: z.array(z.string()).optional(),
   teacherCode: z.string().trim().optional().or(z.literal("")),
 });
 
@@ -54,7 +54,7 @@ const TeacherProfileForm = () => {
     resolver: zodResolver(TeacherProfileSchema),
     defaultValues: {
       name: existingName,
-      phone: user?.phone?.personal ? String(user.phone.personal) : "",
+      subjects: user?.subjects ?? [],
       teacherCode: user?.teacherCode ?? "",
     },
   });
@@ -64,7 +64,7 @@ const TeacherProfileForm = () => {
 
     form.reset({
       name: [user.firstname, user.lastname].filter(Boolean).join(" "),
-      phone: user.phone?.personal ? String(user.phone.personal) : "",
+      subjects: user.subjects ?? [],
       teacherCode: user.teacherCode ?? "",
     });
   }, [user, form]);
@@ -73,11 +73,11 @@ const TeacherProfileForm = () => {
     setIsSaving(true);
 
     try {
-      const payload: { name?: string; phone?: string; teacherCode?: string } =
+      const payload: { name?: string; subjects?: string[]; teacherCode?: string } =
         {};
 
       if (data.name?.trim()) payload.name = data.name.trim();
-      if (data.phone?.trim()) payload.phone = data.phone.trim();
+      payload.subjects = data.subjects ?? [];
       if (data.teacherCode !== undefined) {
         payload.teacherCode = data.teacherCode.trim();
       }
@@ -93,7 +93,7 @@ const TeacherProfileForm = () => {
               res.user.lastname !== undefined
                 ? res.user.lastname
                 : user.lastname,
-            phone: res.user.phone ?? user.phone,
+            subjects: res.user.subjects ?? user.subjects,
             teacherCode:
               res.user.teacherCode !== undefined
                 ? res.user.teacherCode
@@ -131,7 +131,7 @@ const TeacherProfileForm = () => {
           </>
         ) : (
           <p className="text-sm text-gray-500">
-            Update your name, phone number, and teacher code. All fields are
+            Update your name, subjects, and teacher code. All fields are
             optional.
           </p>
         )}
@@ -167,25 +167,25 @@ const TeacherProfileForm = () => {
 
             <FormField
               control={form.control}
-              name="phone"
+              name="subjects"
               render={({ field }) => (
                 <FormItem className="space-y-2">
                   <FormLabel className="text-sm font-semibold text-gray-700">
-                    Phone number
+                    Subjects
                     <span className="ml-1.5 font-normal text-gray-400">
                       (optional)
                     </span>
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      type="tel"
-                      placeholder="Enter your phone number"
-                      icon2={<Phone className="w-4 h-4 text-gray-400" />}
-                      className="text-sm font-medium"
-                      countryCodeClassName="text-sm font-medium text-gray-500"
-                      inputWrapperClassName="h-12 rounded-lg"
-                      maxLength={10}
-                      {...field}
+                    <MultiSelect
+                      options={subjectSelectOptions}
+                      onValueChange={field.onChange}
+                      defaultValue={field.value ?? []}
+                      placeholder="Select subjects"
+                      variant="inverted"
+                      animation={0}
+                      maxCount={3}
+                      className="min-h-12"
                     />
                   </FormControl>
                   <FormMessage />

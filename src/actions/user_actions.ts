@@ -186,7 +186,7 @@ export const mentorPersonalInfo = async (data: any) => {
 
 export const updateTeacherProfile = async (data: {
   name?: string;
-  phone?: string;
+  subjects?: string[];
   teacherCode?: string;
 }) => {
   const token = await getCookie("token");
