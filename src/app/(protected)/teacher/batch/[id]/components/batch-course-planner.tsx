@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
@@ -13,6 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { SUBJECT_OPTIONS } from "@/helpers/constants/academic";
 import { ChapterSheetStatus } from "@/helpers/types/chapter-plan";
 
 const statusStyles: Record<ChapterSheetStatus, string> = {
@@ -39,17 +40,31 @@ export function BatchCoursePlanner({
   batchName,
   standard,
   subjects,
+  classSubjects,
 }: {
   batchId: string;
   batchName?: string;
   standard?: string;
   subjects?: string[];
+  classSubjects?: string[];
 }) {
-  const subjectOptions = useMemo(
-    () => (subjects || []).filter(Boolean),
-    [subjects]
-  );
-  const [subject, setSubject] = useState(subjectOptions[0] || "");
+  const subjectOptions = useMemo(() => {
+    const fromBatch = (subjects || []).filter(Boolean);
+    const fromClasses = (classSubjects || []).filter(Boolean);
+    const merged = [...new Set([...fromBatch, ...fromClasses])];
+    return merged.length ? merged : [...SUBJECT_OPTIONS];
+  }, [subjects, classSubjects]);
+  const [subject, setSubject] = useState("");
+
+  useEffect(() => {
+    if (!subject && subjectOptions[0]) {
+      setSubject(subjectOptions[0]);
+      return;
+    }
+    if (subject && !subjectOptions.includes(subject)) {
+      setSubject(subjectOptions[0] || "");
+    }
+  }, [subject, subjectOptions]);
 
   const { data: sheet, isFetching } = useQuery({
     queryKey: ["chapter-plan-sheet", batchId, subject],
@@ -71,26 +86,24 @@ export function BatchCoursePlanner({
 
   return (
     <div className="space-y-4">
-      {subjectOptions.length > 1 ? (
-        <div className="max-w-sm">
-          <Select value={subject} onValueChange={setSubject}>
-            <SelectTrigger className="h-10 bg-white">
-              <SelectValue placeholder="Select subject" />
-            </SelectTrigger>
-            <SelectContent>
-              {subjectOptions.map((item) => (
-                <SelectItem key={item} value={item}>
-                  {item}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      ) : null}
+      <div className="max-w-sm">
+        <Select value={subject} onValueChange={setSubject}>
+          <SelectTrigger className="h-10 bg-white">
+            <SelectValue placeholder="Select subject" />
+          </SelectTrigger>
+          <SelectContent>
+            {subjectOptions.map((item) => (
+              <SelectItem key={item} value={item}>
+                {item}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
       {!subject ? (
         <div className="rounded-2xl border border-dashed border-[#E9D5FF] bg-[#FAF5FF]/40 p-10 text-center text-gray-500">
-          This batch has no subjects yet.
+          Choose a subject to open the course planner.
         </div>
       ) : isFetching && !rows.length ? (
         <div className="py-10 text-center text-gray-400">Loading course planner...</div>
