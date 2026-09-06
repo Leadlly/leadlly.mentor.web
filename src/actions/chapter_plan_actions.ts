@@ -1,14 +1,14 @@
 "use server";
 
+import { cookies } from "next/headers";
+
 import { ChapterPlanResponse, ChapterPlanSheet } from "@/helpers/types/chapter-plan";
 
-import { getCookie } from "./cookie_actions";
-
 async function headers() {
-  const token = await getCookie("token");
+  const token = (await cookies()).get("token")?.value;
   return {
     "Content-Type": "application/json",
-    Cookie: `token=${token}`,
+    Cookie: token ? `token=${token}` : "",
   };
 }
 

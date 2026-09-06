@@ -13,7 +13,12 @@ export async function POST(req: NextRequest) {
     const { token, ...userData } = response.data;
     
     const res = NextResponse.json(userData);
-    res.cookies.set('token', token, { httpOnly: true, path: '/', sameSite: 'strict' });
+    res.cookies.set("token", token, {
+      httpOnly: true,
+      path: "/",
+      sameSite: "lax",
+      maxAge: 30 * 24 * 60 * 60,
+    });
     
     return res;
   } catch (error: any) {
