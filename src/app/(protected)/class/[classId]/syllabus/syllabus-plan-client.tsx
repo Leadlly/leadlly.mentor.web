@@ -3,109 +3,50 @@
 import React from "react";
 
 import { useQuery } from "@tanstack/react-query";
-import dayjs from "dayjs";
 
-import { getChapterPlanByClass } from "@/actions/chapter_plan_actions";
-import { ChapterSheetStatus } from "@/helpers/types/chapter-plan";
-
-const statusStyles: Record<ChapterSheetStatus, string> = {
-  not_started: "bg-gray-50 text-gray-600",
-  running: "bg-amber-50 text-amber-700",
-  completed: "bg-emerald-50 text-emerald-700",
-};
-
-const statusLabels: Record<ChapterSheetStatus, string> = {
-  not_started: "Not started",
-  running: "Running",
-  completed: "Completed",
-};
+import { getClassDetails } from "@/actions/batch_actions";
+import { BatchCoursePlanner } from "@/app/(protected)/teacher/batch/[id]/components/batch-course-planner";
 
 const ChapterPlanView = ({ classId }: { classId: string }) => {
-  const { data, isLoading } = useQuery({
-    queryKey: ["chapter-plan", classId],
-    queryFn: () => getChapterPlanByClass(classId),
+  const { data: classDoc, isLoading } = useQuery({
+    queryKey: ["class-details", classId],
+    queryFn: () => getClassDetails(classId),
   });
 
   if (isLoading) {
     return (
       <div className="py-16 text-center text-gray-400 animate-pulse">
-        Loading chapter plan...
+        Loading course planner...
       </div>
     );
   }
 
-  const plan = data?.plan;
-  const chapters = [...(plan?.chapters || [])].sort(
-    (a, b) => a.sequenceOrder - b.sequenceOrder
-  );
-  const subject = data?.class?.subject || plan?.subject;
+  const subject = classDoc?.subject;
+  const batchId =
+    typeof classDoc?.batch === "object" ? classDoc?.batch?._id : classDoc?.batch;
   const batchName =
-    data?.class?.batch?.name ||
-    (typeof plan?.batch === "object" ? plan.batch.name : "");
+    typeof classDoc?.batch === "object" ? classDoc?.batch?.name : "";
+  const standard =
+    typeof classDoc?.batch === "object" ? classDoc?.batch?.standard : classDoc?.standard;
 
-  if (!plan) {
+  if (!batchId || !subject) {
     return (
-      <div className="max-w-2xl mx-auto py-10">
-        <div className="rounded-[28px] border border-dashed border-[#E9D5FF] bg-[#FAF5FF]/50 px-8 py-14 text-center">
-          <p className="text-lg font-semibold text-gray-800">No chapter plan yet</p>
-          <p className="mt-2 text-sm text-gray-500 leading-relaxed">
-            Your institute admin has not published a chapter sequence for{" "}
-            {subject || "this subject"}. Keep logging Today&apos;s Work as usual.
-          </p>
-        </div>
+      <div className="rounded-2xl border border-dashed border-[#E9D5FF] bg-[#FAF5FF]/50 px-8 py-14 text-center">
+        <p className="text-lg font-semibold text-gray-800">No course planner yet</p>
+        <p className="mt-2 text-sm text-gray-500">
+          This class is missing a batch or subject.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 pb-10">
-      <div className="rounded-[28px] bg-gradient-to-br from-[#FAF5FF] to-white border border-[#F2E0FF] p-6 md:p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#A855F7]">
-          Admin chapter plan
-        </p>
-        <h1 className="mt-2 text-2xl md:text-3xl font-bold text-gray-900">
-          {subject}
-        </h1>
-        <p className="mt-2 text-sm text-gray-500">
-          {batchName ? `${batchName} · ` : ""}
-          {chapters.length} chapter{chapters.length === 1 ? "" : "s"} · read only
-        </p>
-      </div>
-
-      <div className="space-y-3">
-        {chapters.map((chapter, index) => (
-          <div
-            key={chapter.chapterId}
-            className="flex gap-4 rounded-2xl border border-gray-100 bg-white p-4 md:p-5 shadow-sm"
-          >
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-[#FAF5FF] text-sm font-bold text-[#A855F7]">
-              {chapter.sequenceOrder || index + 1}
-            </div>
-            <div className="min-w-0 flex-1">
-              <h2 className="font-semibold text-gray-900 leading-snug">
-                {chapter.chapterName}
-              </h2>
-              <div className="mt-2 flex flex-wrap gap-2 text-xs font-medium">
-                <span className="rounded-full bg-gray-50 px-3 py-1 text-gray-600">
-                  {chapter.plannedLectureCount} lecture
-                  {chapter.plannedLectureCount === 1 ? "" : "s"} required
-                </span>
-                {chapter.expectedStartDate ? (
-                  <span className="rounded-full bg-gray-50 px-3 py-1 text-gray-600">
-                    Start {dayjs(chapter.expectedStartDate).format("DD MMM YYYY")}
-                  </span>
-                ) : null}
-                <span
-                  className={`rounded-full px-3 py-1 ${statusStyles[chapter.chapterStatus || "not_started"]}`}
-                >
-                  {statusLabels[chapter.chapterStatus || "not_started"]}
-                </span>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
+    <BatchCoursePlanner
+      batchId={String(batchId)}
+      batchName={batchName}
+      standard={standard}
+      subjects={[subject]}
+    />
   );
 };
 

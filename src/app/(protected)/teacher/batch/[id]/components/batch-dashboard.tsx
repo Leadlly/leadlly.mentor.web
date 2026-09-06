@@ -11,6 +11,7 @@ import AnnouncementModal from "@/components/shared/AnnouncementModal";
 import { Button } from "@/components/ui/button";
 import { formatClassLabel } from "@/helpers/constants/academic";
 import ReportDetailBanner from "@/app/(protected)/class/[classId]/components/report-detail-banner";
+import { BatchCoursePlanner } from "./batch-course-planner";
 
 const BatchDashboard = ({ batchId }: { batchId: string }) => {
   const [activeTab, setActiveTab] = useState("report");
@@ -43,6 +44,7 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
 
   const tabs = [
     { id: "report", label: "Report" },
+    { id: "course_planner", label: "Course planner" },
     { id: "announcements", label: "Announcements" },
     { id: "students", label: "Students" },
     { id: "add_work", label: "Add Work" },
@@ -272,6 +274,15 @@ const BatchDashboard = ({ batchId }: { batchId: string }) => {
             </div>
 
           </div>
+        )}
+
+        {activeTab === "course_planner" && (
+          <BatchCoursePlanner
+            batchId={batchId}
+            batchName={batch.name}
+            standard={batch.standard}
+            subjects={batch.subjects}
+          />
         )}
 
         {activeTab === "announcements" && (
