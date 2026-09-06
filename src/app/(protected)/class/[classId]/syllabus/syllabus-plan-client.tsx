@@ -6,6 +6,19 @@ import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 
 import { getChapterPlanByClass } from "@/actions/chapter_plan_actions";
+import { ChapterSheetStatus } from "@/helpers/types/chapter-plan";
+
+const statusStyles: Record<ChapterSheetStatus, string> = {
+  not_started: "bg-gray-50 text-gray-600",
+  running: "bg-amber-50 text-amber-700",
+  completed: "bg-emerald-50 text-emerald-700",
+};
+
+const statusLabels: Record<ChapterSheetStatus, string> = {
+  not_started: "Not started",
+  running: "Running",
+  completed: "Completed",
+};
 
 const ChapterPlanView = ({ classId }: { classId: string }) => {
   const { data, isLoading } = useQuery({
@@ -77,8 +90,15 @@ const ChapterPlanView = ({ classId }: { classId: string }) => {
                   {chapter.plannedLectureCount} lecture
                   {chapter.plannedLectureCount === 1 ? "" : "s"} required
                 </span>
-                <span className="rounded-full bg-gray-50 px-3 py-1 text-gray-600">
-                  Start {dayjs(chapter.expectedStartDate).format("DD MMM YYYY")}
+                {chapter.expectedStartDate ? (
+                  <span className="rounded-full bg-gray-50 px-3 py-1 text-gray-600">
+                    Start {dayjs(chapter.expectedStartDate).format("DD MMM YYYY")}
+                  </span>
+                ) : null}
+                <span
+                  className={`rounded-full px-3 py-1 ${statusStyles[chapter.chapterStatus || "not_started"]}`}
+                >
+                  {statusLabels[chapter.chapterStatus || "not_started"]}
                 </span>
               </div>
             </div>

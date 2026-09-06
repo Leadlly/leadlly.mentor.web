@@ -1,9 +1,12 @@
+export type ChapterSheetStatus = "not_started" | "running" | "completed";
+
 export interface PlannedChapter {
   chapterId: string;
   chapterName: string;
   sequenceOrder: number;
   plannedLectureCount: number;
   expectedStartDate: string;
+  chapterStatus?: ChapterSheetStatus;
 }
 
 export interface ChapterPlanRecord {
