@@ -18,6 +18,7 @@ const ClassTab = () => {
 
   const tabs = [
     { name: "Report", href: `/class/${classId}/report` },
+    { name: "Chapter plan", href: `/class/${classId}/syllabus` },
     { name: "Students", href: `/class/${classId}/students` },
     { name: "Add work", href: `/class/${classId}/add-work` },
   ];

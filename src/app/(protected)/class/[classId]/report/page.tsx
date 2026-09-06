@@ -72,6 +72,15 @@ const Page = ({ params }: { params: Promise<{ classId: string }> }) => {
           <div className="space-y-4 md:space-y-6 lg:space-y-8">
             {/* Syllabus Section */}
             <div className="space-y-2 md:space-y-3">
+              <div className="flex items-center justify-between px-1">
+                <span className="text-sm text-gray-500">Admin chapter sequence</span>
+                <Link
+                  href={`/class/${classId}/syllabus${searchParams.toString() ? `?${searchParams.toString()}` : ""}`}
+                  className="text-sm font-semibold text-[#A855F7] hover:underline"
+                >
+                  View chapter plan
+                </Link>
+              </div>
               <div className="bg-white border border-[#F2E0FF] rounded-[28px] md:rounded-[32px] p-6 md:p-8 shadow-sm">
                 <h2 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight mb-8">
                   Syllabus Completed
